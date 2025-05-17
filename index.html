@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JLOS</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: system-ui, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .owner {
+      font-size: 1rem;
+      color: #777;
+      margin-bottom: 0.2em;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0.2em 0 0.2em;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 0 0 2rem;
+    }
+
+    a {
+      display: inline-block;
+      font-size: 1.1rem;
+      padding: 0.75rem 1.5rem;
+      color: #ffffff;
+      background-color: #007acc;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      margin-bottom: 2rem;
+    }
+
+    a:hover {
+      background-color: #005fa3;
+    }
+
+    .connect-btn {
+      font-size: 1.1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #aaa;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .owner {
+        font-size: 0.9rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      a, .connect-btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="owner">go47ankara's</div>
+  <h1>JLOS</h1>
+  <p>Japanese Language Open Space</p>
+  <a href="quiz.html">クイズページへ</a>
+  <button class="connect-btn" disabled>Connect Wallet</button>
+</body>
+</html>
