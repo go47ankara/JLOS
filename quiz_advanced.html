@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>都道府県クイズ（上級）</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; margin: 0; padding: 10px; }
+    h1 { font-size: 1.8em; margin-top: 10px; }
+    #question { font-size: 2em; margin: 15px; font-weight: bold; color: #333; }
+    #pref-number-display { font-size: 4em; margin: 20px 0 10px 0; color: #007acc; font-weight: bold; }
+    #timer, #score { font-size: 1.2em; font-weight: bold; margin: 4px 0; }
+    #result { font-size: 1.2em; margin-top: 10px; font-weight: bold; }
+    input, button { font-size: 1em; margin: 8px; padding: 10px; width: 80%; max-width: 300px; }
+    img { max-width: 90%; height: auto; margin-top: 20px; }
+    #user-info { margin-top: 15px; font-size: 1rem; color: #555; }
+    #logout-btn { margin-top: 10px; padding: 0.5rem 1rem; background-color: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    #logout-btn:hover { background-color: #d32f2f; }
+    #countdownOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); color: white; font-size: 10vw; display: none; align-items: center; justify-content: center; z-index: 999; }
+  </style>
+</head>
+<body>
+  <h1>都道府県クイズ（上級・10問チャレンジ）</h1>
+  <p id="question">「次の問題」ボタンを押してください</p>
+  <button id="nextBtn">次の問題</button><br />
+  <input type="text" id="answerInput" placeholder="都道府県名を入力" autocomplete="off" />
+  <button id="answerBtn">答える</button>
+  <p id="result"></p>
+  <img src="map.png" alt="日本地図" />
+  <div id="pref-number-display"></div>
+  <p id="timer">タイマー：--</p>
+  <p id="score">スコア：0 / 0問中</p>
+
+  <div id="user-info">
+    <div id="username-display"></div>
+    <div id="login-status"></div>
+    <button id="logout-btn" onclick="handleLogout()">ログアウト</button>
+  </div>
+  <div id="countdownOverlay"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    async function saveScore(level, score) {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        const uid = user.uid;
+        const userRef = db.collection("users").doc(uid);
+        const docSnap = await userRef.get();
+        const data = docSnap.exists ? docSnap.data() : {};
+        const prevMax = data?.stats?.[level]?.maxScore ?? 0;
+
+        const updates = {
+          stats: {
+            [level]: {
+              maxScore: score > prevMax ? score : prevMax,
+              totalScore: firebase.firestore.FieldValue.increment(score || 0),
+              tries: firebase.firestore.FieldValue.increment(1)
+            },
+            totalScore: firebase.firestore.FieldValue.increment(score || 0),
+            totalTries: firebase.firestore.FieldValue.increment(1)
+          }
+        };
+
+        const username = localStorage.getItem("username");
+        if (username) updates.username = username;
+
+        await userRef.set(updates, { merge: true });
+        console.log("✅ スコア保存成功");
+      } catch (e) {
+        console.error("❌ スコア保存失敗:", e);
+      }
+    }
+
+    const prefectures =["北海道", "青森県", "岩手県", "秋田県", "宮城県", "山形県", "福島県",
+      "新潟県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+      "山梨県", "長野県", "静岡県", "富山県", "岐阜県", "愛知県", "石川県", "福井県",
+      "滋賀県", "三重県", "京都府", "大阪府", "奈良県", "和歌山県", "兵庫県",
+      "鳥取県", "岡山県", "島根県", "広島県", "山口県",
+      "香川県", "徳島県", "高知県", "愛媛県",
+      "福岡県", "大分県", "佐賀県", "長崎県", "熊本県", "宮崎県", "鹿児島県", "沖縄県"];
+
+
+    let currentNumber = null, answerTimer = null, timeLeft = 8, answered = false, score = 0, questionCount = 0;
+    const totalQuestions = 10;
+    const questionEl = document.getElementById("question");
+    const timerEl = document.getElementById("timer");
+    const resultEl = document.getElementById("result");
+    const answerInput = document.getElementById("answerInput");
+    const nextBtn = document.getElementById("nextBtn");
+    const answerBtn = document.getElementById("answerBtn");
+    const scoreEl = document.getElementById("score");
+    const countdownOverlay = document.getElementById("countdownOverlay");
+    const prefNumberDisplay = document.getElementById("pref-number-display");
+
+    nextBtn.addEventListener("click", startCountdown);
+    answerBtn.addEventListener("click", checkAnswer);
+    answerInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkAnswer();
+      }
+    });
+
+    function normalizeAnswer(str) {
+      return str.replace(/\s+/g, "").replace(/　+/g, "").replace(/[都道府県]+$/, "").trim();
+    }
+
+    function startCountdown() {
+      if (questionCount >= totalQuestions) return;
+      answered = false;
+      resultEl.textContent = "";
+      answerInput.value = "";
+      answerInput.disabled = true;
+      countdownOverlay.style.display = "flex";
+
+      let count = 3;
+      countdownOverlay.textContent = count;
+      const countdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) countdownOverlay.textContent = count;
+        else {
+          clearInterval(countdownTimer);
+          countdownOverlay.style.display = "none";
+          generateQuestion();
+        }
+      }, 1000);
+    }
+
+    function generateQuestion() {
+      currentNumber = Math.floor(Math.random() * 47) + 1;
+      questionEl.textContent = `問題 ${questionCount + 1}: ${currentNumber}番の都道府県はどこ？`;
+      prefNumberDisplay.textContent = `${currentNumber}番`;
+      timeLeft = 8;
+      timerEl.textContent = `タイマー：${timeLeft}秒`;
+      answerInput.disabled = false;
+      answerInput.focus();
+
+      answerTimer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `タイマー：${timeLeft}秒`;
+        if (timeLeft <= 0) {
+          clearInterval(answerTimer);
+          if (!answered) showTimeoutResult();
+        }
+      }, 1000);
+    }
+
+    function checkAnswer() {
+      if (answered || timeLeft <= 0) return;
+      const userAnswer = normalizeAnswer(answerInput.value);
+      const correct = prefectures[currentNumber - 1];
+      const correctNormalized = normalizeAnswer(correct);
+      answered = true;
+      clearInterval(answerTimer);
+      questionCount++;
+
+      if (userAnswer === correctNormalized) {
+        const point = 1 + timeLeft;
+        score += point;
+        resultEl.textContent = `正解！🎉 +${point}点`;
+      } else {
+        resultEl.textContent = `不正解。正解は「${correct}」です。`;
+      }
+      scoreEl.textContent = `スコア：${score} / ${questionCount}問中`;
+
+      if (questionCount >= totalQuestions) endGame();
+    }
+
+    function showTimeoutResult() {
+      answered = true;
+      questionCount++;
+      const correct = prefectures[currentNumber - 1];
+      resultEl.textContent = `⏱時間切れ！正解は「${correct}」でした。`;
+      scoreEl.textContent = `スコア：${score} / ${questionCount}問中`;
+
+      if (questionCount >= totalQuestions) endGame();
+    }
+
+    function endGame() {
+      questionEl.textContent = "ゲーム終了！";
+      nextBtn.disabled = true;
+      answerInput.disabled = true;
+      answerBtn.disabled = true;
+
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          saveScore("advanced", score);
+        } else {
+          resultEl.innerHTML += `<br><span style=\"color:#007acc;\">※ ランキングに参加するにはログインが必要です</span>`;
+        }
+      });
+    }
+
+    function handleLogout() {
+      localStorage.removeItem("username");
+      alert("ログアウトしました");
+      window.location.href = "index.html";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const username = localStorage.getItem("username");
+      const usernameDisplay = document.getElementById("username-display");
+      const loginStatus = document.getElementById("login-status");
+      if (username) {
+        usernameDisplay.textContent = `登録名: ${username}`;
+        loginStatus.textContent = "ログイン中";
+      } else {
+        usernameDisplay.textContent = "";
+        loginStatus.textContent = "ログインしていません";
+      }
+    });
+  </script>
+</body>
+</html>

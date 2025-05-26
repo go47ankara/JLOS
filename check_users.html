@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Firestore ユーザーデータ構造チェック</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    ul {
+      background: white;
+      padding: 1em;
+      border-radius: 10px;
+      max-width: 600px;
+    }
+    li {
+      margin-bottom: 1em;
+    }
+    .ok {
+      color: green;
+    }
+    .warn {
+      color: orange;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Firestore ユーザーデータ構造チェック</h1>
+  <ul id="output"><li>読み込み中...</li></ul>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const outputEl = document.getElementById("output");
+
+    async function checkUsers() {
+      try {
+        const snapshot = await db.collection("users").get();
+        outputEl.innerHTML = "";
+
+        if (snapshot.empty) {
+          outputEl.innerHTML = "<li class='error'>❌ users コレクションが空です</li>";
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${doc.id}</strong><br/>`;
+
+          const results = [];
+
+          // username
+          if (data.username) {
+            results.push(`<span class="ok">✅ username: ${data.username}</span>`);
+          } else {
+            results.push(`<span class="warn">⚠️ username がありません</span>`);
+          }
+
+          // beginner.maxScore
+          if (data.stats?.beginner?.maxScore !== undefined) {
+            results.push(`<span class="ok">✅ beginner.maxScore: ${data.stats.beginner.maxScore}</span>`);
+          } else {
+            results.push(`<span class="warn">⚠️ stats.beginner.maxScore が見つかりません</span>`);
+          }
+
+          // totalScore
+          if (data.stats?.totalScore !== undefined) {
+            results.push(`<span class="ok">✅ totalScore: ${data.stats.totalScore}</span>`);
+          } else {
+            results.push(`<span class="warn">⚠️ stats.totalScore が見つかりません</span>`);
+          }
+
+          // totalTries
+          if (data.stats?.totalTries !== undefined) {
+            results.push(`<span class="ok">✅ totalTries: ${data.stats.totalTries}</span>`);
+          } else {
+            results.push(`<span class="warn">⚠️ stats.totalTries が見つかりません</span>`);
+          }
+
+          li.innerHTML += results.join("<br/>");
+          outputEl.appendChild(li);
+        });
+      } catch (err) {
+        outputEl.innerHTML = `<li class="error">❌ エラー: ${err.message}</li>`;
+      }
+    }
+
+    checkUsers();
+  </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JLOS ユーザー登録</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 0.6rem;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .output {
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>JLOS ユーザー登録</h2>
+    <input type="text" id="username" placeholder="ユーザー名を入力" />
+    <input type="text" id="evm" placeholder="C-Chainアドレス（任意）" />
+    <button onclick="register()">登録する</button>
+    <div id="output" class="output"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos",
+      storageBucket: "quizapp-jlos.appspot.com",
+      messagingSenderId: "628212159424",
+      appId: "1:628212159424:web:f66d6040ae73196b8fee25"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.register = async () => {
+      const username = document.getElementById("username").value.trim();
+      const evm = document.getElementById("evm").value.trim();
+      const output = document.getElementById("output");
+
+      if (!username) {
+        output.textContent = "❌ ユーザー名を入力してください";
+        return;
+      }
+
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("username", "==", username));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          output.textContent = `❌ そのユーザー名「${username}」はすでに使われています`;
+          return;
+        }
+
+        await addDoc(usersRef, {
+          username: username,
+          evmAddress: evm || null,
+          createdAt: serverTimestamp()
+        });
+
+        output.textContent = `✅ 登録成功：${username}`;
+        setTimeout(() => {
+          window.location.href = "quiz-select.html";
+        }, 1000);
+      } catch (error) {
+        output.textContent = `❌ 登録失敗: ${error.message}`;
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>漢字記憶チャレンジ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Shippori Mincho', serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 2rem;
+    }
+    #kanji-display {
+      font-size: 20vw;
+      margin: 2rem 0 1rem;
+      color: #333;
+    }
+    .choice-button {
+      font-size: 1.2rem;
+      padding: 0.75rem 1.5rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+      width: 40%;
+    }
+    #status-area {
+      margin-top: 1.5rem;
+      font-size: 1.8rem;
+      color: #333;
+    }
+    #result {
+      margin-top: 3rem;
+      font-size: 1.5rem;
+    }
+    table {
+      margin: auto;
+      background: white;
+      border-collapse: collapse;
+      box-shadow: 0 0 8px #ccc;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background: #007acc;
+      color: white;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 3rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      text-decoration: none;
+      color: white;
+      background-color: #555;
+      border-radius: 6px;
+    }
+    #start-btn {
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #countdownOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 20vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+<h1>漢字記憶チャレンジ</h1>
+<button id="start-btn" onclick="startGame()">スタート</button>
+<div id="kanji-display"></div>
+<div id="choices"></div>
+
+<div id="status-area">
+  <div id="score-display">スコア: 0 点</div>
+  <div id="remaining-display">残り: 50 問</div>
+</div>
+
+<div id="result"></div>
+
+<h2>ランキング</h2>
+<table>
+  <thead>
+    <tr><th>順位</th><th>ユーザー名</th><th>スコア</th></tr>
+  </thead>
+  <tbody id="ranking-body"></tbody>
+</table>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc,
+  collection, query, orderBy, limit,
+  getDocs, increment
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+  authDomain: "quizapp-jlos.firebaseapp.com",
+  projectId: "quizapp-jlos"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const allKanji = [
+    "日","月","木","山","川","田","人","口","車","門","火","水","金","土","子","女","学","生","先","私",
+    "一","二","三","四","五","六","七","八","九","十","百","千","万","円","年","上","下","中","大","小",
+    "本","半","分","力","何","明","休","体","好","男","林","森","間","畑","岩","目","耳","手","足","雨",
+    "竹","米","貝","石","糸","花","茶","肉","文","字","物","牛","馬","鳥","魚","新","古","長","短","高",
+    "安","低","暗","多","少","行","来","帰","食","飲","見","聞","読","書","話","買","教","朝","昼","夜",
+    "晩","夕","方","午","前","後","毎","週","曜","作","泳","油","海","酒","待","校","時","言","計","語",
+    "飯","宅","客","室","家","英","薬","会","今","雪","雲","電","売","広","店","度","病","疲","痛","屋",
+    "国","回","困","開","閉","近","遠","速","遅","道","青","晴","静","寺","持","荷","歌","友","父","母",
+    "兄","姉","弟","妹","夫","妻","彼","主","奥","元","気","有","名","親","切","便","利","不","若","早",
+    "忙","出","入","乗","降","着","渡","通","走","歩","止","動","働","右","左","東","西","北","南","外",
+    "内","部","駅","社","院","地","鉄","工","場","図","館","公","園","住","所","番","号","市","町","村",
+    "区","都","府","県","島","京","様","練","習","勉","強","研","究","留","質","問","題","答","宿","政",
+    "治","経","済","歴","史","育","化","理","科","数","医","映","画","写","真","音","楽","料","組","思",
+    "色","白","黒","赤","起","寝","遊","立","座","使","始","終","貸","借","返","送","結","婚","離","席",
+    "欠","予","定","洋","式","和","活","春","夏","秋","冬","暑","熱","寒","冷","暖","温","涼","天","仕",
+    "事","者","運","転","選","記","議","員","商","業","農","良","悪","点","正","違","同","適","当","難",
+    "次","形","味","試","験","面","接","説","果","合","格","受","落","浴","念","指","折","払","投","打",
+    "深","洗","流","消","決","旅","約","案","準","備","相","急","連","絡","泊","特","急","線","発","到",
+    "交","機","関","局","信","路","故","注","意","押","引","割","営","自","由","取","求","願","知","台",
+    "窓","具","器","用","服","紙","辞","雑","誌","銀","資","品","個","価","産","期","々","報","告","心",
+    "感","情","悲","泣","笑","頭","覚","忘","考","伝","代","呼","焼","曲","脱","別","集","並","喜","驚",
+    "細","太","重","軽","狭","弱","眠","苦","簡","単","空","港","飛","階","建","設","完","成","費","放",
+    "位","置","横","向","原","平","野","風","両","橋","老","族","配","術","退","効","民","訪","顔","歯",
+    "卒","論","実","調","必","要","類","得","失","礼","増","加","減","変","移","続","過","進","以","美",
+    "比","較","反","対","賛","共","直","表","現","初","全","最","無","非","第","的","性","法","制","課"
+]; // 仮漢字データ
+
+let score = 0;
+let round = 0;
+let used = new Set();
+let startTime;
+let timer;
+
+function weightedRandomIndex() {
+  const weights = [];
+  for (let i = 0; i < 500; i++) {
+    if (i < 100) weights.push(1);
+    else if (i < 200) weights.push(2);
+    else if (i < 300) weights.push(3);
+    else if (i < 400) weights.push(4);
+    else weights.push(5);
+  }
+  const total = weights.reduce((a, b) => a + b, 0);
+  let rand = Math.random() * total;
+  for (let i = 0; i < weights.length; i++) {
+    if (rand < weights[i]) return i;
+    rand -= weights[i];
+  }
+}
+
+function shuffleButtons(correctLabel) {
+  const choices = ["読めない", "読めない", "読めない", correctLabel];
+  for (let i = choices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choices[i], choices[j]] = [choices[j], choices[i]];
+  }
+  return choices;
+}
+
+window.startGame = function () {
+  score = 0;
+  round = 0;
+  used.clear();
+  document.getElementById("score-display").textContent = "スコア: 0 点";
+  document.getElementById("remaining-display").textContent = "残り: 50 問";
+  document.getElementById("start-btn").style.display = "none";
+  startCountdown(() => showNextKanji());
+};
+
+function startCountdown(callback) {
+  const overlay = document.createElement("div");
+  overlay.id = "countdownOverlay";
+  document.body.appendChild(overlay);
+  let count = 3;
+  overlay.textContent = count;
+  const interval = setInterval(() => {
+    count--;
+    if (count > 0) overlay.textContent = count;
+    else {
+      clearInterval(interval);
+      overlay.remove();
+      callback();
+    }
+  }, 1000);
+}
+
+function showNextKanji() {
+  if (round >= 50 || used.size >= allKanji.length) {
+    showFinalResult(score);
+    return;
+  }
+  let index;
+  do {
+    index = weightedRandomIndex();
+  } while (used.has(index));
+  used.add(index);
+  round++;
+  const kanji = allKanji[index];
+  document.getElementById("kanji-display").textContent = kanji;
+
+  const container = document.getElementById("choices");
+  container.innerHTML = "";
+  const options = shuffleButtons("読めた");
+  options.forEach(label => {
+    const btn = document.createElement("button");
+    btn.className = "choice-button";
+    btn.textContent = label;
+    btn.onclick = () => handleChoice(label === "読めた");
+    container.appendChild(btn);
+  });
+
+  startTime = performance.now();
+  timer = setTimeout(() => handleChoice(false), 2000);
+  document.getElementById("remaining-display").textContent = `残り: ${50 - round} 問`;
+}
+
+function handleChoice(correct) {
+  clearTimeout(timer);
+  const elapsed = performance.now() - startTime;
+  if (correct) {
+    score += 100 + Math.floor(2000 - elapsed);
+  }
+  document.getElementById("score-display").textContent = `スコア: ${score} 点`;
+  showNextKanji();
+}
+
+async function saveScore(score) {
+  const user = auth.currentUser;
+  if (!user) return;
+  const uid = user.uid;
+  const username = localStorage.getItem("username") || "匿名";
+
+  const userRef = doc(db, "users", uid);
+  const docSnap = await getDoc(userRef);
+  const data = docSnap.exists() ? docSnap.data() : {};
+  const prevMax = data?.memoryChallenge?.maxScore || 0;
+
+  const updates = {
+    username,
+    memoryChallenge: {
+      tries: increment(1),
+      totalScore: increment(score),
+      ...(score > prevMax && { maxScore: score })
+    }
+  };
+
+  await setDoc(userRef, updates, { merge: true });
+  console.log("✅ スコア保存完了");
+}
+
+async function loadRanking() {
+  const q = query(
+    collection(db, "users"),
+    orderBy("memoryChallenge.maxScore", "desc"),
+    limit(10)
+  );
+  const snapshot = await getDocs(q);
+  const tbody = document.getElementById("ranking-body");
+  tbody.innerHTML = "";
+  let rank = 1;
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${rank++}</td>
+      <td>${data.username || "匿名"}</td>
+      <td>${data.memoryChallenge?.maxScore || 0}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function showFinalResult(score) {
+  console.log("showFinalResult 呼び出された！スコア:", score);
+  document.getElementById("kanji-display").textContent = "";
+  document.getElementById("choices").innerHTML = "";
+  document.getElementById("status-area").style.display = "none";
+  document.getElementById("result").innerHTML = `
+    あなたのスコア: <strong>${score}</strong> 点<br><br>
+    <a class="back-link" href="quiz-select.html">← クイズ選択に戻る</a>
+  `;
+  await saveScore(score);
+  await loadRanking();
+}
+</script>
+</body>
+</html>

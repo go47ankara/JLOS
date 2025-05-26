@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>クイズ選択 - JLOS</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: system-ui, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    a.quiz-button {
+      display: inline-block;
+      font-size: 1.1rem;
+      padding: 0.75rem 1.5rem;
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      color: white;
+      background-color: #007acc;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    a.quiz-button:hover {
+      background-color: #005fa3;
+    }
+
+    .spacer {
+      margin-top: 2rem;
+    }
+
+    #user-info {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        alert("ログインしていません。ログインページに戻ります。");
+        window.location.href = "index.html";
+      } else {
+        const uidDisplay = document.getElementById("uid-display");
+        if (uidDisplay) uidDisplay.textContent = `UID：${user.uid}`;
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const username = localStorage.getItem("username");
+      if (username) {
+        const nameEl = document.getElementById("username-display");
+        if (nameEl) nameEl.textContent = `登録名：${username}`;
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>クイズの難易度を選んでください</h1>
+
+  <a class="quiz-button" href="quiz_beginner.html">初級クイズ</a>
+  <a class="quiz-button" href="quiz_intermediate.html">中級クイズ</a>
+  <a class="quiz-button" href="quiz_advanced.html">上級クイズ</a>
+
+  <div class="spacer"></div>
+  <a class="quiz-button" href="memory_challenge.html">漢字記憶チャレンジ</a>
+
+  <div id="user-info">
+    <p id="username-display"></p>
+    <p id="uid-display"></p>
+  </div>
+</body>
+</html>

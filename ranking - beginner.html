@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>初級ランキング</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { color: #007acc; margin-bottom: 20px; }
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+    }
+    th { background-color: #007acc; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    .button-container {
+      margin-top: 20px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #reload-btn { background-color: #4CAF50; color: white; }
+    #reload-btn:hover { background-color: #45a049; }
+    #logout-btn { background-color: #f44336; color: white; }
+    #logout-btn:hover { background-color: #d32f2f; }
+  </style>
+</head>
+<body>
+  <h1>初級クイズランキング</h1>
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>順位</th>
+        <th>ユーザー名</th>
+        <th>スコア</th>
+      </tr>
+    </thead>
+    <tbody id="rankingBody">
+      <tr><td colspan="3">読み込み中...</td></tr>
+    </tbody>
+  </table>
+
+  <div class="button-container">
+    <button id="reload-btn" onclick="loadRanking()">🔄 ランキング再読み込み</button>
+    <button id="logout-btn" onclick="handleLogout()">🔓 ログアウト</button>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    async function loadRanking() {
+      const tbody = document.getElementById("rankingBody");
+      tbody.innerHTML = "";
+
+      try {
+        const snapshot = await db.collection("users").get();
+        const rankingData = [];
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const username = data.username || "名無し";
+          const score = data.stats?.beginner?.maxScore ?? null;
+
+          if (score !== null) {
+            rankingData.push({ username, score });
+          }
+        });
+
+        rankingData.sort((a, b) => b.score - a.score);
+
+        if (rankingData.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='3'>データがありません</td></tr>";
+          return;
+        }
+
+        rankingData.forEach((entry, index) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${entry.username}</td>
+            <td>${entry.score}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("ランキング取得失敗:", e);
+        tbody.innerHTML = "<tr><td colspan='3'>エラーが発生しました</td></tr>";
+      }
+    }
+
+    function handleLogout() {
+      auth.signOut().then(() => {
+        localStorage.removeItem("username");
+        alert("ログアウトしました");
+        window.location.href = "index.html";
+      });
+    }
+
+    // 初回読み込み
+    loadRanking();
+  </script>
+</body>
+</html>

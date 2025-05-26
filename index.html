@@ -32,61 +32,157 @@
 
     p {
       font-size: 1.2rem;
-      margin: 0 0 2rem;
+      margin: 0 0 1.5rem;
     }
 
-    a {
+    .form-container {
+      display: flex;
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 1.5rem;
+      height: 3rem;
+      box-sizing: border-box;
+    }
+
+    .form-container input {
+      flex: 2;
+      padding: 0 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      background-color: #fff;
+      border: 1px solid #007acc;
+      border-right: none;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-container button {
+      flex: 1;
+      font-size: 1rem;
+      background-color: #007acc;
+      color: white;
+      border: 1px solid #007acc;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      height: 100%;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .form-container button:hover {
+      background-color: #005fa3;
+    }
+
+    a.button-link {
       display: inline-block;
       font-size: 1.1rem;
-      padding: 0.75rem 1.5rem;
-      color: #ffffff;
-      background-color: #007acc;
+      padding: 0;
+      height: 3rem;
+      line-height: 3rem;
+      width: 80%;
+      max-width: 300px;
       text-decoration: none;
       border-radius: 8px;
-      transition: background-color 0.3s ease;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #ffffff;
+      background-color: #007acc;
+      box-sizing: border-box;
     }
 
-    a:hover {
+    a.button-link:hover {
       background-color: #005fa3;
     }
 
     .connect-btn {
+      display: inline-block;
       font-size: 1.1rem;
-      padding: 0.75rem 1.5rem;
+      height: 3rem;
+      line-height: 3rem;
+      width: 80%;
+      max-width: 300px;
       background-color: #aaa;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: not-allowed;
       opacity: 0.6;
+      text-align: center;
+      box-sizing: border-box;
+      margin-top: 3rem;
     }
 
     @media (max-width: 480px) {
-      h1 {
-        font-size: 2rem;
+      .form-container {
+        flex-direction: column;
+        height: auto;
+        gap: 0.5rem;
       }
 
-      .owner {
-        font-size: 0.9rem;
+      .form-container input,
+      .form-container button {
+        width: 100%;
+        height: 3.2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
       }
 
-      p {
-        font-size: 1rem;
+      .form-container input {
+        border-radius: 8px;
+        border-right: 1px solid #007acc;
       }
 
-      a, .connect-btn {
-        font-size: 1rem;
-        padding: 0.6rem 1.2rem;
+      .form-container button {
+        border-radius: 8px;
+        border-top: none;
       }
     }
   </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.handleLogin = async function () {
+      const username = document.getElementById('username').value.trim();
+      if (!username) {
+        alert("ユーザー名を入力してください");
+        return;
+      }
+
+      try {
+        await signInAnonymously(auth);
+        localStorage.setItem('username', username);
+        window.location.href = 'quiz-select.html';
+      } catch (error) {
+        console.error("Firebaseログインエラー:", error);
+        alert("ログインに失敗しました");
+      }
+    };
+  </script>
 </head>
 <body>
   <div class="owner">go47ankara's</div>
   <h1>JLOS</h1>
   <p>Japanese Language Open Space</p>
-  <a href="quiz.html">クイズページへ</a>
-  <button class="connect-btn" disabled>Connect Wallet</button>
+
+  <div class="form-container">
+    <input type="text" id="username" placeholder="ユーザー名を入力" />
+    <button onclick="handleLogin()">ログイン</button>
+  </div>
+
+  <a class="button-link" href="signup.html">登録してクイズのページへ</a>
+  <a class="button-link" href="quiz-select.html">直接クイズのページへ</a>
+  <div class="connect-btn">Connect Wallet</div>
 </body>
 </html>
