@@ -114,6 +114,12 @@
       margin-top: 3rem;
     }
 
+    .login-status {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #555;
+    }
+
     @media (max-width: 480px) {
       .form-container {
         flex-direction: column;
@@ -142,7 +148,8 @@
   </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
@@ -152,11 +159,21 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     window.handleLogin = async function () {
       const username = document.getElementById('username').value.trim();
       if (!username) {
         alert("ユーザー名を入力してください");
+        return;
+      }
+
+      const userRef = doc(db, "users", username);
+      const docSnap = await getDoc(userRef);
+
+      if (!docSnap.exists()) {
+        alert("このユーザー名は登録されていません。登録ページに移動します。");
+        window.location.href = "signup.html";
         return;
       }
 
@@ -169,6 +186,36 @@
         alert("ログインに失敗しました");
       }
     };
+
+    document.getElementById('logout-button').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        localStorage.removeItem('username');
+        window.location.reload();
+      }).catch((error) => {
+        console.error("ログアウト失敗:", error);
+      });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      const status = document.getElementById('login-status');
+      const logoutBtn = document.getElementById('logout-button');
+      if (user) {
+        const username = localStorage.getItem('username') || '匿名ユーザー';
+        status.textContent = `ログイン中：${username}`;
+        logoutBtn.style.display = 'inline-block';
+      } else {
+        status.textContent = "ログインしていません";
+        logoutBtn.style.display = 'none';
+      }
+    });
+
+    // ページ読み込み時に localStorage から username を取得して自動入力
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedUsername = localStorage.getItem('username');
+      if (savedUsername) {
+        document.getElementById('username').value = savedUsername;
+      }
+    });
   </script>
 </head>
 <body>
@@ -184,5 +231,8 @@
   <a class="button-link" href="signup.html">登録してクイズのページへ</a>
   <a class="button-link" href="quiz-select.html">直接クイズのページへ</a>
   <div class="connect-btn">Connect Wallet</div>
+
+  <div class="login-status" id="login-status">ログイン状態を確認中...</div>
+  <button id="logout-button" style="display:none; margin-top: 1rem; padding: 0.5rem 1rem; font-size: 1rem; border: none; border-radius: 8px; background-color: #dc3545; color: white; cursor: pointer;">ログアウト</button>
 </body>
 </html>
