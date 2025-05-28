@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -22,7 +23,6 @@
       margin: 0.5rem;
       border: none;
       border-radius: 8px;
-      background-color: #007acc;
       color: white;
       cursor: pointer;
       width: 40%;
@@ -83,49 +83,62 @@
       justify-content: center;
       z-index: 9999;
     }
+    @media screen and (max-width: 600px) {
+      .choice-button {
+        width: 80%;
+      }
+      #kanji-display {
+        font-size: 30vw;
+      }
+    }
   </style>
 </head>
 <body>
+  <h1>漢字記憶チャレンジ</h1>
+  <button id="start-btn" onclick="startGame()">スタート</button>
+  <div id="kanji-display"></div>
+  <div id="choices"></div>
+  <div id="status-area">
+    <div id="score-display">スコア: 0 点</div>
+    <div id="remaining-display">残り: 50 問</div>
+  </div>
+  <div id="result"></div>
+  <h2>ランキング</h2>
+  <table>
+    <thead><tr><th>順位</th><th>ユーザー名</th><th>スコア</th></tr></thead>
+    <tbody id="ranking-body"></tbody>
+  </table>
 
-<h1>漢字記憶チャレンジ</h1>
-<button id="start-btn" onclick="startGame()">スタート</button>
-<div id="kanji-display"></div>
-<div id="choices"></div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, setDoc,
+      collection, query, orderBy, limit,
+      getDocs, increment
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<div id="status-area">
-  <div id="score-display">スコア: 0 点</div>
-  <div id="remaining-display">残り: 50 問</div>
-</div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
+      authDomain: "quizapp-jlos.firebaseapp.com",
+      projectId: "quizapp-jlos"
+    };
 
-<div id="result"></div>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-<h2>ランキング</h2>
-<table>
-  <thead>
-    <tr><th>順位</th><th>ユーザー名</th><th>スコア</th></tr>
-  </thead>
-  <tbody id="ranking-body"></tbody>
-</table>
+    
+const knownLabels = [
+  { label: "見たことある", points: 100, color: "#cce5ff" },
+  { label: "音読みおｋ", points: 200, color: "#66b2ff" },
+  { label: "音訓楽勝", points: 200, color: "#4da3ff" },
+  { label: "熟語でばっちり", points: 300, color: "#007bff" },
+  { label: "完璧", points: 300, color: "#004494" }
+];
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore, doc, getDoc, setDoc,
-  collection, query, orderBy, limit,
-  getDocs, increment
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
-  authDomain: "quizapp-jlos.firebaseapp.com",
-  projectId: "quizapp-jlos"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
+    const unknownLabels = ["読めない", "わからん", "難しい", "？？？", "は？"];
+   
 const allKanji = [
     "日","月","木","山","川","田","人","口","車","門","火","水","金","土","子","女","学","生","先","私",
     "一","二","三","四","五","六","七","八","九","十","百","千","万","円","年","上","下","中","大","小",
@@ -154,163 +167,157 @@ const allKanji = [
     "比","較","反","対","賛","共","直","表","現","初","全","最","無","非","第","的","性","法","制","課"
 ]; // 仮漢字データ
 
-let score = 0;
-let round = 0;
-let used = new Set();
-let startTime;
-let timer;
+    let score = 0;
+    let round = 0;
+    let used = new Set();
+    let startTime;
+    let timer;
 
-function weightedRandomIndex() {
-  const weights = [];
-  for (let i = 0; i < 500; i++) {
-    if (i < 100) weights.push(1);
-    else if (i < 200) weights.push(2);
-    else if (i < 300) weights.push(3);
-    else if (i < 400) weights.push(4);
-    else weights.push(5);
-  }
-  const total = weights.reduce((a, b) => a + b, 0);
-  let rand = Math.random() * total;
-  for (let i = 0; i < weights.length; i++) {
-    if (rand < weights[i]) return i;
-    rand -= weights[i];
-  }
-}
-
-function shuffleButtons(correctLabel) {
-  const choices = ["読めない", "読めない", "読めない", correctLabel];
-  for (let i = choices.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [choices[i], choices[j]] = [choices[j], choices[i]];
-  }
-  return choices;
-}
-
-window.startGame = function () {
-  score = 0;
-  round = 0;
-  used.clear();
-  document.getElementById("score-display").textContent = "スコア: 0 点";
-  document.getElementById("remaining-display").textContent = "残り: 50 問";
-  document.getElementById("start-btn").style.display = "none";
-  startCountdown(() => showNextKanji());
-};
-
-function startCountdown(callback) {
-  const overlay = document.createElement("div");
-  overlay.id = "countdownOverlay";
-  document.body.appendChild(overlay);
-  let count = 3;
-  overlay.textContent = count;
-  const interval = setInterval(() => {
-    count--;
-    if (count > 0) overlay.textContent = count;
-    else {
-      clearInterval(interval);
-      overlay.remove();
-      callback();
+    function weightedRandomIndex() {
+      const weights = Array(500).fill(1).map((_, i) =>
+        i < 100 ? 1 : i < 200 ? 2 : i < 300 ? 3 : i < 400 ? 4 : 5);
+      const total = weights.reduce((a, b) => a + b, 0);
+      let rand = Math.random() * total;
+      for (let i = 0; i < weights.length; i++) {
+        if (rand < weights[i]) return i;
+        rand -= weights[i];
+      }
     }
-  }, 1000);
-}
 
-function showNextKanji() {
-  if (round >= 50 || used.size >= allKanji.length) {
-    showFinalResult(score);
-    return;
-  }
-  let index;
-  do {
-    index = weightedRandomIndex();
-  } while (used.has(index));
-  used.add(index);
-  round++;
-  const kanji = allKanji[index];
-  document.getElementById("kanji-display").textContent = kanji;
-
-  const container = document.getElementById("choices");
-  container.innerHTML = "";
-  const options = shuffleButtons("読めた");
-  options.forEach(label => {
-    const btn = document.createElement("button");
-    btn.className = "choice-button";
-    btn.textContent = label;
-    btn.onclick = () => handleChoice(label === "読めた");
-    container.appendChild(btn);
-  });
-
-  startTime = performance.now();
-  timer = setTimeout(() => handleChoice(false), 3000);
-  document.getElementById("remaining-display").textContent = `残り: ${50 - round} 問`;
-}
-
-function handleChoice(correct) {
-  clearTimeout(timer);
-  const elapsed = performance.now() - startTime;
-  if (correct) {
-    score += 100 + Math.floor(2000 - elapsed);
-  }
-  document.getElementById("score-display").textContent = `スコア: ${score} 点`;
-  showNextKanji();
-}
-
-async function saveScore(score) {
-  const user = auth.currentUser;
-  if (!user) return;
-  const uid = user.uid;
-  const username = localStorage.getItem("username") || "匿名";
-
-  const userRef = doc(db, "users", uid);
-  const docSnap = await getDoc(userRef);
-  const data = docSnap.exists() ? docSnap.data() : {};
-  const prevMax = data?.memoryChallenge?.maxScore || 0;
-
-  const updates = {
-    username,
-    memoryChallenge: {
-      tries: increment(1),
-      totalScore: increment(score),
-      ...(score > prevMax && { maxScore: score })
+    function createButton(labelObj, isCorrect) {
+      const btn = document.createElement("button");
+      btn.className = "choice-button";
+      btn.textContent = labelObj.label || labelObj;
+      btn.style.backgroundColor = isCorrect ? (labelObj.color || "#007acc") : "#f0ad4e";
+      btn.onclick = () => handleChoice(isCorrect, labelObj.points || 0);
+      return btn;
     }
-  };
 
-  await setDoc(userRef, updates, { merge: true });
-  console.log("✅ スコア保存完了");
-}
+    window.startGame = function () {
+      score = 0;
+      round = 0;
+      used.clear();
+      document.getElementById("score-display").textContent = "スコア: 0 点";
+      document.getElementById("remaining-display").textContent = "残り: 50 問";
+      document.getElementById("start-btn").style.display = "none";
+      startCountdown(() => showNextKanji());
+    };
 
-async function loadRanking() {
-  const q = query(
-    collection(db, "users"),
-    orderBy("memoryChallenge.maxScore", "desc"),
-    limit(10)
-  );
-  const snapshot = await getDocs(q);
-  const tbody = document.getElementById("ranking-body");
-  tbody.innerHTML = "";
-  let rank = 1;
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${rank++}</td>
-      <td>${data.username || "匿名"}</td>
-      <td>${data.memoryChallenge?.maxScore || 0}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+    function startCountdown(callback) {
+      const overlay = document.createElement("div");
+      overlay.id = "countdownOverlay";
+      document.body.appendChild(overlay);
+      let count = 3;
+      overlay.textContent = count;
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) overlay.textContent = count;
+        else {
+          clearInterval(interval);
+          overlay.remove();
+          callback();
+        }
+      }, 1000);
+    }
 
-async function showFinalResult(score) {
-  console.log("showFinalResult 呼び出された！スコア:", score);
-  document.getElementById("kanji-display").textContent = "";
-  document.getElementById("choices").innerHTML = "";
-  document.getElementById("status-area").style.display = "none";
-  document.getElementById("result").innerHTML = `
-    あなたのスコア: <strong>${score}</strong> 点<br><br>
-    <a class="back-link" href="quiz-select.html">← クイズ選択に戻る</a>
-  `;
-  await saveScore(score);
-  await loadRanking();
-}
-</script>
+    function showNextKanji() {
+      if (round >= 50 || used.size >= allKanji.length) {
+        showFinalResult(score);
+        return;
+      }
+      let index;
+      do {
+        index = weightedRandomIndex();
+      } while (used.has(index));
+      used.add(index);
+      round++;
+      const kanji = allKanji[index];
+      document.getElementById("kanji-display").textContent = kanji;
+
+      const selectedKnown = knownLabels
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+      const selectedUnknown = unknownLabels[
+        Math.floor(Math.random() * unknownLabels.length)
+      ];
+      const wrongBtn = createButton(selectedUnknown, false);
+
+      const allBtns = [
+        ...selectedKnown.map(labelObj => createButton(labelObj, true)),
+        wrongBtn
+      ].sort(() => 0.5 - Math.random());
+
+      const container = document.getElementById("choices");
+      container.innerHTML = "";
+      allBtns.forEach(btn => container.appendChild(btn));
+
+      startTime = performance.now();
+      timer = setTimeout(() => handleChoice(false, 0), 3000);
+      document.getElementById("remaining-display").textContent = `残り: ${50 - round} 問`;
+    }
+
+    function handleChoice(correct, basePoint = 0) {
+      clearTimeout(timer);
+      const elapsed = performance.now() - startTime;
+      const bonus = correct ? Math.max(100, Math.floor(2000 - elapsed)) : 0;
+      if (correct) score += basePoint + bonus;
+      document.getElementById("score-display").textContent = `スコア: ${score} 点`;
+      showNextKanji();
+    }
+
+    async function saveScore(score) {
+      const user = auth.currentUser;
+      if (!user) return;
+      const uid = user.uid;
+      const username = localStorage.getItem("username") || "匿名";
+      const userRef = doc(db, "users", uid);
+      const docSnap = await getDoc(userRef);
+      const data = docSnap.exists() ? docSnap.data() : {};
+      const prevMax = data?.memoryChallenge?.maxScore || 0;
+      const updates = {
+        username,
+        memoryChallenge: {
+          tries: increment(1),
+          totalScore: increment(score),
+          ...(score > prevMax && { maxScore: score })
+        }
+      };
+      await setDoc(userRef, updates, { merge: true });
+    }
+
+    async function loadRanking() {
+      const q = query(
+        collection(db, "users"),
+        orderBy("memoryChallenge.maxScore", "desc"),
+        limit(10)
+      );
+      const snapshot = await getDocs(q);
+      const tbody = document.getElementById("ranking-body");
+      tbody.innerHTML = "";
+      let rank = 1;
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${rank++}</td>
+          <td>${data.username || "匿名"}</td>
+          <td>${data.memoryChallenge?.maxScore || 0}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function showFinalResult(score) {
+      document.getElementById("kanji-display").textContent = "";
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("status-area").style.display = "none";
+      document.getElementById("result").innerHTML = `
+        あなたのスコア: <strong>${score}</strong> 点<br><br>
+        <a class="back-link" href="quiz-select.html">← クイズ選択に戻る</a>
+      `;
+      await saveScore(score);
+      await loadRanking();
+    }
+  </script>
 </body>
 </html>
