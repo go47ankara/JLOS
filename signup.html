@@ -69,59 +69,71 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
       getFirestore,
-      collection,
-      addDoc,
-      serverTimestamp,
-      query,
-      where,
-      getDocs
+      doc,
+      getDoc,
+      setDoc,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      getAuth,
+      signInAnonymously
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCi3cB7GdpgdEIZrxxnoyHPpeINIJ6sSMw",
       authDomain: "quizapp-jlos.firebaseapp.com",
-      projectId: "quizapp-jlos",
-      storageBucket: "quizapp-jlos.appspot.com",
-      messagingSenderId: "628212159424",
-      appId: "1:628212159424:web:f66d6040ae73196b8fee25"
+      projectId: "quizapp-jlos"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     window.register = async () => {
-      const username = document.getElementById("username").value.trim();
+      const usernameRaw = document.getElementById("username").value.trim();
       const evm = document.getElementById("evm").value.trim();
       const output = document.getElementById("output");
 
-      if (!username) {
+      if (!usernameRaw) {
         output.textContent = "❌ ユーザー名を入力してください";
         return;
       }
 
-      try {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", username));
-        const querySnapshot = await getDocs(q);
+      const username = usernameRaw.toLowerCase();
+      const userRef = doc(db, "users", username);
+      const userSnap = await getDoc(userRef);
 
-        if (!querySnapshot.empty) {
-          output.textContent = `❌ そのユーザー名「${username}」はすでに使われています`;
-          return;
-        }
-
-        await addDoc(usersRef, {
-          username: username,
-          evmAddress: evm || null,
-          createdAt: serverTimestamp()
-        });
-
-        output.textContent = `✅ 登録成功：${username}`;
-        setTimeout(() => {
-          window.location.href = "quiz-select.html";
-        }, 1000);
-      } catch (error) {
-        output.textContent = `❌ 登録失敗: ${error.message}`;
+      if (userSnap.exists()) {
+        output.textContent = `❌ そのユーザー名「${username}」はすでに使われています`;
+        return;
       }
+
+      // ここから：匿名ログイン → Firestore保存 → リダイレクト
+      signInAnonymously(auth)
+        .then(() => {
+          return setDoc(userRef, {
+            createdAt: serverTimestamp(),
+            wallet: evm || "",
+            memoryScore: 0,
+            memoryTotal: 0,
+            beginnerScore: 0,
+            beginnerTotal: 0,
+            intermediateScore: 0,
+            intermediateTotal: 0,
+            advancedScore: 0,
+            advancedTotal: 0
+          });
+        })
+        .then(() => {
+          localStorage.setItem("username", username);
+          output.textContent = `✅ 登録成功：${username}`;
+          setTimeout(() => {
+            window.location.href = "quiz-select.html";
+          }, 1000);
+        })
+        .catch((error) => {
+          output.textContent = `❌ エラー発生: ${error.message}`;
+        });
     };
   </script>
 </body>

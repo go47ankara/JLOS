@@ -66,19 +66,16 @@
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, user => {
-      if (!user) {
-        alert("ログインしていません。ログインページに戻ります。");
+      const username = localStorage.getItem("username");
+
+      if (!user || !username) {
+        alert("ログインしていません。トップページに戻ります。");
         window.location.href = "index.html";
       } else {
         const uidDisplay = document.getElementById("uid-display");
-        if (uidDisplay) uidDisplay.textContent = `UID：${user.uid}`;
-      }
-    });
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const username = localStorage.getItem("username");
-      if (username) {
         const nameEl = document.getElementById("username-display");
+
+        if (uidDisplay) uidDisplay.textContent = `UID：${user.uid}`;
         if (nameEl) nameEl.textContent = `登録名：${username}`;
       }
     });

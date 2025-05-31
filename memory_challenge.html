@@ -95,6 +95,9 @@
 </head>
 <body>
   <h1>漢字記憶チャレンジ</h1>
+  
+<div id="login-status" style="margin-bottom: 1rem; font-weight: bold;"></div>
+
   <button id="start-btn" onclick="startGame()">スタート</button>
   <div id="kanji-display"></div>
   <div id="choices"></div>
@@ -110,7 +113,49 @@
   </table>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+function handleChoice(correct, basePoint = 0) {
+  if (gameEnded) return;
+  clearTimeout(timer);
+  console.log("👉 handleChoice called: round", round, "correct:", correct);
+
+  if (round >= 50) {
+    console.log("🎯 round >= 50 → showFinalResult");
+    showFinalResult(score);
+    return;
+  }
+
+  const elapsed = performance.now() - startTime;
+  const bonus = correct ? Math.max(100, Math.floor(2000 - elapsed)) : 0;
+  if (correct) score += basePoint + bonus;
+
+  document.getElementById("score-display").textContent = `スコア: ${score} 点`;
+
+  if (round >= 50) {
+    console.log("🎯 (post-increment) round >= 50 → showFinalResult");
+    showFinalResult(score);
+  } else {
+    showNextKanji();
+  }
+}
+
+function createButton(labelObj, isCorrect, forceDarkBlue = false) {
+  const btn = document.createElement("button");
+  btn.textContent = labelObj.label;
+  btn.classList.add("choice-button");
+
+  if (isCorrect) {
+    btn.style.backgroundColor = forceDarkBlue
+      ? "#004494"
+      : (labelObj.color || "#007acc");
+  } else {
+    btn.style.backgroundColor = "#f0ad4e";
+  }
+
+  btn.onclick = () => handleChoice(isCorrect, labelObj.points);
+  return btn;
+}
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import {
       getFirestore, doc, getDoc, setDoc,
@@ -137,7 +182,13 @@ const knownLabels = [
   { label: "完璧", points: 300, color: "#004494" }
 ];
 
-    const unknownLabels = ["読めない", "わからん", "難しい", "？？？", "は？"];
+    const unknownLabels = [
+  { label: "読めない", points: 0 },
+  { label: "わからん", points: 0 },
+  { label: "難しい", points: 0 },
+  { label: "？？？", points: 0 },
+  { label: "は？", points: 0 }
+];
    
 const allKanji = [
     "日","月","木","山","川","田","人","口","車","門","火","水","金","土","子","女","学","生","先","私",
@@ -167,11 +218,29 @@ const allKanji = [
     "比","較","反","対","賛","共","直","表","現","初","全","最","無","非","第","的","性","法","制","課"
 ]; // 仮漢字データ
 
+    auth.onAuthStateChanged((user) => {
+      const statusDiv = document.getElementById("login-status");
+      if (user) {
+        const username = localStorage.getItem("username") || "未登録ユーザー";
+        statusDiv.innerHTML = `ログイン中: <strong>${username}</strong> <button id="logout-btn" style="margin-left: 1rem; padding: 0.3rem 0.6rem;">ログアウト</button>`;
+        document.getElementById("logout-btn").onclick = () => {
+          auth.signOut().then(() => {
+            localStorage.removeItem("username");
+            location.reload();
+          });
+        };
+      } else {
+        statusDiv.innerHTML = `登録すれば、得点が記録されますよ！ <a href="index.html" class="back-link" style="background-color: #007bff;">登録・ログインはこちら</a>`;
+      }
+    });
+
+
     let score = 0;
     let round = 0;
     let used = new Set();
     let startTime;
     let timer;
+let gameEnded = false;
 
     function weightedRandomIndex() {
       const weights = Array(500).fill(1).map((_, i) =>
@@ -184,16 +253,10 @@ const allKanji = [
       }
     }
 
-    function createButton(labelObj, isCorrect) {
-      const btn = document.createElement("button");
-      btn.className = "choice-button";
-      btn.textContent = labelObj.label || labelObj;
-      btn.style.backgroundColor = isCorrect ? (labelObj.color || "#007acc") : "#f0ad4e";
-      btn.onclick = () => handleChoice(isCorrect, labelObj.points || 0);
-      return btn;
-    }
+    
 
     window.startGame = function () {
+  gameEnded = false;
       score = 0;
       round = 0;
       used.clear();
@@ -221,103 +284,132 @@ const allKanji = [
     }
 
     function showNextKanji() {
-      if (round >= 50 || used.size >= allKanji.length) {
-        showFinalResult(score);
-        return;
-      }
-      let index;
-      do {
-        index = weightedRandomIndex();
-      } while (used.has(index));
-      used.add(index);
-      round++;
-      const kanji = allKanji[index];
-      document.getElementById("kanji-display").textContent = kanji;
+  if (round >= 50 || used.size >= allKanji.length) {
+    showFinalResult(score);
+    return;
+  }
 
-      const selectedKnown = knownLabels
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
-      const selectedUnknown = unknownLabels[
-        Math.floor(Math.random() * unknownLabels.length)
-      ];
-      const wrongBtn = createButton(selectedUnknown, false);
+  let index;
+  do {
+    index = weightedRandomIndex();
+  } while (used.has(index));
+  used.add(index);
+  round++;
+  const kanji = allKanji[index];
+  document.getElementById("kanji-display").textContent = kanji;
 
-      const allBtns = [
-        ...selectedKnown.map(labelObj => createButton(labelObj, true)),
-        wrongBtn
-      ].sort(() => 0.5 - Math.random());
+  // 「見たことある」は必ず表示
+  const mitakotoaru = knownLabels.find(l => l.label === "見たことある");
 
-      const container = document.getElementById("choices");
-      container.innerHTML = "";
-      allBtns.forEach(btn => container.appendChild(btn));
+  // 「完璧」or「熟語でばっちり」からどちらか1つ
+  const mainChoices = ["完璧", "熟語でばっちり"];
+  const chosenMain = mainChoices[Math.floor(Math.random() * mainChoices.length)];
+  const mainLabelObj = knownLabels.find(l => l.label === chosenMain);
 
-      startTime = performance.now();
-      timer = setTimeout(() => handleChoice(false, 0), 3000);
-      document.getElementById("remaining-display").textContent = `残り: ${50 - round} 問`;
-    }
+  // 「完璧」「熟語でばっちり」「見たことある」以外から1つ選ぶ
+  const remainingKnown = knownLabels.filter(
+    l => l.label !== "見たことある" && l.label !== "完璧" && l.label !== "熟語でばっちり"
+  );
+  const subLabel = remainingKnown.sort(() => 0.5 - Math.random())[0];
 
-    function handleChoice(correct, basePoint = 0) {
-      clearTimeout(timer);
-      const elapsed = performance.now() - startTime;
-      const bonus = correct ? Math.max(100, Math.floor(2000 - elapsed)) : 0;
-      if (correct) score += basePoint + bonus;
-      document.getElementById("score-display").textContent = `スコア: ${score} 点`;
-      showNextKanji();
-    }
+  const correctButtons = [
+    createButton(mitakotoaru, true),
+    createButton(mainLabelObj, true),
+    createButton(subLabel, true)
+  ];
 
-    async function saveScore(score) {
-      const user = auth.currentUser;
-      if (!user) return;
-      const uid = user.uid;
-      const username = localStorage.getItem("username") || "匿名";
-      const userRef = doc(db, "users", uid);
-      const docSnap = await getDoc(userRef);
-      const data = docSnap.exists() ? docSnap.data() : {};
-      const prevMax = data?.memoryChallenge?.maxScore || 0;
-      const updates = {
-        username,
-        memoryChallenge: {
-          tries: increment(1),
-          totalScore: increment(score),
-          ...(score > prevMax && { maxScore: score })
-        }
-      };
-      await setDoc(userRef, updates, { merge: true });
-    }
+  const selectedUnknown = unknownLabels[Math.floor(Math.random() * unknownLabels.length)];
+  const wrongBtn = createButton(selectedUnknown, false);
 
-    async function loadRanking() {
-      const q = query(
-        collection(db, "users"),
-        orderBy("memoryChallenge.maxScore", "desc"),
-        limit(10)
-      );
-      const snapshot = await getDocs(q);
-      const tbody = document.getElementById("ranking-body");
-      tbody.innerHTML = "";
-      let rank = 1;
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${rank++}</td>
-          <td>${data.username || "匿名"}</td>
-          <td>${data.memoryChallenge?.maxScore || 0}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+  const allBtns = [...correctButtons, wrongBtn].sort(() => 0.5 - Math.random());
+  const container = document.getElementById("choices");
+  container.innerHTML = "";
+  allBtns.forEach(btn => container.appendChild(btn));
 
-    async function showFinalResult(score) {
-      document.getElementById("kanji-display").textContent = "";
-      document.getElementById("choices").innerHTML = "";
-      document.getElementById("status-area").style.display = "none";
-      document.getElementById("result").innerHTML = `
-        あなたのスコア: <strong>${score}</strong> 点<br><br>
-        <a class="back-link" href="quiz-select.html">← クイズ選択に戻る</a>
-      `;
-      await saveScore(score);
-      await loadRanking();
-    }
-  </script>
+  startTime = performance.now();
+  timer = setTimeout(() => handleChoice(false, 0), 3000);
+  document.getElementById("remaining-display").textContent = `残り: ${50 - round} 問`;
+}
+
+
+
+  
+async function saveScore(score) {
+  const username = localStorage.getItem("username");
+  if (!username) {
+    console.log("❌ No username found, cannot save score");
+    return;
+  }
+
+  const userRef = doc(db, "users", username);
+  const docSnap = await getDoc(userRef);
+  const data = docSnap.exists() ? docSnap.data() : {};
+  const prevMax = data.memoryScore || 0;
+  const totalTries = data.memoryTotal || 0;
+
+  const updates = {
+    memoryScore: Math.max(prevMax, score),
+    memoryTotal: totalTries + 1
+  };
+
+  if (!docSnap.exists()) {
+    updates.createdAt = new Date();
+    updates.wallet = "";
+  }
+
+  console.log("🔥 saving score", { username, score, updates });
+  await setDoc(userRef, updates, { merge: true });
+}
+
+async function showFinalResult(score) {
+  gameEnded = true;
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = `
+    <h2>最終スコア: ${score} 点</h2>
+    <button id="retry-btn" style="
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    ">もう一度トライ</button>
+  `;
+  resultDiv.style.display = "block";
+
+  // 🔒 解答ボタンを無効化
+  const allButtons = document.querySelectorAll(".choice-button");
+  allButtons.forEach(btn => btn.disabled = true);
+
+  document.getElementById("retry-btn").onclick = startGame;
+
+  await saveScore(score);
+  loadAndDisplayTopScores();
+}
+
+async function loadAndDisplayTopScores() {
+  const rankingBody = document.getElementById("ranking-body");
+  rankingBody.innerHTML = "";
+
+  const q = query(
+    collection(db, "users"),
+    orderBy("memoryScore", "desc"),
+    limit(10)
+  );
+
+  const querySnapshot = await getDocs(q);
+  let rank = 1;
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${rank}</td><td>${doc.id}</td><td>${data.memoryScore || 0}</td>`;
+    rankingBody.appendChild(tr);
+    rank++;
+  });
+}
+</script>
 </body>
 </html>
