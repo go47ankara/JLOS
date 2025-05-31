@@ -66,19 +66,22 @@
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, user => {
-      const username = localStorage.getItem("username");
+  const username = localStorage.getItem("username");
 
-      if (!user || !username) {
-        alert("ログインしていません。トップページに戻ります。");
-        window.location.href = "index.html";
-      } else {
-        const uidDisplay = document.getElementById("uid-display");
-        const nameEl = document.getElementById("username-display");
+  const uidDisplay = document.getElementById("uid-display");
+  const nameEl = document.getElementById("username-display");
 
-        if (uidDisplay) uidDisplay.textContent = `UID：${user.uid}`;
-        if (nameEl) nameEl.textContent = `登録名：${username}`;
-      }
-    });
+  if (user) {
+    if (username) {
+      if (nameEl) nameEl.textContent = `登録名：${username}`;
+    } else {
+      if (nameEl) nameEl.textContent = "ログイン中（未登録ユーザー）";
+    }
+    if (uidDisplay) uidDisplay.textContent = `UID：${user.uid}`;
+  } else {
+    if (nameEl) nameEl.textContent = "ゲストモードでプレイ中";
+  }
+});
   </script>
 </head>
 <body>
