@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>鍛錬の場 | JLOS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f9f9f9; color: #333; font-family: system-ui, -apple-system, "Noto Sans JP", sans-serif; }
+    main { width: min(100% - 2rem, 720px); margin: 0 auto; padding: 3rem 0 4rem; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: clamp(2rem, 5vw, 2.5rem); margin: 0 0 .5rem; }
+    .subtitle { margin: 0; color: #666; line-height: 1.7; }
+    .eyebrow { color: #007acc; font-size: .8rem; letter-spacing: .14em; font-weight: 700; margin-bottom: .7rem; }
+    h2 { font-size: 1.16rem; margin: 2.4rem 0 1rem; }
+    .cards { display: grid; gap: 1rem; }
+    .card { background: #fff; border: 1px solid #e2e7ec; border-radius: 14px; padding: 1.35rem; box-shadow: 0 2px 8px rgba(0,0,0,.035); }
+    .card-top { display: flex; align-items: center; gap: 1rem; }
+    .symbol { display: flex; align-items: center; justify-content: center; flex: 0 0 3.3rem; height: 3.3rem; background: #eaf5fc; color: #006bae; border-radius: 10px; font-weight: 700; font-size: 1.25rem; }
+    .card h3 { margin: 0 0 .25rem; font-size: 1.2rem; }
+    .card p { margin: 0; line-height: 1.65; color: #666; font-size: .95rem; }
+    .actions { margin-top: 1.2rem; }
+    .button { display: block; padding: .85rem 1rem; border-radius: 8px; background: #007acc; color: white; text-decoration: none; font-weight: 600; text-align: center; }
+    .button:hover, .button:focus-visible { background: #005fa3; }
+    .disabled { display: block; padding: .85rem 1rem; border-radius: 8px; background: #e5e7ea; color: #686e75; text-align: center; font-weight: 600; }
+    .note { margin: .6rem 0 0 !important; font-size: .82rem !important; text-align: center; }
+    .support { background: #fff; border: 1px solid #e2e7ec; border-radius: 14px; padding: 1.3rem; }
+    .support p { color: #666; line-height: 1.65; margin: 0 0 1rem; }
+    .back { display: block; width: fit-content; margin: 2.6rem auto 0; color: #006bae; text-decoration: underline; text-underline-offset: 3px; }
+    a:focus-visible { outline: 3px solid #333; outline-offset: 3px; }
+    @media (min-width: 660px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .card { display: flex; flex-direction: column; } .card-top { flex-direction: column; text-align: center; } .actions { margin-top: auto; padding-top: 1.3rem; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">JLOS · TRAINING</div>
+      <h1>鍛錬の場</h1>
+      <p class="subtitle">漢字を見抜き、構造を捉え、記憶して書く。<br>知識だけに頼らない、文字の技能を鍛えよう。</p>
+    </header>
+
+    <h2>三つの鍛錬</h2>
+    <section class="cards" aria-label="漢字の技能別鍛錬">
+      <article class="card">
+        <div class="card-top">
+          <div class="symbol" aria-hidden="true">辨</div>
+          <div><h3>識別</h3><p>似ている漢字を見分け、細部の違いを捉える。</p></div>
+        </div>
+        <div class="actions"><span class="disabled">準備中</span></div>
+      </article>
+      <article class="card">
+        <div class="card-top">
+          <div class="symbol" aria-hidden="true">品</div>
+          <div><h3>構造把握</h3><p>漢字を部品に分け、数や配置、組み合わせを捉える。</p></div>
+        </div>
+        <div class="actions"><span class="disabled">準備中</span></div>
+      </article>
+      <article class="card">
+        <div class="card-top">
+          <div class="symbol" aria-hidden="true">鬱</div>
+          <div><h3>記憶・再現</h3><p>字形を記憶し、表示が消えた後に再現する。</p></div>
+        </div>
+        <div class="actions"><span class="disabled">準備中</span></div>
+      </article>
+    </section>
+
+    <h2>既存の鍛錬</h2>
+    <section class="support" aria-label="既存の鍛錬">
+      <p><strong>地名クイズ</strong><br>日本の地名に使われる漢字に挑戦。初級・中級・上級から選べます。</p>
+      <a class="button" href="quiz-select.html">地名クイズへ</a>
+    </section>
+    <section class="support" aria-label="漢字記憶チャレンジ" style="margin-top: 1rem;">
+      <p><strong>漢字記憶チャレンジ</strong><br>既存の漢字記憶トレーニングに挑戦できます。</p>
+      <a class="button" href="memory_challenge.html">漢字記憶チャレンジへ</a>
+    </section>
+
+    <a class="back" href="base-camp.html">← ベースキャンプへ戻る</a>
+  </main>
+</body>
+</html>
