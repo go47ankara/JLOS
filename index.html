@@ -181,7 +181,7 @@
       try {
         await signInAnonymously(auth);
         localStorage.setItem('username', username);
-        window.location.href = 'quiz-select.html';
+        window.location.href = 'base-camp.html';
       } catch (error) {
         console.error("Firebaseログインエラー:", error);
         alert("ログインに失敗しました");
