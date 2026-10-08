@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Base Camp | JLOS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 2rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f9f9;
+      color: #333;
+      font-family: system-ui, -apple-system, "Noto Sans JP", sans-serif;
+      text-align: center;
+    }
+    main { width: 100%; max-width: 380px; }
+    .brand { font-size: .9rem; color: #777; margin: 0 0 .4rem; }
+    h1 { font-size: clamp(1.8rem, 6vw, 2.3rem); margin: 0 0 .35rem; }
+    .subtitle { color: #666; font-size: .95rem; margin: 0 0 2.5rem; }
+    nav { display: grid; gap: 1rem; }
+    .menu-link {
+      display: flex;
+      min-height: 3.25rem;
+      align-items: center;
+      justify-content: center;
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      background: #007acc;
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color .15s ease;
+    }
+    .menu-link:hover, .menu-link:focus-visible { background: #005fa3; }
+    .menu-link:focus-visible { outline: 3px solid #333; outline-offset: 3px; }
+    .footer { margin: 2.5rem 0 0; font-size: .85rem; color: #777; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="brand">Japanese Language Open Space</p>
+    <h1>Base Camp</h1>
+    <p class="subtitle">JLOSへようこそ</p>
+    <nav aria-label="メインメニュー">
+      <a class="menu-link" href="about-writing.html">文字について</a>
+      <a class="menu-link" href="training.html">鍛錬の場</a>
+      <a class="menu-link" href="trivia.html">雑学至上主義</a>
+    </nav>
+    <p class="footer">JLOS</p>
+  </main>
+</body>
+</html>
