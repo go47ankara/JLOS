@@ -72,7 +72,15 @@
       box-sizing: border-box;
     }
 
-    .form-container button:hover {
+    .form-container button:disabled {
+      background-color: #aaa;
+      border-color: #aaa;
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .form-container button:not(:disabled):hover {
       background-color: #005fa3;
     }
 
@@ -226,10 +234,10 @@
 
   <div class="form-container">
     <input type="text" id="username" placeholder="ユーザー名を入力" />
-    <button onclick="handleLogin()">ログイン</button>
+    <button type="button" disabled>ログイン</button>
   </div>
 
-  <a class="button-link" style="background-color:#aaa; pointer-events:none; opacity:0.6;">新規登録（一時停止中）</a>
+  <a class="button-link" style="background-color:#aaa; pointer-events:none; opacity:0.6;">新規登録</a>
   <a class="button-link" href="base-camp.html">直接ベースキャンプへ</a>
   <div class="connect-btn">Connect Wallet</div>
 
