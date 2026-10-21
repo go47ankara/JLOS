@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f9fc">
+  <meta name="description" content="JLOS 鍛錬の場。知・研・行の三つの鍛錬を通して、漢字を認識し、思考し、実践する力を鍛えよう。">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>鍛錬の場 | JLOS</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink:#1b2b3b;
+      --muted:#596979;
+      --line:#e0e7ef;
+      --blue:#1765bf;
+      --blue-dark:#0b4e9c;
+      --paper:#f7f9fc;
+      --card:#fff;
+      --shadow:0 11px 27px rgba(27,46,70,.045);
+      --round:18px;
+    }
+    * {box-sizing:border-box}
+    html {scroll-behavior:smooth}
+    body {margin:0; background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;letter-spacing:.012em;-webkit-font-smoothing:antialiased}
+    a {color:inherit}
+    button {font:inherit}
+    .page {width:min(1100px,calc(100% - 44px)); margin:0 auto;padding:24px 0 68px}
+    .utility {display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:42px;margin-bottom:19px}
+    .brand {font-size:16px;letter-spacing:.18em;font-weight:900;color:#174d85;text-decoration:none}
+    .back-top {font-size:13px;text-decoration:none;color:#47627b;font-weight:700;display:flex;align-items:center;gap:8px}
+    .back-top:hover,.back-bottom:hover {color:var(--blue)}
+    .hero {position:relative;isolation:isolate;overflow:hidden;min-height:286px;border-radius:25px;background:linear-gradient(122deg,#102a4a 0%,#173c68 59%,#155a83 100%);color:#fff;padding:41px 52px 32px;box-shadow:0 14px 34px rgba(12,44,81,.13)}
+    .hero::before {content:"";position:absolute;width:460px;height:460px;right:-170px;top:-254px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 60px rgba(255,255,255,.03),0 0 0 145px rgba(255,255,255,.025);pointer-events:none;z-index:-1}
+    .hero::after {content:"";position:absolute;right:12%;bottom:-195px;width:420px;height:340px;border:1px solid rgba(255,255,255,.055);border-radius:50%;transform:rotate(-26deg);pointer-events:none;z-index:-1}
+    .hero-copy {max-width:650px;position:relative;z-index:2}
+    .eyebrow {margin:0 0 14px;color:#a7d3ff;font-size:11px;font-weight:800;letter-spacing:.25em}
+    .hero h1 {font-weight:850;letter-spacing:.075em;font-size:clamp(36px,5.1vw,53px);margin:0 0 13px;line-height:1.28}
+    .hero-lead {font-weight:750;font-size:clamp(15px,1.9vw,18px);letter-spacing:.07em;margin:0 0 7px}
+    .hero-desc {font-size:13px;line-height:1.95;color:#cbdff0;margin:0}
+    .hero-emblem {position:absolute;right:50px;top:65px;display:flex;align-items:center;gap:12px;opacity:.92;pointer-events:none}
+    .hero-emblem span {width:70px;height:77px;display:grid;place-items:center;border:1px solid rgba(237,248,255,.32);border-radius:16px;background:rgba(255,255,255,.075);font-family:serif;font-size:37px;font-weight:700}
+    .hero-emblem span:nth-child(2) {transform:translateY(19px)}
+    .hero-emblem span:nth-child(3) {transform:translateY(-10px)}
+    .hero-nav {display:flex;flex-wrap:wrap;gap:9px;margin-top:29px;position:relative;z-index:2}
+    .hero-nav a {text-decoration:none;color:#e3f0fc;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.17);padding:9px 15px;border-radius:100px;font-size:12px;font-weight:750;transition:background .18s,transform .18s}
+    .hero-nav a:hover {background:rgba(255,255,255,.18);transform:translateY(-1px)}
+    .hero-nav strong {font-family:serif;font-size:16px;margin-right:6px}
+    .section-guide {display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;margin:42px 2px 6px}
+    .section-guide h2 {font-size:18px;font-weight:850;margin:0;letter-spacing:.02em}
+    .section-guide p {color:var(--muted);font-size:12px;margin:0}
+    .category {display:grid;grid-template-columns:244px minmax(0,1fr);gap:22px;margin-top:22px;scroll-margin-top:22px}
+    .category-info {padding:21px 12px 14px 2px;display:flex;flex-direction:column;align-items:flex-start}
+    .category--know {--accent:#167e9a;--pale:#e8f5f9;--acc-rgb:22,126,154}
+    .category--think {--accent:#7958a8;--pale:#f1ecf8;--acc-rgb:121,88,168}
+    .category--do {--accent:#b36a35;--pale:#fff2e8;--acc-rgb:179,106,53}
+    .category-mark {display:grid;place-items:center;width:64px;height:64px;border-radius:18px;color:var(--accent);background:var(--pale);font:700 36px/1 serif;letter-spacing:0;margin-bottom:19px}
+    .category-index {font-size:10px;letter-spacing:.2em;font-weight:850;color:var(--accent);margin-bottom:7px}
+    .category-info h2 {margin:0;font-size:26px;font-weight:850;letter-spacing:.06em}
+    .category-info p {color:var(--muted);font-size:13px;line-height:1.9;margin:12px 0 0;max-width:210px}
+    .game-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .game-card {min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column;padding:24px 23px 20px;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:var(--round);background:var(--card);box-shadow:var(--shadow);min-height:312px}
+    .game-top {display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .game-num {font-size:11px;font-weight:800;letter-spacing:.15em;color:#8391a1;padding-top:5px}
+    .visual {width:88px;height:76px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--pale);color:var(--accent);flex-shrink:0;position:relative;overflow:hidden}
+    .visual--matrix {display:grid;grid-template-columns:repeat(3,16px);gap:4px;align-content:center;justify-content:center;font-weight:750;font-size:12px}
+    .visual--matrix span:nth-child(5) {color:#fff;background:var(--accent);border-radius:3px}
+    .visual--words {display:grid;grid-template-columns:repeat(2,auto);gap:3px 5px;align-content:center;justify-content:center;font-size:11px;font-weight:800}
+    .visual--words span {background:#fff9;border-radius:4px;padding:2px 4px}
+    .visual--words span:last-child {outline:1.5px dashed var(--accent)}
+    .visual--star svg {height:58px;width:66px;overflow:visible}
+    .visual--bond {gap:4px;font-size:23px;font-weight:800}
+    .visual--bond i {display:block;width:15px;height:1px;background:var(--accent);position:relative}
+    .visual--bond i::after {content:"";position:absolute;right:0;top:-3px;border-left:5px solid var(--accent);border-top:3px solid transparent;border-bottom:3px solid transparent}
+    .visual--memory {font-family:serif;font-size:41px;font-weight:600}
+    .visual--memory small {position:absolute;right:6px;bottom:5px;font:800 9px/1 system-ui;color:var(--accent);letter-spacing:.04em}
+    .visual--brush {font-family:serif;font-size:41px;font-weight:600}
+    .visual--brush::after {content:"";width:37px;height:39px;position:absolute;right:14px;top:15px;border:2px dashed var(--accent);border-radius:9px;transform:rotate(-12deg);opacity:.65}
+    .game-card h3 {font-size:clamp(18px,2vw,21px);line-height:1.45;letter-spacing:.02em;margin:18px 0 7px;font-weight:850}
+    .game-card .summary {font-size:13px;color:var(--muted);line-height:1.8;flex:1;margin:0 0 23px}
+    .game-action {width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:43px;border-radius:9px;border:1px solid transparent;text-decoration:none;font-size:13px;font-weight:800;letter-spacing:.04em;transition:background .18s,box-shadow .18s,transform .18s}
+    .game-action--ready {background:var(--blue);color:#fff;box-shadow:0 4px 11px rgba(23,101,191,.16)}
+    .game-action--ready:hover {background:var(--blue-dark);box-shadow:0 7px 16px rgba(23,101,191,.22);transform:translateY(-1px)}
+    .game-action--disabled,.game-action:disabled {background:#e9edf2;color:#7e8994;border-color:#e6ebf0;cursor:not-allowed;box-shadow:none;opacity:1}
+    .game-action:disabled:active {transform:none}
+    .arrow {font-size:17px;line-height:1}
+    .extras {margin-top:54px;padding:28px 30px 27px;border:1px solid var(--line);border-radius:20px;background:#fff}
+    .extras-heading {display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:19px}
+    .extras-heading h2 {font-size:17px;margin:0;font-weight:850}
+    .extras-heading p {font-size:12px;color:var(--muted);margin:0}
+    .extra-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .extra-card {display:flex;align-items:center;gap:17px;text-decoration:none;background:#f7f9fc;border:1px solid #e7edf3;border-radius:13px;padding:17px;transition:border-color .18s,background .18s}
+    .extra-card:hover {background:#f1f7ff;border-color:#b7d0ec}
+    .extra-symbol {width:46px;height:46px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#e5edf7;color:#315d8c;font-size:21px;font-weight:800;font-family:serif}
+    .extra-body {display:block;flex:1;min-width:0}
+    .extra-body strong {display:block;margin-bottom:4px;font-size:14px}
+    .extra-body small {display:block;color:var(--muted);font-size:11px;line-height:1.65}
+    .extra-arrow {color:var(--blue);font-weight:800;font-size:18px}
+    .footer {display:flex;justify-content:center;padding-top:36px}
+    .back-bottom {text-decoration:none;color:#526d86;font-size:13px;font-weight:800;padding:9px}
+    a:focus-visible {outline:3px solid #efab38;outline-offset:3px}
+    @media(max-width:910px) {
+      .hero-emblem {right:25px;opacity:.55;transform:scale(.8);transform-origin:right center}
+      .hero-copy {max-width:570px}
+      .category {grid-template-columns:190px minmax(0,1fr);gap:16px}
+      .category-info h2 {font-size:23px}
+      .game-card {padding:20px 18px 18px}
+    }
+    @media(max-width:700px) {
+      .page {width:min(100% - 28px,520px);padding-top:11px}
+      .utility {margin:1px 3px 12px}
+      .hero {padding:33px 25px 26px;min-height:0;border-radius:20px}
+      .hero-emblem {display:none}
+      .hero-desc {font-size:12px}
+      .hero-nav {margin-top:24px}
+      .hero-nav a {font-size:11px;padding:7px 10px}
+      .section-guide {margin-top:32px}
+      .category {grid-template-columns:1fr;gap:12px;margin-top:25px}
+      .category-info {display:grid;grid-template-columns:55px 1fr;grid-template-rows:auto auto auto;column-gap:14px;align-items:center;padding:0}
+      .category-mark {width:54px;height:54px;margin:0;grid-column:1;grid-row:1/4;font-size:31px;border-radius:14px}
+      .category-index {grid-column:2;grid-row:1;margin:0;font-size:9px;align-self:end}
+      .category-info h2 {grid-column:2;grid-row:2;font-size:21px;line-height:1.25}
+      .category-info p {grid-column:2;grid-row:3;margin:5px 0 0;max-width:none;font-size:11px;line-height:1.5}
+      .game-grid {gap:12px}
+      .game-card {min-height:294px;padding:17px 14px 15px;border-radius:15px}
+      .visual {width:68px;height:63px}
+      .visual--matrix {grid-template-columns:repeat(3,13px);gap:3px;font-size:10px}
+      .visual--words {font-size:9px;gap:3px}
+      .visual--star svg {width:56px;height:50px}
+      .visual--bond {font-size:19px;gap:2px}
+      .visual--bond i {width:11px}
+      .visual--memory,.visual--brush {font-size:34px}
+      .game-card h3 {font-size:17px;margin-top:15px}
+      .game-card .summary {font-size:12px;line-height:1.7}
+      .extras {padding:21px 17px;margin-top:37px}
+      .extra-grid {grid-template-columns:1fr}
+    }
+    @media(max-width:365px) {
+      .page {width:calc(100% - 20px)}
+      .game-grid {grid-template-columns:1fr}
+      .game-card {min-height:240px}
+      .game-card h3 {font-size:19px}
+      .visual {width:75px;height:68px}
+      .hero-nav a {flex:1;text-align:center}
+    }
+    @media(prefers-reduced-motion:reduce) {html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="utility" aria-label="サイト内ナビゲーション" data-tr-aria="Site içi gezinme">
+      <a class="brand" href="base-camp.html" aria-label="JLOS ベースキャンプへ" data-tr-aria="JLOS Base Camp'e git">JLOS</a>
+      <a class="back-top" href="base-camp.html" data-tr="← Base Camp'e dön">← ベースキャンプへ戻る</a>
+    </nav>
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">JLOS / TRAINING GROUND</p>
+        <h1 data-tr="Alıştırma Alanı">鍛錬の場</h1>
+        <p class="hero-lead" data-tr="Tanı. Düşün. Uygula.">知り、研ぎ澄まし、行動する。</p>
+        <p class="hero-desc" data-tr="Kanjileri dikkatle gözlemle, anlam ilişkilerini keşfet ve öğrendiklerini uygulamaya koy. Üç farklı becerini geliştir.">漢字を見抜き、意味を考え、手を動かす。<br>三つの力を磨く、六つの鍛錬。</p>
+      </div>
+      <div class="hero-emblem" aria-hidden="true"><span>知</span><span>研</span><span>行</span></div>
+      <nav class="hero-nav" aria-label="鍛錬カテゴリー" data-tr-aria="Alıştırma kategorileri">
+        <a href="#notice"><strong>知</strong> <span data-tr="Tanı">認識する</span></a>
+        <a href="#think"><strong>研</strong> <span data-tr="Düşün">思考する</span></a>
+        <a href="#practice"><strong>行</strong> <span data-tr="Uygula">実践する</span></a>
+      </nav>
+    </header>
+
+    <div class="section-guide">
+      <h2 data-tr="Altı Alıştırma">六つの鍛錬</h2>
+      <p data-tr="Her kategoride iki oyun. Kendi becerilerini geliştir.">三つの領域、それぞれ二つのゲーム。</p>
+    </div>
+
+    <section class="category category--know" id="notice" aria-labelledby="know-title">
+      <div class="category-info">
+        <div class="category-mark" aria-hidden="true">知</div>
+        <div class="category-index">01 / NOTICE</div>
+        <h2 id="know-title" data-tr="Tanı">認識する</h2>
+        <p data-tr="Gözlemle, karşılaştır ve farklı olanı bul.">見つめ、比べ、違いを見抜く。</p>
+      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">01 / 06</span><div class="visual visual--matrix" aria-hidden="true"><span>微</span><span>微</span><span>微</span><span>微</span><span>徴</span><span>微</span><span>微</span><span>微</span><span>微</span></div></div>
+          <h3 data-tr="Sürüdeki Turna">鶏群一鶴</h3>
+          <p class="summary" data-tr="Birbirine çok benzeyen kanjiler arasında yalnızca bir farklı karakteri bul.">よく似た漢字の群れから、たった一文字の違いを見つけ出す。</p>
+          <a class="game-action game-action--ready" href="jlos_keigun_ikkaku.html"><span data-tr="Başla">挑戦する</span><span class="arrow" aria-hidden="true">↗</span></a>
+        </article>
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">02 / 06</span><div class="visual visual--words" aria-hidden="true"><span>増減</span><span>高低</span><span>売買</span><span>道路</span></div></div>
+          <h3 data-tr="Bir Kelime, Bir Terslik!">一語一、え？</h3>
+          <p class="summary" data-tr="Dört iki-kanjili kelimeden, iç yapısı diğerlerinden farklı olanı bul.">四つの熟語を見比べ、漢字同士の関係が違う一語を見抜く。</p>
+          <button type="button" class="game-action game-action--disabled" disabled data-tr="Geliştiriliyor">開発中</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="category category--think" id="think" aria-labelledby="think-title">
+      <div class="category-info">
+        <div class="category-mark" aria-hidden="true">研</div>
+        <div class="category-index">02 / THINK</div>
+        <h2 id="think-title" data-tr="Düşün">思考する</h2>
+        <p data-tr="Anlamı çözümle, ilişkileri keşfet.">意味を掘り下げ、つながりを探る。</p>
+      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">03 / 06</span><div class="visual visual--star" aria-hidden="true"><svg viewBox="0 0 80 70"><path d="M40 4 L61 64 L8 26 H72 L19 64 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><g fill="currentColor"><circle cx="40" cy="4" r="4"/><circle cx="61" cy="64" r="4"/><circle cx="8" cy="26" r="4"/><circle cx="72" cy="26" r="4"/><circle cx="19" cy="64" r="4"/></g></svg></div></div>
+          <h3 data-tr="Beş Köşeli Yıldız">五芒星</h3>
+          <p class="summary" data-tr="Beş kanjiden, ortak anlam ilişkisi taşıyan dört tanesini seç.">五つの漢字から、意味の共通点で結ばれる四文字を探し出す。</p>
+          <button type="button" class="game-action game-action--disabled" disabled data-tr="Geliştiriliyor">開発中</button>
+        </article>
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">04 / 06</span><div class="visual visual--bond" aria-hidden="true"><span>海</span><i></i><span>外</span></div></div>
+          <h3 data-tr="Kanji Kimyası">語縁鑑定</h3>
+          <p class="summary" data-tr="Kanjilerin birbiriyle kurduğu bağı araştır; hangi ikili geçerli bir kelime oluşturmaz?">二つの漢字の「語縁」を鑑定。正しい熟語にならない組み合わせを探す。</p>
+          <button type="button" class="game-action game-action--disabled" disabled data-tr="Geliştiriliyor">開発中</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="category category--do" id="practice" aria-labelledby="do-title">
+      <div class="category-info">
+        <div class="category-mark" aria-hidden="true">行</div>
+        <div class="category-index">03 / PRACTICE</div>
+        <h2 id="do-title" data-tr="Uygula">実践する</h2>
+        <p data-tr="Hatırla, yaz ve yeniden oluştur.">覚え、書き、かたちにする。</p>
+      </div>
+      <div class="game-grid">
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">05 / 06</span><div class="visual visual--memory" aria-hidden="true">瞬<small>00:03</small></div></div>
+          <h3 data-tr="Önce Gör, Sonra Çiz">瞬視筆写</h3>
+          <p class="summary" data-tr="Kısa bir an gördüğün kanjiyi hafızandan kâğıda yaz. Altı farklı modda dene.">一瞬だけ見た漢字を記憶し、紙に書いて再現する。六つのモードで挑戦。</p>
+          <a class="game-action game-action--ready" href="jlos_shunshi_mode_select.html"><span data-tr="Başla">挑戦する</span><span class="arrow" aria-hidden="true">↗</span></a>
+        </article>
+        <article class="game-card">
+          <div class="game-top"><span class="game-num">06 / 06</span><div class="visual visual--brush" aria-hidden="true">永</div></div>
+          <h3 data-tr="Tek Fırça, Tüm Ruh">一筆入魂</h3>
+          <p class="summary" data-tr="Eksik kalmış kanjiyi, kalan çizgiler ve bağlamdan hareketle yeniden oluştur.">欠けた漢字の手がかりを読み取り、字形や文脈から復元する。</p>
+          <button type="button" class="game-action game-action--disabled" disabled data-tr="Geliştiriliyor">開発中</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="extras" aria-labelledby="extras-heading">
+      <div class="extras-heading"><h2 id="extras-heading" data-tr="Diğer Alıştırmalar">既存の鍛錬</h2><p data-tr="Önceden hazırlanmış alıştırmalar burada da mevcut.">これまでのクイズにも挑戦できます。</p></div>
+      <div class="extra-grid">
+        <a class="extra-card" href="quiz-select.html"><span class="extra-symbol" aria-hidden="true">地</span><span class="extra-body"><strong data-tr="Yer Adları Testi">地名クイズ</strong><small data-tr="Japonya'nın yer adlarında geçen kanjileri keşfet.">日本各地の地名に使われる漢字に挑戦。</small></span><span class="extra-arrow" aria-hidden="true">↗</span></a>
+        <a class="extra-card" href="memory_challenge.html"><span class="extra-symbol" aria-hidden="true">憶</span><span class="extra-body"><strong data-tr="Kanji Hafıza Yarışması">漢字記憶チャレンジ</strong><small data-tr="Kanji hafızanı başka bir şekilde sınamayı dene.">漢字の記憶力を試す、もう一つの鍛錬。</small></span><span class="extra-arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+    <footer class="footer"><a class="back-bottom" href="base-camp.html" data-tr="← Base Camp'e dön">← ベースキャンプへ戻る</a></footer>
+  </main>
+  <script>
+    // This page ships with translations for its new labels. The existing JLOS
+    // language switch (jlos-language.js) remains the source of the locale choice.
+    (() => {
+      let lang='ja';
+      try { lang=localStorage.getItem('jlos_ui_language')==='tr'?'tr':'ja'; } catch (_) {}
+      if(lang!=='tr')return;
+      document.documentElement.lang='tr';
+      document.querySelectorAll('[data-tr]').forEach(el=>{el.textContent=el.dataset.tr;});
+      document.querySelectorAll('[data-tr-aria]').forEach(el=>{el.setAttribute('aria-label',el.dataset.trAria);});
+    })();
+  </script>
+  <script src="jlos-language.js" defer></script>
+</body>
+</html>
