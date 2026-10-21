@@ -10,7 +10,7 @@
 @media (prefers-reduced-motion:reduce){.observation-warning{animation:none}}
 
 /* 筆順フォントは「書き順の確認」を開いたときだけ読み込む */
-@font-face{font-family:"JLOS KanjiStrokeOrders";src:url("fonts/KanjiStrokeOrders_allmodes.woff2") format("woff2");font-style:normal;font-weight:400;font-display:block}
+@font-face{font-family:"JLOS KanjiStrokeOrders";src:url("fonts/KanjiStrokeOrders_allmodes.woff2?v=20261021-stroke551") format("woff2");font-style:normal;font-weight:400;font-display:block}
 .stroke-glyph{font-family:"JLOS KanjiStrokeOrders",sans-serif;font-size:clamp(110px,28vw,190px);font-weight:400;line-height:1.45;min-height:160px;display:grid;place-items:center}
 .stroke-note{font-size:12px;color:var(--muted);line-height:1.6}
 
@@ -101,7 +101,7 @@ let fontReady=false,fontPromise=null,observing=false;
 const allKanji=pools.flat().map(x=>x.kanji).join('');
 // 画数を誤って表示しないため、出題前に辞書の画数を照合して保存する。
 // この試験版はネット接続が必要（照合後は同じ端末でキャッシュを利用できる）。
-const missingStrokeChars=new Set("鱷襖襟襲覆蹴躍躊躇轟轍轄轢醸醜醤醬醴鑑鏑鏃鏤鏨鐸鐙鐵鐶鑞鑠鑢鑷鑲鱒鰤鰆鱚鯨鯱鯰鰊鰌鰍鰭鯣鱶鷹鷲鷗鶉");
+const missingStrokeChars=new Set("鑲鱷");
 const strokeCache=new Map();
 async function ensureStrokes(items){
   const todo=items.filter(x=>!Number.isInteger(x.strokes));
