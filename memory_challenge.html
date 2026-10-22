@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>漢字記憶チャレンジ | JLOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#242b35;--muted:#607080;--bg:#f5f6f8;--paper:#fff;--accent:#174b86;--stroke:#dce2e8}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:var(--ink);background:var(--bg);transition:background-color .12s linear,color .12s linear}
+main{width:min(94vw,750px);min-height:100dvh;margin:auto;display:flex;flex-direction:column;align-items:center;padding:clamp(12px,3vh,28px) 0 18px;gap:clamp(8px,2vh,18px)}header{text-align:center;width:100%;position:relative}.language-switch{display:flex;justify-content:flex-end;gap:5px;margin-bottom:5px}.lang-btn{font:inherit;font-size:.82rem;font-weight:700;min-width:45px;padding:6px 9px;border:1px solid #8e9aab;border-radius:8px;background:#fff;color:#304054;cursor:pointer}.lang-btn[aria-pressed="true"]{background:#174b86;color:#fff;border-color:#174b86}body.stage-dark .lang-btn{border-color:#fff;color:#13243b}body.stage-dark .lang-btn[aria-pressed="true"]{background:#fff;color:#13243b}h1{font-size:clamp(1.2rem,3vw,1.8rem);margin:0;font-weight:750;letter-spacing:.06em}.subtitle{font-size:.92rem;color:var(--muted);margin:.3em 0 0}
+.panel{width:100%;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:clamp(10px,3vh,22px);text-align:center}.hidden{display:none!important}.pill{font-size:.9rem;border:1px solid var(--stroke);border-radius:999px;padding:.35em 1.2em;background:#fff;color:#526273}.prompt{font-size:clamp(1rem,2.2vw,1.2rem);font-weight:600}.kanji{font-family:"Klee One",serif;font-weight:600;font-size:clamp(120px,30vmin,230px);line-height:1.15;letter-spacing:0;user-select:none}.count{font-size:clamp(120px,35vmin,250px);font-weight:750;line-height:1.2;font-variant-numeric:tabular-nums}.time{font-size:clamp(1.2rem,3vw,1.65rem);font-variant-numeric:tabular-nums;font-weight:750}.controls{width:min(100%,520px);display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{font:inherit;font-weight:700;font-size:clamp(1rem,2.4vw,1.25rem);padding:15px 16px;border:0;border-radius:14px;cursor:pointer;min-height:58px;transition:transform .1s ease,background .2s ease;touch-action:manipulation}.btn:active{transform:scale(.97)}.btn:focus-visible{outline:3px solid #104b9c;outline-offset:3px}.yes{background:#187744;color:#fff}.no{background:#3e4d60;color:#fff}.primary{background:var(--accent);color:white;min-width:200px}.note{color:var(--muted);font-size:.95rem;line-height:1.7}.result-score{font-size:clamp(2.7rem,8vw,4.5rem);font-weight:800;line-height:1}.missed{width:min(100%,540px);border:1px solid var(--stroke);background:white;border-radius:16px;padding:18px;text-align:left}.missed h2{font-size:1rem;margin:0 0 12px}.missed-list{font-family:"Klee One",serif;font-weight:600;font-size:clamp(1.7rem,5vw,2.2rem);line-height:1.8;word-break:break-all}.footer{font-size:.8rem;color:#788490;text-align:center;margin-top:auto;padding-top:4px}.footer a{color:inherit}
+body.playing{transition:none}body.playing #play-panel{color:#17202a}body.stage-dark #play-panel,body.stage-dark header h1,body.stage-dark header .subtitle,body.stage-dark .footer,body.stage-dark .footer a{color:#fff}body.stage-dark .pill{color:#fff;background:#ffffff22;border-color:#ffffff88}body.stage-dark .no,body.stage-dark .yes{background:#fff;color:#17202a}body.stage-dark .time{color:#fff}
+@media(max-height:650px){main{padding:8px 0;gap:5px}.panel{gap:6px}.kanji{font-size:min(30vmin,145px)}.count{font-size:min(30vmin,160px)}.btn{min-height:45px;padding:10px}.subtitle{display:none}.footer{font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){body,.btn{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="language-switch" role="group" aria-label="Language / 言語"><button type="button" class="lang-btn" id="lang-ja" data-lang="ja" aria-pressed="true">日本語</button><button type="button" class="lang-btn" id="lang-tr" data-lang="tr" aria-pressed="false">Türkçe</button></div><h1 data-i18n="title">漢字記憶チャレンジ</h1><p class="subtitle" data-i18n="subtitle">JLOS · 語彙を記憶から呼び起こす5秒間</p></header>
+<section id="ready-panel" class="panel"><div class="pill" data-i18n="readyInfo">全10問 · 各問3秒の準備時間</div><p class="prompt" data-i18n="instructions">漢字を見て、その字を使った熟語を思い浮かべよう。</p><p class="note" data-i18n="rules">熟語を思い出したら「思い出した」。<br>思い浮かばなければ「思い出せない」。<br>5秒経過すると自動で次の問題へ進みます。</p><button class="btn primary" id="start-btn" data-i18n="start">スタート</button><p class="note" id="load-message" aria-live="polite"></p></section>
+<section id="count-panel" class="panel hidden" aria-live="off"><div class="pill" id="count-progress">第1問 / 10問</div><p class="prompt" data-i18n="getReady">準備はいい？</p><div id="count-number" class="count">3</div></section>
+<section id="play-panel" class="panel hidden"><div class="pill" id="play-progress">第1問 / 10問</div><div class="time" id="time-label">残り 5.0 秒</div><div class="kanji" id="kanji-display" aria-label="出題漢字"></div><div class="controls"><button class="btn yes" id="yes-btn" data-i18n="yes">思い出した</button><button class="btn no" id="no-btn" data-i18n="no">思い出せない</button></div></section>
+<section id="result-panel" class="panel hidden"><div class="pill" data-i18n="finished">10問終了！</div><p class="prompt" data-i18n="rememberedHeading">思い出せた漢字</p><div class="result-score" id="final-score">0 / 10</div><div class="missed"><h2 data-i18n="missedHeading">思い出せなかった漢字（時間切れを含む）</h2><div class="missed-list" id="missed-list">なし！</div></div><button class="btn primary" id="retry-btn" data-i18n="retry">もう一度トライ</button></section>
+<div class="footer"><a href="training.html" data-i18n="back">← 鍛錬の場へ戻る</a></div>
+</main>
+<script>
+'use strict';
+// 旧版 memory_challenge.html の問題プールを継承。
+const allKanji = (`日 月 木 山 川 田 人 口 車 門 火 水 金 土 子 女 学 生 先 私
+一 二 三 四 五 六 七 八 九 十 百 千 万 円 年 上 下 中 大 小
+本 半 分 力 何 明 休 体 好 男 林 森 間 畑 岩 目 耳 手 足 雨
+竹 米 貝 石 糸 花 茶 肉 文 字 物 牛 馬 鳥 魚 新 古 長 短 高
+安 低 暗 多 少 行 来 帰 食 飲 見 聞 読 書 話 買 教 朝 昼 夜
+晩 夕 方 午 前 後 毎 週 曜 作 泳 油 海 酒 待 校 時 言 計 語
+飯 宅 客 室 家 英 薬 会 今 雪 雲 電 売 広 店 度 病 疲 痛 屋
+国 回 困 開 閉 近 遠 速 遅 道 青 晴 静 寺 持 荷 歌 友 父 母
+兄 姉 弟 妹 夫 妻 彼 主 奥 元 気 有 名 親 切 便 利 不 若 早
+忙 出 入 乗 降 着 渡 通 走 歩 止 動 働 右 左 東 西 北 南 外
+内 部 駅 社 院 地 鉄 工 場 図 館 公 園 住 所 番 号 市 町 村
+区 都 府 県 島 京 様 練 習 勉 強 研 究 留 質 問 題 答 宿 政
+治 経 済 歴 史 育 化 理 科 数 医 映 画 写 真 音 楽 料 組 思
+色 白 黒 赤 起 寝 遊 立 座 使 始 終 貸 借 返 送 結 婚 離 席
+欠 予 定 洋 式 和 活 春 夏 秋 冬 暑 熱 寒 冷 暖 温 涼 天 仕
+事 者 運 転 選 記 議 員 商 業 農 良 悪 点 正 違 同 適 当 難
+次 形 味 試 験 面 接 説 果 合 格 受 落 浴 念 指 折 払 投 打
+深 洗 流 消 決 旅 約 案 準 備 相 急 連 絡 泊 特 急 線 発 到
+交 機 関 局 信 路 故 注 意 押 引 割 営 自 由 取 求 願 知 台
+窓 具 器 用 服 紙 辞 雑 誌 銀 資 品 個 価 産 期 々 報 告 心
+感 情 悲 泣 笑 頭 覚 忘 考 伝 代 呼 焼 曲 脱 別 集 並 喜 驚
+細 太 重 軽 狭 弱 眠 苦 簡 単 空 港 飛 階 建 設 完 成 費 放
+位 置 横 向 原 平 野 風 両 橋 老 族 配 術 退 効 民 訪 顔 歯
+卒 論 実 調 必 要 類 得 失 礼 増 加 減 変 移 続 過 進 以 美
+比 較 反 対 賛 共 直 表 現 初 全 最 無 非 第 的 性 法 制 課`).trim().split(/\s+/).filter(k=>k!== '々');
+const I18N={
+  ja:{title:'漢字記憶チャレンジ',subtitle:'JLOS · 語彙を記憶から呼び起こす5秒間',readyInfo:'全10問 · 各問3秒の準備時間',instructions:'漢字を見て、その字を使った熟語を思い浮かべよう。',rules:'熟語を思い出したら「思い出した」。<br>思い浮かばなければ「思い出せない」。<br>5秒経過すると自動で次の問題へ進みます。',start:'スタート',getReady:'準備はいい？',yes:'思い出した',no:'思い出せない',finished:'10問終了！',rememberedHeading:'思い出せた漢字',missedHeading:'思い出せなかった漢字（時間切れを含む）',retry:'もう一度トライ',back:'← 鍛錬の場へ戻る',progress:n=>`第${n}問 / 10問`,remaining:n=>`残り ${n} 秒`,loading:'漢字フォントを準備しています…',loadError:'Klee One の読み込みに失敗しました。ネット接続を確認して、もう一度スタートしてください。',none:'なし！ 全問思い出せました！',kanjiLabel:'出題漢字'},
+  tr:{title:'Kanji Hafıza Meydan Okuması',subtitle:'JLOS · 5 saniyede hafızandan kelime bul',readyInfo:'10 soru · Her sorudan önce 3 saniye hazırlık',instructions:'Kanjiyi gör ve bu kanjiyi içeren iki kanjili bir kelime hatırla.',rules:'Bir kelime hatırladıysan “Hatırladım”a bas.<br>Hatırlayamadıysan “Hatırlayamadım”a bas.<br>5 saniye dolunca otomatik olarak sonraki soruya geçilir.',start:'Başla',getReady:'Hazır mısın?',yes:'Hatırladım',no:'Hatırlayamadım',finished:'10 soru tamamlandı!',rememberedHeading:'Hatırladığın kanjiler',missedHeading:'Hatırlayamadığın kanjiler (süre dolanlar dahil)',retry:'Tekrar dene',back:'← Alıştırmalara dön',progress:n=>`Soru ${n} / 10`,remaining:n=>`Kalan ${n} sn`,loading:'Kanji yazı tipi hazırlanıyor…',loadError:'Klee One yazı tipi yüklenemedi. İnternet bağlantını kontrol edip yeniden dene.',none:'Hiç yok! Hepsini hatırladın!',kanjiLabel:'Sorulan kanji'}
+};
+let lang='ja';try{lang=localStorage.getItem('jlos-lang')==='tr'?'tr':'ja';}catch(e){}
+function t(key,...args){const value=I18N[lang][key];return typeof value==='function'?value(...args):value;}
+function setLanguage(value){
+  lang=value;document.documentElement.lang=value;
+  try{localStorage.setItem('jlos-lang',value);}catch(e){}
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n);});
+  document.querySelectorAll('[data-lang]').forEach(el=>{el.setAttribute('aria-pressed',String(el.dataset.lang===value));});
+  document.title=t('title')+' | JLOS';
+  $('kanji-display').setAttribute('aria-label',t('kanjiLabel'));
+  if(phase==='loading')$('load-message').textContent=t('loading');
+  if(phase==='count')$('count-progress').textContent=t('progress',index+1);
+  if(phase==='question'){$('play-progress').textContent=t('progress',index+1);$('time-label').textContent=t('remaining',remainingSeconds.toFixed(1));}
+  if(phase==='done')$('missed-list').textContent=missed.length?missed.join('　'):t('none');
+}
+let remainingSeconds=5;
+const TOTAL=10, COUNTDOWN_MS=3000, ANSWER_MS=5000;
+const $=id=>document.getElementById(id);
+let deck=[],index=0,score=0,missed=[],phase='ready',raf=0,token=0,questionColors=[];
+const screens=['ready-panel','count-panel','play-panel','result-panel'];
+function showScreen(id){screens.forEach(k=>$(k).classList.toggle('hidden',k!==id));}
+function clearClock(){cancelAnimationFrame(raf);token++;}
+function resetColors(){document.body.classList.remove('playing','stage-dark');document.body.style.backgroundColor='';}
+function shufflePool(){const a=[...new Set(allKanji)];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a.slice(0,TOTAL);}
+async function startGame(){
+  if(phase==='loading')return;
+  clearClock();resetColors();phase='loading';
+  deck=shufflePool();index=0;score=0;missed=[];questionColors=makeQuestionColors();
+  const button=$('start-btn');
+  button.disabled=true;
+  $('load-message').textContent=t('loading');
+  try{
+    if(!document.fonts || !document.fonts.load)throw new Error('フォント読み込みAPIが利用できません');
+    // Google Fonts は文字別にファイルが分割されているため、実際に出題する全文字を指定。
+    const sample=deck.join('');
+    const loaded=await document.fonts.load('600 120px "Klee One"',sample);
+    await document.fonts.ready;
+    if(!loaded.length || !document.fonts.check('600 120px "Klee One"',sample)){
+      throw new Error('Klee One を読み込めませんでした');
+    }
+    $('load-message').textContent='';
+    button.disabled=false;
+    startCountdown();
+  }catch(err){
+    console.error('Klee One loading error:',err);
+    phase='ready';button.disabled=false;
+    $('load-message').textContent=t('loadError');
+  }
+}
+function animate(duration,update,done){const currentToken=token;const started=performance.now();const frame=now=>{if(currentToken!==token)return;const elapsed=Math.min(duration,now-started);update(elapsed);if(elapsed>=duration){done();}else{raf=requestAnimationFrame(frame);}};raf=requestAnimationFrame(frame);}
+function startCountdown(){clearClock();resetColors();phase='count';showScreen('count-panel');$('count-progress').textContent=t('progress',index+1);let prior=-1;animate(COUNTDOWN_MS,elapsed=>{const n=Math.max(1,3-Math.floor(elapsed/1000));if(n!==prior){$('count-number').textContent=n;prior=n;}},startQuestion);}
+// 各問題で色系統を固定し、１秒ごとに濃さを一段上げる。虹色には変化させない。
+// 配列は開始直後→最後の１秒の順。最後の色を最低１秒間表示する。
+const PALETTES=[
+  ['#e3f1ff','#a8d1ff','#5a9de5','#2165b6','#092f72'], // 青
+  ['#ffe3e6','#ffabb5','#f46b80','#ca294d','#720b2b'], // 赤
+  ['#ece3ff','#ccb5f5','#a179df','#7042b5','#37136b'], // 紫
+  ['#e0f6e8','#a2dfb9','#58bc83','#218957','#095030'], // 緑
+  ['#fff0dc','#ffcc91','#f49c50','#c46a20','#713609'], // 橙
+  ['#e0f8fa','#a6e1e8','#57b6c7','#227f9b','#10445e']  // 青緑
+];
+function makeQuestionColors(){
+  const colors=[];
+  while(colors.length<TOTAL){
+    const round=[...PALETTES];
+    for(let i=round.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[round[i],round[j]]=[round[j],round[i]];}
+    for(const item of round){if(colors.length<TOTAL)colors.push(item);}
+  }
+  return colors;
+}
+function startQuestion(){
+  clearClock();phase='question';showScreen('play-panel');
+  $('play-progress').textContent=t('progress',index+1);
+  $('kanji-display').textContent=deck[index];
+  document.body.classList.add('playing');
+  let previous=-1;
+  animate(ANSWER_MS,elapsed=>{
+    const remaining=Math.max(0,(ANSWER_MS-elapsed)/1000);remainingSeconds=remaining;
+    $('time-label').textContent=t('remaining',remaining.toFixed(1));
+    const step=Math.min(4,Math.floor(elapsed/1000));
+    if(step!==previous){
+      document.body.style.backgroundColor=questionColors[index][step];
+      document.body.classList.toggle('stage-dark',step>=3);
+      previous=step;
+    }
+  },()=>answer(false));
+}
+function answer(remembered){if(phase!=='question')return;clearClock();phase='transition';if(remembered)score++;else missed.push(deck[index]);index++;if(index>=TOTAL)endGame();else startCountdown();}
+function endGame(){clearClock();phase='done';resetColors();showScreen('result-panel');$('final-score').textContent=`${score} / ${TOTAL}`;$('missed-list').textContent=missed.length?missed.join('　'):t('none');}
+document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('click',()=>setLanguage(btn.dataset.lang)));
+setLanguage(lang);
+$('start-btn').addEventListener('click',startGame);$('retry-btn').addEventListener('click',startGame);$('yes-btn').addEventListener('click',()=>answer(true));$('no-btn').addEventListener('click',()=>answer(false));
+</script>
+</body>
+</html>
