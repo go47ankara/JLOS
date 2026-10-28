@@ -1,0 +1,156 @@
+name: JLOS 筆順フォントを更新
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-font:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Prepare Python on GitHub (not on your PC)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install conversion packages
+        run: python -m pip install --disable-pip-version-check 'fonttools>=4.55,<5' 'brotli>=1.1,<2'
+      - name: Rebuild WOFF2 for JLOS games
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import json
+          import hashlib
+          from fontTools.ttLib import TTFont
+          from fontTools import subset
+
+          root = Path.cwd()
+          source = root / 'fonts' / 'KanjiStrokeOrders_v4.005.ttf'
+          old_font = root / 'fonts' / 'KanjiStrokeOrders_allmodes.woff2'
+          output = old_font
+          pages = [root / 'jlos_shunshi_mode_select.html', root / 'jlos_keigun_ikkaku.html']
+          gobosei = root / 'jlos_gobousei.html'
+          if not source.is_file():
+              raise SystemExit('TTF が見つかりません: fonts/KanjiStrokeOrders_v4.005.ttf')
+          if not all(page.is_file() for page in pages) or not gobosei.is_file():
+              raise SystemExit('JLOS のゲーム HTML が見つかりません。')
+
+          # Verified union of 2026-10-21 JLOS's two games + prior subset.
+          # Keep these explicitly even if the HTML is reorganized later.
+          NEEDED = (
+              '一七万三上下中丸主九二人今代令休体侍侑侵俣倖倭偲側働優元兄先光兜入全八公内円冬冶凱出函刀刃分切劇力勝募勧北十千午半又友口古可右合同名品啄問喋'
+              '四因困圃園土地堀堤堰墓増壁士夕外多大天太夫央失奄女姥姪嬢子字孟安宕官宥宮察寺導小少山峨峯峻川工左己巷巽市幕幣干平年幸広庚庵廳弊弓引彗彪彬待復'
+              '微徴徹心怜恕恰情惇惣想惺意感慕憲懸戸手才技持按掘提撤散数整文斐斧新方旗日早昂昴晃晏晨晴晶暖暗暦暮曜曲最月有朔朝木未末本束杭東杵枇枝柊柏柑柘柚'
+              '柾栞桂桐桔桧梓梛梢梧梶森椋植椛椰椿楓楠楢楯榊榎榛槌標権樫橋橘機檄檜櫛歓止正歴死母毎気水氷永沫治洛浸清温測港湖漢激濃火烏煌熟熱燃燕爆父牛特犬獅'
+              '玉王玲珀珂珈珊琉琥琳瑛瑞璧環生用田由甲申畠療登白百皓皿目瞬矢短石砥砧確礼福稔種積立童競竹笙笹算箱篠簪簾簿籍籠米籾粉精糸紗紘紛紬結絢給絵綱網綴'
+              '綺綾緑緒線緩練縁縞縮績織纜羅羊羽考耳聞職肉腺臨自興色苑茉茜茸荻莉菫萌萩葦蒲蒼蓮蔦蔭蕾薄薬薰藁蘇蘭虫蟹蟻血行衿袴製複襖襟襲西覆見覧親観解訪詩話'
+              '認語説課調請論諸謎講謝識警議譲護讚豹貝買賛質路蹴躇躊躍輸轄轍轟轢辛農遠選醜醤醬醴醸鉄錆錬録鎖鎧鏃鏑鏡鏤鏨鐘鐙鐵鐶鐸鑑鑞鑠鑢鑰鑷鑾鑿閑間防際隼'
+              '集雛難雫電霧露静鞄響題額願顧顳飲驚驥驪驫鬱魔鯖鯛鯣鯨鯰鯱鯵鰆鰈鰊鰌鰍鰐鰤鰭鰯鰹鰻鱒鱗鱚鱧鱶鱸鳥鳳鴨鶉鶯鶴鷗鷲鷹鷺鸞麟鼎齢龍'
+          )
+          # Extract future character-pool changes as well as preserving known glyphs.
+          requested = set(NEEDED)
+          for page in pages:
+              html = page.read_text(encoding='utf-8')
+              requested.update(re.findall(r'"kanji":"([^"\n]+)"', html))
+              if 'const pairs=[' in html:
+                  pair_block = html.split('const pairs=[', 1)[1].split('];', 1)[0]
+                  for left, right in re.findall(r"\['(.)','(.)'\]", pair_block):
+                      requested.update((left,right))
+          # 五芒星の確定問題を直接読み取る。HTML内の SOURCE_QUESTIONS を
+          # 参照するので、新たな問題が追加されても抽出し忘れない。
+          gobosei_html = gobosei.read_text(encoding='utf-8')
+          anchor = re.search(r'\bconst\s+SOURCE_QUESTIONS\s*=\s*', gobosei_html)
+          if not anchor:
+              raise SystemExit('五芒星の SOURCE_QUESTIONS が見つかりません。')
+          try:
+              gobosei_questions, _ = json.JSONDecoder().raw_decode(gobosei_html[anchor.end():])
+          except json.JSONDecodeError as e:
+              raise SystemExit('五芒星の問題データを解析できません: ' + str(e))
+          if not isinstance(gobosei_questions, list) or len(gobosei_questions) < 50:
+              raise SystemExit('五芒星の設問数が不足しています。')
+          gobosei_chars = set()
+          for q in gobosei_questions:
+              chars = q.get('core', []) + [q.get('answer', '')]
+              if len(chars) != 5 or any(len(ch) != 1 for ch in chars):
+                  raise SystemExit('五芒星の設問の字数に異常: ' + str(q.get('id')))
+              gobosei_chars.update(chars)
+          requested.update(gobosei_chars)
+          print('五芒星の問題数:',len(gobosei_questions),'使用漢字:',len(gobosei_chars))
+          if old_font.exists():
+              old_tt = TTFont(str(old_font))
+              requested.update(map(chr, old_tt.getBestCmap()))
+              old_tt.close()
+
+          font = TTFont(str(source))
+          original = set(font.getBestCmap())
+          all_codes = {ord(ch) for ch in requested}
+          missing = all_codes - original
+          supported = all_codes & original
+          if not set(map(ord, '醜錬練')).issubset(supported):
+              raise SystemExit('元のTTFに醜・錬・練が見つかりません。')
+          print('元TTF:', len(original), '字 / 新WOFF2:', len(supported), '字')
+          print('元フォントにも存在しない漢字:', ''.join(map(chr, sorted(missing))) or 'なし')
+          opts = subset.Options()
+          opts.name_IDs = ['*']
+          opts.name_legacy = True
+          opts.notdef_glyph = True
+          opts.notdef_outline = True
+          opts.recommended_glyphs = True
+          opts.layout_features = ['*']
+          ss = subset.Subsetter(options=opts)
+          ss.populate(unicodes=supported)
+          ss.subset(font)
+          output.parent.mkdir(parents=True, exist_ok=True)
+          font.flavor = 'woff2'
+          font.save(str(output))
+          font.close()
+          check = TTFont(str(output))
+          assert supported.issubset(check.getBestCmap()), '字体が欠けています'
+          check.close()
+          print('WOFF2完了:', output, output.stat().st_size, 'bytes')
+          print('五芒星に収録できた文字:',len(gobosei_chars & set(map(chr,supported))))
+          print('五芒星で元TTFに存在しない文字:', ''.join(sorted(gobosei_chars-set(map(chr,supported)))) or 'なし')
+          stamp = hashlib.sha256(output.read_bytes()).hexdigest()[:12]
+
+          # Fix incorrect hard-coded unavailability and cache old font URLs.
+          # Only these two declarations/URLs are edited; other game behavior is unchanged.
+          for page in pages:
+              html = page.read_text(encoding='utf-8')
+              pattern = r'const missingStrokeChars\s*=\s*new Set\s*\(\s*([\"\'])(.*?)\1\s*\)\s*;'
+              replacement = 'const missingStrokeChars=new Set("'+''.join(map(chr, sorted(missing)))+'");'
+              html, n = re.subn(pattern, lambda m: replacement, html, count=1, flags=re.S)
+              if n != 1:
+                  raise SystemExit(f'{page.name}: 未収録漢字の設定が見つかりません')
+              font_url = r'fonts/KanjiStrokeOrders_allmodes\.woff2(?:\?v=[\w.\-]+)?'
+              html, n2 = re.subn(font_url, f'fonts/KanjiStrokeOrders_allmodes.woff2?v={stamp}', html)
+              if n2 < 1:
+                  raise SystemExit(f'{page.name}: フォントURLが見つかりません')
+              page.write_text(html, encoding='utf-8')
+              print(page.name, ': 更新しました (font refs:', n2, ')')
+          # 五芒星は欠字変数を使わないので、フォント参照URLのみ更新する。
+          font_url = r'fonts/KanjiStrokeOrders_allmodes\.woff2(?:\?v=[\w.\-]+)?'
+          patched, cnt = re.subn(font_url, f'fonts/KanjiStrokeOrders_allmodes.woff2?v={stamp}', gobosei_html)
+          if cnt < 1:
+              raise SystemExit('五芒星のフォントURLが見つかりません。')
+          gobosei.write_text(patched, encoding='utf-8')
+          print(gobosei.name, ': 更新しました (font refs:', cnt, ')')
+          PY
+      - name: Save updates in GitHub repository
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fonts/KanjiStrokeOrders_allmodes.woff2 jlos_shunshi_mode_select.html jlos_keigun_ikkaku.html jlos_gobousei.html
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(JLOS): expand stroke font coverage for Gobosei"
+            git push
+          else
+            echo "No changes needed."
+          fi
