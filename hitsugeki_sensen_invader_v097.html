@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1426">
+<title>筆撃戦線 — インベーダー試作 Ver.0.9.7 | JLOS</title>
+<style>
+:root{color-scheme:dark;--bg:#0a1426;--fg:#eef4ff;--soft:#aac0d9;--cyan:#7aefe9;--pink:#ff698e;--gold:#ffe19b;--line:#486383}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0;-webkit-text-size-adjust:100%}body{background:radial-gradient(ellipse at 50% 0,#243c5e 0,#12223d 37%,#091224 100%);color:var(--fg);font-family:system-ui,-apple-system,'Noto Sans JP','Noto Sans',sans-serif}button{font:inherit;cursor:pointer;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}.hidden{display:none!important}
+#app{max-width:810px;margin:auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 8px) 10px calc(env(safe-area-inset-bottom) + 10px);display:flex;flex-direction:column;gap:8px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:41px} .brand{display:flex;align-items:center;gap:8px;min-width:0}.mark{display:grid;place-items:center;flex-shrink:0;width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,#ffde90,#e87aab);color:#22324b;font-weight:950;font-size:19px}.brand small{font-size:9px;letter-spacing:.13em;color:var(--soft);display:block;white-space:nowrap}.brand b{font-size:15px;display:block;white-space:nowrap}
+.tools{display:flex;align-items:center;gap:3px}.lang{border:1px solid #4a6687;border-radius:8px;background:#152a46;color:#c5d5ee;font-size:11px;font-weight:750;padding:6px 6px;min-height:33px}.lang[aria-pressed=true]{background:#e1eaff;border-color:#e1eaff;color:#1664bc}.sound{border:1px solid #4a6687;border-radius:18px;background:#142841;padding:7px 7px;font-weight:800;font-size:11px;min-height:33px}
+.main{flex:1;min-height:0;display:flex;flex-direction:column}.panel{width:min(100%,540px);margin:0 auto}.menu{text-align:center;padding:clamp(8px,3vh,24px) 4px 10px;gap:13px}.eyebrow{font-size:10px;letter-spacing:.16em;color:var(--gold);font-weight:850;margin:0}.logo{margin:7px 0;font-weight:950;letter-spacing:.08em;font-size:clamp(39px,10vw,68px);line-height:1.13;text-shadow:0 7px 24px #ffd68829}.sub{color:#cad8ee;font-size:13px;margin:7px 0 12px;line-height:1.6}
+.miniarmy{display:grid;grid-template-columns:repeat(3,minmax(0,65px));gap:7px;justify-content:center;margin:12px 0 16px}.miniarmy span{display:grid;place-items:center;background:linear-gradient(145deg,#31486b,#192944);border:1px solid #617699;border-radius:10px;font-family:'Noto Serif CJK JP','Yu Mincho',serif;font-weight:900;font-size:30px;height:51px}
+.rules{border:1px solid #395573;border-radius:13px;background:#12243ad9;color:#d5e3f5;padding:10px 13px;text-align:left;font-size:12px;line-height:1.65;margin:8px 0 13px}.rules strong{color:var(--gold)}.choice-head{text-align:left;font-weight:850;color:#9eb6d5;font-size:11px;margin:9px 0 7px}.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px}.level{min-width:0;min-height:73px;border:1px solid #4b6487;background:#172c46;border-radius:12px;padding:10px 3px;display:flex;flex-direction:column;justify-content:center;gap:5px}.level strong{font-size:15px}.level span{font-size:11px;color:#c2cde0}.level[aria-pressed=true]{border:2px solid var(--gold);background:#3b3a45;padding:9px 2px}.level[aria-pressed=true] strong{color:var(--gold)}
+.primary{width:100%;min-height:53px;border:0;border-radius:13px;background:linear-gradient(115deg,#ffe4b1,#e9a779);color:#18273e;font-weight:950;font-size:19px;box-shadow:0 7px 22px #f6bc7560}.primary:active{transform:scale(.99)}.note{font-size:11px;color:#97aecb;margin:12px 0 0;line-height:1.5}
+.battle{gap:7px;min-height:0}.hud{display:flex;justify-content:space-between;align-items:center;gap:5px;min-height:35px}.back{border:1px solid #4b6687;border-radius:9px;background:#1b314c;padding:8px 9px;font-size:11px;white-space:nowrap}.hudbox{display:flex;gap:10px;align-items:center;color:#bdcde3;font-size:11px;white-space:nowrap}.hudbox b{color:var(--gold);font-size:17px;font-variant-numeric:tabular-nums}.dots{display:flex;gap:4px;height:4px;margin-bottom:2px}.dot{flex:1;background:#2f4460;border-radius:9px}.dot.done{background:var(--cyan)}
+.arena{position:relative;flex:1 1 auto;min-height:300px;max-height:700px;border:1px solid #526e93;border-radius:18px;overflow:hidden;isolation:isolate;box-shadow:inset 0 0 50px #0008,0 12px 28px #0005;background:radial-gradient(ellipse at 50% 28%,#30456599,#14233b 66%,#091528 100%)}.arena:before{content:"";position:absolute;inset:0;opacity:.23;pointer-events:none;background:linear-gradient(#dcecff16 1px,transparent 1px),linear-gradient(90deg,#dcecff16 1px,transparent 1px);background-size:33px 33px}.arena.threat{box-shadow:inset 0 0 60px #ed35552e,0 12px 28px #0005}.arena.shake{animation:rumble .38s linear}
+.fleet{position:absolute;left:50%;top:16px;width:min(94%,390px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,var(--tile-h,79px));gap:clamp(7px,2.8vw,14px);transform:translate(-50%,var(--fleet-y,0px));transition:transform .13s steps(1,end);z-index:3}.cell{min-width:0;height:100%;position:relative}.enemy{display:grid;place-items:center;width:100%;height:100%;padding:0;position:relative;border:1px solid #758aad;border-radius:12px;background:linear-gradient(145deg,#42577a,#253b59 66%,#1b2941);box-shadow:0 7px 20px #0008,inset 0 1px #fff2;font-weight:900;touch-action:manipulation}.enemy:before{content:"";position:absolute;inset:5px;border-radius:8px;border:1px solid #ffffff12;pointer-events:none}.enemy:active{border-color:var(--cyan);background:#355b76}.glyph{font-family:'Noto Serif CJK JP','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif;font-size:clamp(39px,13.1vw,72px);line-height:1;user-select:none;-webkit-user-select:none;text-shadow:0 4px 12px #0007}.enemy.burst{animation:explode .56s ease-in forwards;pointer-events:none}.enemy.bad{animation:wobble .3s 2;border-color:var(--pink)}.enemy.flee{animation:escape .7s ease-in forwards;pointer-events:none}.empty{height:100%;border:1px dashed #5070971a;border-radius:12px;pointer-events:none}.count-tag{position:absolute;top:2px;right:2px;color:var(--gold);background:#102d49;padding:1px 7px;border-radius:10px;border:1px solid #667695;font-size:11px;white-space:nowrap;z-index:8}
+.defense{position:absolute;bottom:68px;left:4%;right:4%;height:3px;background:linear-gradient(90deg,transparent,#ff6a91 16%,#ff6a91 84%,transparent);box-shadow:0 0 12px #ff5b87aa;pointer-events:none}.defense span{position:absolute;right:0;bottom:8px;color:#ffa8c2;white-space:nowrap;font-weight:900;font-size:9px;letter-spacing:.05em}.turret{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:2;pointer-events:none}.turret .top{background:linear-gradient(#bbfff1,#2b879c 52%,#11405a);width:62px;height:43px;clip-path:polygon(50% 0%,90% 35%,100% 83%,83% 100%,17% 100%,0 83%,10% 35%);display:grid;place-items:center;color:#184455;font-weight:950;font-size:17px;padding-top:7px}.turret small{font-size:9px;color:#9cf5ed;font-weight:900;margin-top:2px}.laser-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}.beam{stroke:#bafffa;stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 0 6px #23f4fb);stroke-dasharray:1200;stroke-dashoffset:1200;animation:beam .43s ease-out forwards}.beam.badbeam{stroke:#ff7497;filter:drop-shadow(0 0 6px #ff507b)}.particle{width:5px;height:5px;background:#ffdc8d;position:absolute;z-index:6;pointer-events:none;box-shadow:0 0 8px #ffe59f;animation:particle .72s ease-out forwards}.float{position:absolute;z-index:6;left:50%;top:60%;transform:translateX(-50%);font-weight:1000;font-size:24px;text-shadow:0 0 10px #000;pointer-events:none;animation:float .8s ease-out forwards}.float.good{color:var(--cyan)}.float.bad{color:var(--pink)}
+.dropbar{display:flex;gap:9px;align-items:center;font-size:10px;color:#abc2d8;font-weight:750}.track{flex:1;background:#243c56;height:5px;overflow:hidden;border-radius:20px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold))}.ticknum{font-variant-numeric:tabular-nums;min-width:31px;text-align:right}
+.order{border:1px solid #5d7294;background:linear-gradient(145deg,#213754,#152844);border-radius:15px;padding:10px 13px 11px;min-height:81px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 6px 19px #0004}.order small{font-size:10px;font-weight:850;letter-spacing:.14em;color:#a4bddb}.order strong{font-size:clamp(20px,5.9vw,28px);font-weight:950;line-height:1.27;color:var(--gold)}.order.final{background:linear-gradient(145deg,#393852,#1a2a49);border-color:#c9a76f}.message{min-height:17px;text-align:center;color:#a9c5d9;font-size:11px;line-height:1.4}.message.good{color:var(--cyan)}.message.bad{color:#ff9bb0}
+.result{text-align:center;padding-top:clamp(38px,10vh,85px)}.result h2{font-size:clamp(28px,7.5vw,45px);margin:10px 0}.result-score{font-size:55px;font-weight:950;color:var(--gold)}.report{background:#192c46;border:1px solid #435d7e;border-radius:14px;padding:15px;margin:19px 0;color:#dce5f4;line-height:1.8}.secondary{margin-top:10px;border:1px solid #546d8b;background:#1c304c;border-radius:13px;padding:13px;min-height:47px;width:100%}
+@keyframes beam{0%{stroke-dashoffset:1200;opacity:1}55%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes explode{20%{transform:scale(1.16);filter:brightness(3)}100%{opacity:0;transform:scale(.12) rotate(38deg);filter:blur(9px)}}
+@keyframes wobble{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes escape{10%{transform:rotate(-10deg)}100%{opacity:0;transform:translateY(-100px) rotate(25deg) scale(.3)}}
+@keyframes particle{to{transform:translate(var(--dx),var(--dy));opacity:0}}
+@keyframes rumble{20%{filter:brightness(1.45);transform:translateY(3px)}50%{transform:translateY(-2px)}85%{transform:translateY(2px)}}
+@keyframes float{to{opacity:0;transform:translate(-50%,-50px)}}
+@media(min-width:680px){#app{padding:14px 24px 18px;gap:11px}.arena{min-height:470px}.fleet{top:22px;--tile-h:106px!important}.glyph{font-size:70px}.order{min-height:83px}.battle{gap:10px}.hud{min-height:42px}}
+@media(max-height:700px) and (max-width:679px){#app{gap:5px}.arena{min-height:265px}.order{min-height:70px;padding:7px 10px}.message{min-height:14px}.hud{min-height:32px}.fleet{top:12px}.menu{gap:7px}.miniarmy{margin:5px 0}.rules{margin:5px 0 6px}.levels{margin-bottom:9px}}
+@media(max-height:700px) and (max-width:679px){
+ .menu{padding-top:2px;gap:4px}.eyebrow{font-size:9px;letter-spacing:.1em}
+ .menu .logo{font-size:36px;margin:2px 0 0}.menu .sub{font-size:11px;line-height:1.35;margin:0 0 3px}
+ .miniarmy{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:3px 0 4px}
+ .miniarmy span{height:40px;font-size:24px;border-radius:8px}
+ .rules{font-size:11px;line-height:1.43;padding:7px 9px;margin:3px 0 6px}
+ .choice-head{margin:3px 0 5px}.level{min-height:56px;padding:5px 2px;gap:2px}.level[aria-pressed=true]{padding:4px 1px}
+ .levels{margin-bottom:8px}.menu .primary{min-height:49px}.menu .note{margin:5px 0 0;font-size:9px}
+}
+@media(max-width:350px){.brand small{font-size:8px}.brand b{font-size:13px}.lang{font-size:10px;padding:5px}.sound{font-size:10px;padding:5px}.glyph{font-size:43px}.hudbox{gap:6px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.arena,.fleet,.enemy,.particle,.float{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Ver.0.8: one beam per command, animated energy charge */
+.energybox{width:100%;max-width:430px;margin:3px auto 0}
+.energyhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;color:#95b9d4;font-size:10px;font-weight:850;letter-spacing:.1em}
+#energyPct{color:#b7f5ff;font-variant-numeric:tabular-nums}
+.energymeter{height:13px;position:relative;overflow:hidden;border:1px solid #577b9e;border-radius:5px;background:#061020;box-shadow:inset 0 1px 6px #0009}
+.energyfill{height:100%;width:0;background:linear-gradient(90deg,#12518c,#119ce0 60%,#c3faff);box-shadow:0 0 16px #43d8ff,0 0 9px #b9ffff inset}
+.energyticks{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 1px),#0515288a calc(10% - 1px),#0515288a 10%)}
+.energymeter.ready{box-shadow:0 0 12px #1baeea77,inset 0 0 5px #b9faff}
+.energymeter.ready:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,#e0ffff9c,transparent);animation:energyflash .3s ease-out forwards;pointer-events:none}
+@keyframes energyflash{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.energymeter.ready:after{animation:none}}
+
+/* Ver.0.9.4: misfire drops 2x the original distance with a heavy snap. */
+.fleet.misdrop{transition:transform .19s cubic-bezier(.12,.85,.24,1)!important}
+/* Ver.0.9: full-arena falling-kanji loss sequence */
+#kanjiRain{position:absolute;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;display:none}
+#kanjiRain.active{display:block}
+.training-link{display:inline-block;color:#9cdafc;font-weight:800;text-decoration:underline;text-underline-offset:4px;padding:8px 10px;min-height:35px}.training-link:hover,.training-link:focus-visible{color:#fff;text-shadow:0 0 8px #4dcaff}
+
+.motto{color:#f5bc64;font-size:clamp(13px,2.8vw,16px);font-weight:750;letter-spacing:.04em;margin:5px auto 9px;text-align:center}
+</style>
+</head>
+<body><div id="app">
+<header><div class="brand"><span class="mark">筆</span><div><small>JLOS / KANJI ARENA</small><b>筆撃戦線</b></div></div><div class="tools"><button class="sound" id="sound" aria-label="Sound">♪<span id="soundval">OFF</span></button><button class="lang" id="ja" aria-pressed="false">日本語</button><button class="lang" id="tr" aria-pressed="true">Türkçe</button></div></header>
+<main class="main menu panel" id="menu">
+<p class="eyebrow">KANJI INVADERS / PROTOTYPE 0.9.7</p><h1 class="logo">筆撃戦線</h1><p id="motto" class="motto"></p><p id="subtitle" class="sub"></p>
+<div class="miniarmy" aria-hidden="true"><span>林</span><span>音</span><span>書</span><span>明</span><span>思</span><span>家</span></div>
+<div class="rules" id="rules"></div>
+<div class="choice-head" id="choose"></div><div class="levels" id="levels"></div>
+<button class="primary" id="start"></button><p class="note"><a id="trainingLink" class="training-link" href="training.html"></a></p>
+</main>
+<main class="main battle hidden" id="battle">
+<div class="hud"><button class="back" id="back"></button><div class="hudbox"><span><span id="remainingLabel"></span> <b id="remaining">6</b>/6</span><span><span id="hitLabel"></span> <b id="hits">0</b>/5</span><span><span id="missLabel"></span> <b id="misses">0</b></span></div></div>
+<div class="dots" id="dots"></div>
+<div class="arena" id="arena">
+ <div class="fleet" id="fleet"></div><div class="defense" id="defense"><span id="defenseLabel"></span></div>
+ <div class="turret" id="turret"><div class="top">筆</div><small id="playerLabel"></small></div>
+ <svg class="laser-svg" id="laser" aria-hidden="true"></svg><canvas id="kanjiRain" aria-hidden="true"></canvas>
+</div>
+<div class="dropbar"><span id="dropLabel"></span><div class="track"><div class="fill" id="dropfill"></div></div><span class="ticknum" id="droptime">1.0s</span></div>
+<div class="order" id="order"><small id="orderLabel"></small><strong id="orderText"></strong><div class="energybox"><div class="energyhead"><span>BEAM ENERGY</span><span id="energyPct">0%</span></div><div id="energymeter" class="energymeter" role="progressbar" aria-label="Beam energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="energyfill" class="energyfill"></div><div class="energyticks"></div></div></div></div>
+<div class="message" id="message" role="status" aria-live="polite"></div>
+</main>
+<main class="main panel result hidden" id="result">
+<p class="eyebrow">BATTLE REPORT</p><h2 id="resultTitle"></h2><div class="result-score" id="resultScore"></div><div class="report" id="resultReport"></div>
+<button class="primary" id="again"></button><button class="secondary" id="menuBtn"></button>
+</main>
+</div>
+<script>
+'use strict';
+const POOL={"4":"王日月木火水手心中天円文犬牛今元公友父分方少引切内午止戸","5":"本田目白生出立正右左石玉半古広外北平市母兄四冬用央主可代礼","6":"字年先名気休早百竹虫糸耳肉米光西行地多安色合同自毎全寺考有曲羊羽","7":"花赤見足町村体何作声形車男近社言住弟初志医究走里図兵","8":"事京使取受味国夜始岩店念明東林油泳物直知空金長門雨青","9":"前南品客室屋待思急持星春昼海神秋美草面音風食首","10":"勉原夏家島庭弱旅時書校残流消病真紙能記起速連高","11":"動常強得情教族望深猫理祭章組経進都野雪魚黒","12":"勝場寒悲散晴暑最朝期森植温港湖焼登着短童答結給絵買運過道開集飲","13":"働園想意愛感数新暗楽歳準漢福群腸蓮解詩話誠路辞農違遠鉄電","14":"増察旗暮模歴演漫種算精総緑練聞製複認語説読銀際静","15":"劇導影標権熟熱確箱線編縄課調談論賛質輝","16":"憲憶操整樹橋機濃燃積興薄薬親輸選鋼録頭館龍","17":"優環療縮績翼臨覧謎講謝鍛鮮齢","18":"曜瞬織職藤観鎖難題額顔類騒験"};
+const LEVELS=[{min:4,max:8},{min:8,max:13},{min:12,max:18}];
+const TX={
+ja:{motto:'漢字の鍛錬に、終戦なし。',subtitle:'指令の画数を見抜いて、迫る漢字軍を迎撃！',rules:'<strong>敵6体・5回の迎撃で防衛成功！</strong> 3種類の画数が各2体。指令に合う漢字を<strong>1体だけ</strong>撃とう。正解で敵が上昇、誤射ならドスンと下降。残り2体は「多い／少ない」を比較し、最後の1体は逃走！',choose:'漢字の難易度',levels:['入門','初級','上級'],start:'迎撃開始！',trainingLink:'← 鍛錬の場へ戻る',back:'← メニュー',remaining:'残敵',hits:'撃破',misses:'誤射',defense:'防衛ライン',player:'自機',drop:'次の下降',order:'迎撃指令',fire:n=>`${n}画を1体撃て！`,finalBig:'画数の多い方を撃て！',finalSmall:'画数の少ない方を撃て！',finalLabel:'最終指令',standby:'漢字を見抜いてタップ！',good:'命中！ 戦線を押し戻した！',bad:'誤射！ 敵軍がドスンと下降！',finalHit:'最終迎撃成功！ 残敵が逃走！',win:'防衛成功！',lose:'防衛ライン突破！',reportWin:'5体撃破・残る1体は逃走。敵軍を退けた！',reportLose:'敵が防衛ラインに到達。もう一度挑戦しよう。',again:'↻ もう一戦',menu:'レベルを変える',resultHits:'撃破数',resultMiss:'誤射数',resultSec:'所要時間',count:'画'},
+tr:{motto:'Kanji eğitiminde ateşkes yok.',subtitle:'Emri oku, yaklaşan kanjileri vur ve savunma hattını koru!',rules:'<strong>6 düşman, 5 isabet!</strong> Üç farklı çizgi sayısından ikişer kanji var. Emirdeki çizgi sayısına uyan <strong>tek bir</strong> hedefi vur. Doğru atış düşmanları geri iter; yanlış atışta hepsi hızla iner. Son iki kanjide daha çok / daha az çizgili olanı seç. Sonuncusu kaçar!',choose:'KANJİ SEVİYESİ',levels:['Başlangıç','Temel','İleri'],start:'SAVAŞI BAŞLAT!',trainingLink:'← Alıştırma Alanına dön',back:'← Menü',remaining:'Kalan',hits:'İmha',misses:'Hata',defense:'SAVUNMA HATTI',player:'SEN',drop:'Sonraki iniş',order:'ATIŞ EMRİ',fire:n=>`${n} çizgili 1 kanjiyi vur!`,finalBig:'Çizgisi DAHA ÇOK olanı vur!',finalSmall:'Çizgisi DAHA AZ olanı vur!',finalLabel:'SON EMİR',standby:'Emre uygun kanjiyi seç!',good:'İsabet! Düşmanlar geri itildi!',bad:'Yanlış! Düşmanlar hızla indi!',finalHit:'Son isabet! Kalan düşman kaçtı!',win:'SAVUNMA BAŞARILI!',lose:'SAVUNMA HATTI AŞILDI!',reportWin:'5 isabet! Kalan son düşman kaçtı.',reportLose:'Düşmanlar savunma hattına ulaştı. Tekrar dene!',again:'↻ Tekrar oyna',menu:'Seviyeyi değiştir',resultHits:'İmha',resultMiss:'Hata',resultSec:'Süre',count:'çizgi'}
+};
+const $=id=>document.getElementById(id), rand=a=>a[Math.floor(Math.random()*a.length)];
+function localGet(k){try{return localStorage.getItem(k)}catch(_){return null}}
+function localSet(k,v){try{localStorage.setItem(k,v)}catch(_){}}
+const LANGKEY='jlos_ui_language', HISTORYKEY='jlos_hitsugeki_invader_v07_seen';
+let lang=localGet(LANGKEY)==='ja'?'ja':'tr',level=0,sound=false,audio=null,game=null,raf=0,pending=[];
+let recently=[];try{const h=JSON.parse(localGet(HISTORYKEY)||'[]');if(Array.isArray(h))recently=h.slice(-100)}catch(_){}
+function choose(bank,used){const candidates=bank.filter(c=>!used.has(c));const fresh=candidates.filter(c=>!recently.includes(c));return rand(fresh.length?fresh:candidates)}
+function persistSeen(c){recently=recently.filter(v=>v!==c);recently.push(c);recently=recently.slice(-100);localSet(HISTORYKEY,JSON.stringify(recently))}
+function tr(){return TX[lang]}
+function screens(name){for(const s of ['menu','battle','result'])$(s).classList.toggle('hidden',s!==name)}
+function levelButtons(){const root=$('levels');root.replaceChildren();LEVELS.forEach((v,i)=>{const b=document.createElement('button');b.className='level';b.type='button';b.setAttribute('aria-pressed',String(level===i));b.innerHTML=`<strong>${tr().levels[i]}</strong><span>${v.min}–${v.max} ${tr().count}</span>`;b.onclick=()=>{level=i;localSet('jlos_hitsugeki_invader_level',i);levelButtons()};root.append(b)})}
+function translate(){document.documentElement.lang=lang;$('ja').setAttribute('aria-pressed',String(lang==='ja'));$('tr').setAttribute('aria-pressed',String(lang==='tr'));$('motto').textContent=tr().motto;$('subtitle').textContent=tr().subtitle;$('rules').innerHTML=tr().rules;$('choose').textContent=tr().choose;$('start').textContent=tr().start;$('trainingLink').textContent=tr().trainingLink;$('back').textContent=tr().back;$('remainingLabel').textContent=tr().remaining;$('hitLabel').textContent=tr().hits;$('missLabel').textContent=tr().misses;$('defenseLabel').textContent=tr().defense;$('playerLabel').textContent=tr().player;$('dropLabel').textContent=tr().drop;$('again').textContent=tr().again;$('menuBtn').textContent=tr().menu;$('soundval').textContent=sound?'ON':'OFF';levelButtons();if(game){drawOrder();if(!$('result').classList.contains('hidden'))resultText()}}
+function stopTimeouts(){pending.forEach(clearTimeout);pending=[]}
+function later(fn,ms){const activeGame=game;const id=setTimeout(()=>{pending=pending.filter(x=>x!==id);if(game===activeGame&&game?.active)fn()},ms);pending.push(id)}
+function cleanup(){stopKanjiRain();if(game){game.active=false;game.energyRun=(game.energyRun||0)+1;}stopTimeouts();cancelAnimationFrame(raf);raf=0;$('laser').replaceChildren();document.querySelectorAll('.particle,.float').forEach(x=>x.remove());$('arena').classList.remove('shake','threat')}
+function playSound(kind){if(!sound)return;try{audio??=new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const t=audio.currentTime,o=audio.createOscillator(),v=audio.createGain();o.type=kind==='shot'?'sawtooth':'triangle';const f={shot:560,success:350,wrong:110,tick:150,win:500}[kind]||250;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(60,f*.42),t+.2);v.gain.setValueAtTime(kind==='tick'?.018:.06,t);v.gain.exponentialRampToValueAtTime(.001,t+.24);o.connect(v);v.connect(audio.destination);o.start(t);o.stop(t+.25)}catch(_){}}
+function startGame(){cleanup();const def=LEVELS[level];const bases=Array.from({length:def.max-def.min-1},(_,i)=>def.min+i).filter(n=>POOL[n].length>=2&&POOL[n+1].length>=2&&POOL[n+2].length>=2);const base=rand(bases),used=new Set(),units=[];
+for(let n=base;n<=base+2;n++)for(let i=0;i<2;i++){const c=choose([...POOL[n]],used);used.add(c);persistSeen(c);units.push({c,n})}
+for(let i=units.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[units[i],units[j]]=[units[j],units[i]]}
+game={active:true,units,kills:0,misses:0,depth:0,step:10,maxDepth:12,remainingMs:1000,locked:false,energyReady:false,energyRun:0,last:0,started:performance.now(),directive:null,won:false};
+screens('battle');drawFleet();layoutFleet();chooseDirective();drawHud();$('message').textContent=tr().standby;$('message').className='message';requestAnimationFrame(t=>{if(!game?.active)return;game.last=t;raf=requestAnimationFrame(tick)});
+}
+function drawFleet(){const fleet=$('fleet');fleet.replaceChildren();game.units.forEach((u,i)=>{const cell=document.createElement('div');cell.className='cell';cell.dataset.slot=i;const b=document.createElement('button');b.className='enemy';b.type='button';b.setAttribute('aria-label',u.c);b.innerHTML=`<span class="glyph">${u.c}</span>`;b.addEventListener('click',()=>shoot(i));cell.append(b);fleet.append(cell)});}
+function updateCell(i){const cell=$('fleet').children[i];cell.replaceChildren();if(game.units[i]){const u=game.units[i];const b=document.createElement('button');b.className='enemy';b.type='button';b.setAttribute('aria-label',u.c);b.innerHTML=`<span class="glyph">${u.c}</span>`;b.onclick=()=>shoot(i);cell.append(b)}else{const e=document.createElement('div');e.className='empty';cell.append(e)}}
+function layoutFleet(){if(!game?.active)return;const a=$('arena'),f=$('fleet'),def=$('defense');const h=a.clientHeight;const tileH=Math.min(96,Math.max(62,Math.round(h*.205)));f.style.setProperty('--tile-h',tileH+'px');const bottom=def.offsetTop,remaining=bottom-f.offsetTop-f.offsetHeight-8;game.step=Math.max(6,Math.min(10,Math.round(h*.021)));game.maxDepth=Math.max(2,Math.floor(remaining/game.step));if(game.depth>=game.maxDepth)game.depth=Math.max(0,game.maxDepth-1);updateDepth();}
+function updateDepth(){if(!game)return;$('fleet').style.setProperty('--fleet-y',`${Math.round(game.depth*game.step)}px`);$('arena').classList.toggle('threat',game.depth>=game.maxDepth-3)}
+function shift(d){if(!game?.active)return;game.depth=Math.max(0,game.depth+d);updateDepth();if(game.depth>=game.maxDepth){endGame(false)}}
+function tick(now){const g=game;if(!g?.active)return;const dt=Math.min(100,Math.max(0,now-g.last));g.last=now;if(!g.locked&&!document.hidden){g.remainingMs-=dt;if(g.remainingMs<=0){g.remainingMs+=1000;shift(1);playSound('tick')}}$('dropfill').style.width=Math.max(0,Math.min(100,100*(1-g.remainingMs/1000)))+'%';$('droptime').textContent=(Math.max(0,g.remainingMs)/1000).toFixed(1)+'s';if(g.active)raf=requestAnimationFrame(tick)}
+// Pick commands only if the remaining set would still contain two different stroke counts.
+// All valid candidates have equal selection probability.
+function chooseDirective(){if(!game?.active)return;const units=game.units.filter(Boolean);if(units.length===2){if(units[0].n===units[1].n)throw Error('Final pair has the same stroke count');game.directive={kind:'final',higher:Math.random()<.5};}else{const distinct=[...new Set(units.map(v=>v.n))];const eligible=distinct.filter(n=>{const remain=units.map(v=>v.n);remain.splice(remain.indexOf(n),1);return new Set(remain).size>=2});if(!eligible.length)throw Error('No safe directive for remaining enemies');game.directive={kind:'stroke',n:rand(eligible)}}drawOrder();chargeEnergy();}
+function setEnergy(value){const v=Math.max(0,Math.min(100,Math.round(value)));$('energyfill').style.width=v+'%';$('energyPct').textContent=v+'%';$('energymeter').setAttribute('aria-valuenow',String(v));}
+function chargeEnergy(){const g=game;if(!g?.active)return;const token=++g.energyRun;g.energyReady=false;const fill=$('energyfill'),meter=$('energymeter');meter.classList.remove('ready');fill.style.transition='none';setEnergy(0);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{if(game!==g||!g.active||token!==g.energyRun)return;fill.style.transition='width .3s cubic-bezier(.2,.8,.2,1)';fill.style.width='100%';const start=performance.now();const animate=()=>{if(game!==g||!g.active||token!==g.energyRun)return;const v=Math.min(100,(performance.now()-start)/3);$('energyPct').textContent=Math.round(v)+'%';meter.setAttribute('aria-valuenow',String(Math.round(v)));if(v<100)requestAnimationFrame(animate)};requestAnimationFrame(animate);later(()=>{if(token!==g.energyRun)return;setEnergy(100);g.energyReady=true;meter.classList.add('ready')},310)}));
+}
+function dischargeEnergy(){const g=game;g.energyReady=false;g.energyRun++;$('energymeter').classList.remove('ready');$('energyfill').style.transition='width .09s linear';setEnergy(0);}
+function drawOrder(){if(!game?.directive)return;const d=game.directive,final=d.kind==='final';$('order').classList.toggle('final',final);$('orderLabel').textContent=final?tr().finalLabel:tr().order;$('orderText').textContent=final?(d.higher?tr().finalBig:tr().finalSmall):tr().fire(d.n);}
+function drawHud(){$('remaining').textContent=game.units.filter(Boolean).length;$('hits').textContent=game.kills;$('misses').textContent=game.misses;$('dots').innerHTML=Array.from({length:5},(_,i)=>`<span class="dot ${i<game.kills?'done':''}"></span>`).join('');}
+function showMessage(txt,kind=''){$('message').textContent=txt;$('message').className='message '+kind}
+function pos(el){const a=$('arena').getBoundingClientRect(),r=el.getBoundingClientRect();return{x:r.left-a.left+r.width/2,y:r.top-a.top+r.height/2}}
+function beam(target,isBad=false){const ar=$('arena'),from=pos($('turret')),to=pos(target),svg=$('laser');svg.setAttribute('viewBox',`0 0 ${ar.clientWidth} ${ar.clientHeight}`);const line=document.createElementNS('http://www.w3.org/2000/svg','line');for(const [k,v]of Object.entries({x1:from.x,y1:from.y,x2:to.x,y2:to.y}))line.setAttribute(k,v);line.setAttribute('class','beam '+(isBad?'badbeam':''));svg.append(line);later(()=>line.remove(),540)}
+function sparks(el){const c=pos(el),a=$('arena');for(let i=0;i<16;i++){const t=document.createElement('i');t.className='particle';t.style.left=c.x+'px';t.style.top=c.y+'px';const angle=Math.random()*Math.PI*2,dist=25+Math.random()*65;t.style.setProperty('--dx',Math.cos(angle)*dist+'px');t.style.setProperty('--dy',Math.sin(angle)*dist+'px');if(i%3===0)t.style.background='#88fff4';a.append(t);later(()=>t.remove(),760)}}
+function floatLabel(txt,good){const f=document.createElement('div');f.className='float '+(good?'good':'bad');f.textContent=txt;$('arena').append(f);later(()=>f.remove(),820)}
+function showStrokeTag(slot,n){const cell=$('fleet').children[slot];const tag=document.createElement('span');tag.className='count-tag';tag.textContent=n+' '+tr().count;cell.append(tag);later(()=>tag.remove(),680)}
+function shoot(slot){const g=game;if(!g?.active||g.locked||!g.energyReady||!g.units[slot])return;const u=g.units[slot],d=g.directive,target=$('fleet').children[slot].querySelector('.enemy');const correct=d.kind==='stroke'?u.n===d.n:(d.higher?u.n>g.units.filter(Boolean).find(x=>x!==u).n:u.n<g.units.filter(Boolean).find(x=>x!==u).n);g.locked=true;dischargeEnergy();beam(target,!correct);playSound('shot');
+ if(correct){later(()=>{if(!g.active)return;target.classList.add('burst');sparks(target);showStrokeTag(slot,u.n);floatLabel('↑ 2',true);shift(-2);g.kills++;drawHud();showMessage(d.kind==='final'?tr().finalHit:tr().good,'good');playSound('success')},150);
+  later(()=>{if(!g.active)return;g.units[slot]=null;if(d.kind==='final'){updateCell(slot);const other=g.units.findIndex(Boolean);const last=$('fleet').children[other]?.querySelector('.enemy');if(last){last.classList.add('flee');}later(()=>endGame(true),680)}else{updateCell(slot);chooseDirective();g.locked=false;showMessage(tr().standby)}},750)
+ }else{g.misses++;drawHud();later(()=>{if(!g.active)return;target.classList.add('bad');showStrokeTag(slot,u.n);$('arena').classList.add('shake');showMessage(tr().bad,'bad');floatLabel('↓ 6',false);playSound('wrong');$('fleet').classList.add('misdrop');shift(6)},160);later(()=>{if(!g.active)return;target.classList.remove('bad');$('arena').classList.remove('shake');$('fleet').classList.remove('misdrop');chooseDirective();g.locked=false;showMessage(tr().standby)},900)}
+}
+let rainFrame=0,rainTimer=0,rainToken=0;
+function stopKanjiRain(){rainToken++;cancelAnimationFrame(rainFrame);clearTimeout(rainTimer);rainFrame=0;rainTimer=0;const c=$('kanjiRain');if(c){c.classList.remove('active');const ctx=c.getContext('2d');if(ctx)ctx.clearRect(0,0,c.width,c.height)}}
+function startKanjiRain(onComplete){
+ stopKanjiRain();const token=rainToken,canvas=$('kanjiRain'),arena=$('arena'),ctx=canvas.getContext('2d');
+ if(!ctx){onComplete();return}
+ const rect=arena.getBoundingClientRect(),w=rect.width,h=rect.height,dpr=Math.min(window.devicePixelRatio||1,2);
+ canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);canvas.classList.add('active');
+ const chars=[...'漢字山川林森空雨雪雷火水土石金刀力車馬魚鳥虫花草竹糸心人王国語学校電龍虎鬼戦勝敗壊落破砕爆撃軍敵'];
+ let particles=[],elapsed=0,last=0;
+ function make(){const r=Math.random();const size=r<.50?20+Math.random()*15:r<.85?50+Math.random()*25:95+Math.random()*35;return{x:Math.random()*w,y:-size-20,size,vy:(65+Math.random()*165)*(.7+size/120),rotation:(Math.random()-.5)*.6,vr:(Math.random()-.5)*2.4,char:chars[Math.random()*chars.length|0],shade:Math.random(),alpha:.77+Math.random()*.23}}
+ function draw(now){if(token!==rainToken)return;if(!last)last=now;const dt=Math.min(.045,(now-last)/1000);last=now;elapsed+=dt;ctx.clearRect(0,0,w,h);
+ const rate=elapsed<.5?9:elapsed<1.5?28:elapsed<3?60:110,expected=rate*dt;let count=Math.floor(expected)+(Math.random()<expected%1?1:0);while(count--)particles.push(make());
+ ctx.textAlign='center';ctx.textBaseline='middle';particles=particles.filter(p=>p.y<h+p.size);
+ for(const p of particles){p.y+=p.vy*dt;p.rotation+=p.vr*dt;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.font=`900 ${p.size}px 'Noto Serif CJK JP','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif`;ctx.fillStyle=p.shade<.39?`rgba(164,255,0,${p.alpha})`:p.shade<.70?`rgba(230,0,255,${p.alpha})`:p.shade<.81?`rgba(255,23,68,${p.alpha})`:p.shade<.93?`rgba(0,255,213,${p.alpha})`:`rgba(255,120,0,${p.alpha})`;ctx.shadowColor=p.shade<.39?'#a4ff00':p.shade<.70?'#e600ff':p.shade<.81?'#ff1744':p.shade<.93?'#00ffd5':'#ff7800';ctx.shadowBlur=p.size*(p.shade<.7?.23:.15);ctx.fillText(p.char,0,0);ctx.restore()}
+ rainFrame=requestAnimationFrame(draw)}
+ rainFrame=requestAnimationFrame(draw);
+ rainTimer=setTimeout(()=>{if(token!==rainToken)return;stopKanjiRain();onComplete()},5300);
+}
+function endGame(won){if(!game?.active)return;game.active=false;game.won=won;game.elapsed=Math.round((performance.now()-game.started)/1000);cancelAnimationFrame(raf);raf=0;stopTimeouts();laterCleanup();if(won){resultText();screens('result')}else{startKanjiRain(()=>{resultText();screens('result')})}}
+function laterCleanup(){$('laser').replaceChildren();document.querySelectorAll('.particle,.float').forEach(x=>x.remove())}
+function resultText(){const g=game;if(!g)return;$('resultTitle').textContent=g.won?tr().win:tr().lose;$('resultScore').textContent=g.kills+' / 5';$('resultReport').textContent=`${g.won?tr().reportWin:tr().reportLose}　${tr().resultHits}: ${g.kills}　/　${tr().resultMiss}: ${g.misses}　/　${tr().resultSec}: ${g.elapsed}s`;}
+function back(){cleanup();game=null;screens('menu')}
+$('start').onclick=startGame;$('again').onclick=startGame;$('back').onclick=back;$('menuBtn').onclick=back;
+$('ja').onclick=()=>{lang='ja';localSet(LANGKEY,lang);translate()};$('tr').onclick=()=>{lang='tr';localSet(LANGKEY,lang);translate()};
+$('sound').onclick=()=>{sound=!sound;translate();if(sound)playSound('success')};
+window.addEventListener('resize',()=>{if(game?.active)layoutFleet()});
+window.addEventListener('visibilitychange',()=>{if(game?.active)game.last=performance.now()});
+const savedLevel=Number(localGet('jlos_hitsugeki_invader_level'));level=Number.isInteger(savedLevel)&&savedLevel>=0&&savedLevel<=2?savedLevel:0;translate();
+</script></body></html>
