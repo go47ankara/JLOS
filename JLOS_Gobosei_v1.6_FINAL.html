@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070f20">
+<!-- Keep kanji glyphs consistent across Windows, Android and iOS (online). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<title>五芒星 · JLOS · MUZ / PORTAKAL / NAR · Ver.1.6</title>
+<style>
+/* Reuse JLOS's KanjiStrokeOrders webfont without bundling another font file.
+   Local relative path works after deployment to JLOS; remote URL works when
+   the standalone HTML prototype is opened from a phone's Downloads folder. */
+@font-face {
+  font-family: 'JLOS-KanjiStrokeOrders';
+  src: url('./KanjiStrokeOrders_allmodes.woff2') format('woff2'),
+       url('https://go47ankara.github.io/JLOS/KanjiStrokeOrders_allmodes.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {--kanji-face:'Noto Serif JP','Noto Serif CJK JP','Hiragino Mincho ProN','Yu Mincho',serif;}
+:root {color-scheme:dark; --bg:#070f20;--text:#f4f4ef;--muted:#a8b8cc;--line:#91c7d2;--gold:#e6d6a6;--white:#f0ffff;--panel:rgba(12,26,45,.76)}
+*{box-sizing:border-box} html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100dvh;color:var(--text);font-family:system-ui,-apple-system,"Noto Sans JP","Noto Sans",sans-serif;background:radial-gradient(ellipse at 50% 40%,#142b43 0%,#0a172a 36%,#060c19 77%,#040810 100%);overflow-x:hidden}
+body::before {content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#d9f9ff 0.7px,transparent .7px);background-size:46px 41px;opacity:.075}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent} button:focus-visible{outline:2px solid #b2edfa;outline-offset:3px}
+.app{position:relative;max-width:470px;margin:auto;padding:env(safe-area-inset-top) 17px env(safe-area-inset-bottom);min-height:100dvh;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:18px;min-height:57px}
+.brand{font-size:12px;color:#91a7b7;letter-spacing:.22em;font-weight:600}.brand b{color:#e3dfcf;font-weight:700}
+/* Matches JLOS's Japanese / Turkish two-button language switch. */
+.lang{display:flex;align-items:center;gap:4px;background:transparent}
+.lang button{border:1px solid #4b6376;border-radius:8px;background:#102338;color:#a9c0d3;padding:7px 9px;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;min-height:33px}
+.lang button[aria-pressed="true"]{border-color:#9cc7db;background:#294a61;color:#f0faff}
+.lang button:hover{border-color:#abcfe0}
+.return-nav{display:flex;align-items:center;justify-content:center;padding-top:12px}
+.return-link{color:#9dbecb;text-decoration:underline;text-underline-offset:3px;font-size:12px;line-height:1.6;padding:5px 1px}
+.return-link:hover{color:#ebebcd}
+.return-link:focus-visible{outline:2px solid #b2edfa;outline-offset:3px;border-radius:3px}
+@media(max-width:375px){.topbar{flex-wrap:wrap;gap:4px 10px}.top-controls{width:100%;justify-content:flex-end}.return-nav{padding-top:10px}}
+.page{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:stretch;min-height:0}.screen{width:100%;animation:appear .35s both}
+.headline{text-align:center;margin:20px 0 0}.eyebrow{font-size:11px;letter-spacing:.28em;color:#89b5be;margin-bottom:10px}.headline h1{font-family:"Noto Serif JP",serif;font-size:clamp(32px,10vw,46px);font-weight:500;letter-spacing:.24em;margin:0 0 7px;padding-left:.24em;text-shadow:0 0 22px #70d6e84f}.subtitle{margin:0;font-size:13px;letter-spacing:.09em;color:#c4d6de}
+.glyph-stage{position:relative;width:min(100%,370px);aspect-ratio:1;margin:4px auto -4px;isolation:isolate}
+.diagram{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 11px rgba(125,220,232,.12))}
+.halo{fill:none;stroke:#86a7b3;opacity:.32}.edge{fill:none;stroke:#b2eaf1;stroke-width:1.05;opacity:.53}.star{fill:none;stroke:#bceaf0;stroke-width:1.7;opacity:.76}.center-figure{fill:none;stroke:#c5a874;stroke-width:1.2;opacity:.56}
+.ring-spin{transform-origin:200px 200px;animation:spin 100s linear infinite}.ring-spin-back{transform-origin:200px 200px;animation:spinReverse 150s linear infinite}.pulse{animation:pulse 5s ease-in-out infinite}
+.glyph-title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:5px}
+.glyph-title span:first-child{font-family:serif;font-size:26px;color:#f5e9cb;text-shadow:0 0 21px #afdecf88}.glyph-title span:last-child{font-size:10px;letter-spacing:.16em;color:#94afbf}
+.choose{margin:0 auto 0;width:min(100%,395px);padding:0 2px}.choose-heading{text-align:center;color:#a8bfcb;letter-spacing:.09em;font-size:12px;margin:3px 0 11px}
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.level{min-width:0;min-height:83px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;border:1px solid #57697b;background:linear-gradient(145deg,rgba(26,47,68,.74),rgba(10,20,35,.82));border-radius:12px;color:#edf9fc;transition:background .2s,transform .2s,border-color .2s}
+.level:active{transform:scale(.96)}.level:hover{border-color:#94cfce;background:rgba(25,55,73,.85)}
+.level .number{font:16px Georgia,serif;letter-spacing:.16em;color:#dcd0a8}.level .name{font-size:15px;font-weight:600}
+.footer{padding:18px 0 19px;text-align:center;font-size:10px;letter-spacing:.09em;color:#647f91}
+.game-top{margin:16px 0 2px;display:flex;justify-content:space-between;gap:8px;color:#b8cfda;font-size:12px;letter-spacing:.06em}
+.question-heading{text-align:center;margin:20px 0 6px;min-height:26px;font-size:16px;letter-spacing:.045em;font-weight:600}
+.progress{display:flex;justify-content:center;gap:7px;margin:1px 0 4px}.progress i{display:block;height:3px;width:32px;border-radius:20px;background:#394a5c}.progress i.done{background:#a6c7c9}.progress i.current{background:#e0d2a4}
+.kanji-stage{width:min(100%,380px);position:relative;aspect-ratio:1;margin:0 auto;isolation:isolate}
+.kanji-stage .diagram{position:absolute;inset:0;transition:filter .3s}
+.kanji-node{position:absolute;transform:translate(-50%,-50%);width:18.8%;aspect-ratio:1;min-width:50px;max-width:72px;border-radius:50%;border:1px solid #b1c7c4;background:radial-gradient(circle at 45% 25%,#344e5b,#14273b 67%,#091526);box-shadow:0 0 0 4px rgba(130,182,184,.07),0 0 14px rgba(109,203,214,.18);color:#fffdf4;font-size:clamp(30px,9.5vw,39px);font-family:var(--kanji-face);font-weight:600;line-height:1;display:flex;justify-content:center;align-items:center;transition:background .3s,box-shadow .35s,color .3s,opacity .4s,transform .68s cubic-bezier(.18,.85,.22,1),filter .4s;touch-action:manipulation;will-change:transform}
+/* A chosen character travels to the center, then the diagram responds. */
+.kanji-node:disabled{cursor:default}
+.kanji-stage.stage-thinking .kanji-node:not(.to-center){opacity:.32;filter:brightness(.7);transform:translate(-50%,-50%) scale(.9)}
+.kanji-node.to-center{z-index:4;transform:translate(calc(-50% + var(--move-x,0px)),calc(-50% + var(--move-y,0px))) scale(1.35);border-color:#f7e4b5;background:radial-gradient(circle at 40% 22%,#607787,#273d50 70%,#152134);box-shadow:0 0 0 7px #cbd9c11e,0 0 35px #d5f8f0b3,0 0 70px #aecfd26b;color:#fff8de}
+.kanji-node.to-center.rejected{background:#453447;border-color:#cd99c7;box-shadow:0 0 0 7px #aa77b71c,0 0 36px #b278d8b3;animation:rejectPulse .28s ease-in-out 2}
+.center-flare{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.45);width:27%;aspect-ratio:1;border-radius:50%;border:1px solid #e6d4a0;box-shadow:0 0 20px #cfefff70, inset 0 0 17px #c7d6cb55;opacity:0;pointer-events:none;transition:opacity .36s,transform .7s;z-index:1}
+.stage-thinking .center-flare{opacity:.9;transform:translate(-50%,-50%) scale(1.15)}
+.stage-rejected .center-flare{border-color:#c591cc;box-shadow:0 0 24px #c591cc88}
+.stage-complete .center-flare{opacity:.95;transform:translate(-50%,-50%) scale(1.58);border-color:#f4dca9;box-shadow:0 0 25px #fff3c780,0 0 75px #d9e8d75e,inset 0 0 22px #d9e8d733;animation:victoryHalo 3.4s ease-in-out infinite}
+.kanji-node.vanish{opacity:0!important;transform:translate(calc(-50% + var(--move-x,0px)),calc(-50% + var(--move-y,0px))) scale(.2)!important;filter:blur(8px)}
+.kanji-node.wrong{animation:shake .3s ease-in-out;background:#3b273e;box-shadow:0 0 18px #c48cbd70;border-color:#c7a6c9}
+.kanji-node.ally{border-color:#e2d2a6;box-shadow:0 0 22px #fff0bb88,0 0 0 5px #d6b87a25;background:#3e413c}
+.kanji-node.out{color:transparent;border-color:#dcd5ac;box-shadow:0 0 22px #dcb98d;transform:translate(-50%,-50%) scale(.72);opacity:.23}
+/* Five independent strokes are lit in a circuit starting at the selected vertex. */
+.star-trace{fill:none;stroke:#ffe8b1;stroke-width:4;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;opacity:0;filter:drop-shadow(0 0 4px #fff3c7) drop-shadow(0 0 9px #f0ce8f)}
+.stage-activating .star-trace{animation:starTrace .32s ease-out both;animation-delay:calc(var(--trace-order, 0) * 120ms)}
+.stage-activating .diagram{filter:drop-shadow(0 0 16px rgba(255,220,152,.4))}
+@keyframes starTrace{0%{stroke-dashoffset:100;opacity:0}15%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+.stage-complete .diagram{filter:drop-shadow(0 0 17px #f9e4b088)}
+.stage-complete .star-trace{stroke-dashoffset:0;opacity:.94;stroke-width:2.8}
+.stage-complete .ring-spin{animation-duration:36s}
+/* The selected outlier remains enthroned in the center until Next. */
+.stage-complete .kanji-node.to-center{z-index:10;border:2px solid #fff0c9;background:radial-gradient(circle at 40% 23%,#8393a1,#34495f 61%,#152b41);color:#fff8d6;box-shadow:0 0 0 6px #d0bd9142,0 0 33px 13px #e5e5b27a,0 0 72px 25px #bcecf075;animation:victoryCore 2.9s ease-in-out infinite}
+.stage-complete .kanji-node.to-center::after{content:"";position:absolute;inset:-15px;border:1px solid #e9d6a0a8;border-radius:50%;pointer-events:none;animation:victoryHalo 3s ease-in-out infinite}
+.kanji-node.dissolve{pointer-events:none;opacity:0!important;filter:blur(7px) brightness(2);transform:translate(-50%,-50%) scale(.22)!important;transition:opacity .68s ease-in,filter .68s ease-in,transform .68s ease-in!important}
+.sparkfield{position:absolute;inset:0;pointer-events:none;z-index:8;overflow:visible}
+.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff4c7;box-shadow:0 0 7px 2px #f9d79f,0 0 15px #bddff5;opacity:0;animation:sparkFly .86s cubic-bezier(.14,.56,.35,1) both;animation-delay:var(--delay,0ms)}
+.kanji-stage.stage-complete + .feedback .status{font-family:Georgia,"Noto Serif JP",serif;font-size:23px;letter-spacing:.13em;color:#fbe7b5;text-shadow:0 0 20px #f6dca877}
+@keyframes sparkFly{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}18%{opacity:1}72%{opacity:.85}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.18)}}
+@keyframes victoryHalo{0%,100%{opacity:.7;filter:brightness(.9)}50%{opacity:1;filter:brightness(1.3)}}
+@keyframes victoryCore{0%,100%{box-shadow:0 0 0 6px #d0bd9142,0 0 33px 13px #e5e5b27a,0 0 72px 25px #bcecf075}50%{box-shadow:0 0 0 9px #f2d8a260,0 0 39px 18px #ffefb49c,0 0 90px 30px #bcecf085}}
+.kanji-node[data-index="0"]{left:50%;top:16.3%}.kanji-node[data-index="1"]{left:82%;top:39.5%}.kanji-node[data-index="2"]{left:70%;top:77.3%}.kanji-node[data-index="3"]{left:30%;top:77.3%}.kanji-node[data-index="4"]{left:18%;top:39.5%}
+.feedback{min-height:108px;width:min(100%,400px);margin:2px auto 0;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:8px;text-align:center}
+.feedback .status{font-size:14px;color:#e4d8ae;line-height:1.5}.feedback .explanation{color:#cad8df;font-size:13px;line-height:1.55}
+.primary{padding:10px 32px;border:1px solid #bbd3d1;border-radius:999px;background:#253f4c;color:#f3f6e7;min-width:154px;min-height:43px;box-shadow:0 0 16px #86c7c42b}
+.back{background:transparent;border:0;color:#8cafbf;text-decoration:underline;text-underline-offset:3px;font-size:12px;padding:10px}
+.result-box{text-align:center;margin:25px auto 12px;max-width:340px}.result-box h2{font-family:serif;font-size:30px;letter-spacing:.07em;font-weight:500;color:#f3e5be}.result-box p{line-height:1.8;color:#c4d3dc;font-size:14px}
+.hide{display:none!important}
+@keyframes rejectPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.7)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes spinReverse{to{transform:rotate(-360deg)}}@keyframes pulse{0%,100%{opacity:.65}50%{opacity:1}}@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes shake{0%,100%{translate:0}20%{translate:-4px}40%{translate:4px}60%{translate:-3px}80%{translate:2px}}
+@media (max-height:760px){.headline{margin-top:8px}.glyph-stage{width:min(100%,315px)}.choose-heading{margin-top:0}.level{min-height:72px}.footer{padding:11px 0}.question-heading{margin-top:8px}.kanji-stage{width:min(100%,315px)}.feedback{min-height:90px}}
+@media (max-width:340px){.app{padding-left:10px;padding-right:10px}.kanji-node{min-width:48px}.level .name{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Results: a quieter study journal that retains the original magic-circle language. */
+.topbar{position:sticky;top:0;z-index:50;padding-bottom:9px;background:linear-gradient(#070f20f2,#070f20dd);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.page.with-results{justify-content:flex-start}
+.results-screen{width:100%;padding:11px 0 26px}
+.result-heading{text-align:center;margin:10px 0 12px}
+.result-heading .eyebrow{font-size:10px;margin-bottom:6px}
+.result-heading h2{font:500 27px/1.35 Georgia,'Noto Serif JP',serif;letter-spacing:.13em;margin:0;color:#f3e6c7}
+.score-panel{position:relative;overflow:hidden;text-align:center;border:1px solid #657f88a3;background:radial-gradient(ellipse at 50% -15%,#1c4a60b5,transparent 65%),linear-gradient(160deg,#162b40,#0b172a);border-radius:20px;padding:18px 14px 16px;box-shadow:0 12px 35px #0004}
+.score-panel::before{content:'';pointer-events:none;position:absolute;inset:9px;border:1px solid #b5cdd024;border-radius:15px}
+.score-ornament{width:82px;height:82px;margin:0 auto -9px;opacity:.7}.score-ornament .diagram{filter:drop-shadow(0 0 10px #b8e5e05a)}
+.score-big{font:500 54px/1.05 Georgia,'Noto Serif JP',serif;letter-spacing:.02em;color:#fff1c9;text-shadow:0 0 24px #eacb8e67;font-variant-numeric:tabular-nums}
+.score-big small{font-size:22px;color:#a6bfc5}
+.score-message{font-size:17px;color:#f3e6c7;font-weight:600;margin-top:9px}
+.score-detail{font-size:12px;color:#b1c8d2;margin-top:7px;line-height:1.5}
+.score-meter{height:4px;border-radius:20px;background:#314757;overflow:hidden;margin:14px auto 11px;width:min(84%,280px)}
+.score-meter b{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#89bcbd,#f9e3a8);width:0;transition:width .4s ease}
+.score-note{font-size:11px;color:#95b5c2;margin-top:0}
+.results-caption{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:26px 1px 11px}
+.results-caption h3{font-size:18px;letter-spacing:.06em;margin:0;color:#edf5f4;font-weight:600}
+.results-caption small{font-size:11px;color:#9eb5c5}
+.review-card{position:relative;border:1px solid #486478;background:linear-gradient(140deg,#14283dbd,#0d1c30da);border-radius:16px;padding:13px 13px 15px;margin-bottom:12px;box-shadow:0 8px 25px #0002}
+.review-card.good{border-color:#698b87}.review-card.retry{border-color:#786986}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.card-number{font:600 12px Georgia,serif;letter-spacing:.18em;color:#c8dbe0}
+.card-result{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:.04em;color:#e9dbb3}
+.card-result.bad{color:#dec6e2}
+.card-result .dot{font-size:17px;line-height:1}
+.glyph-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.glyph-pick{min-width:0;min-height:96px;position:relative;border:1px solid #3d6274;border-radius:10px;background:#091b2c;color:#fffaf1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:7px 1px 6px;gap:4px;transition:background .15s,border-color .15s,transform .15s}
+.glyph-pick:active{transform:scale(.95)}.glyph-pick .glyph{font:600 clamp(28px,8.2vw,33px)/1.2 var(--kanji-face)}.glyph-pick .gloss{font-size:10px;line-height:1.15;color:#aebfc8;text-wrap:balance;overflow-wrap:anywhere;max-width:100%}
+.glyph-pick .pick-mark{position:absolute;top:2px;right:4px;color:#708b9d;font-size:12px;line-height:1}
+.glyph-pick.is-answer{border-color:#b9b08a;background:#27333a}.glyph-pick.is-unknown{border-color:#f2ca83;background:#39413f;box-shadow:inset 0 0 0 1px #ddbd7a99,0 0 12px #ddbd7a3d}
+.glyph-pick.is-unknown .pick-mark{color:#f7dda2}
+.card-reason{margin-top:10px;font-size:12px;line-height:1.6;color:#d0dfe6}
+.card-reason b{font-weight:600;color:#f0dfb3}
+.card-answer{margin-top:8px;display:flex;flex-wrap:wrap;gap:7px;font-size:11px;color:#afc2cb}
+.card-answer strong{color:#f4e4bf;font-weight:600}
+.tap-hint{font-size:11px;line-height:1.5;color:#90b2c0;margin:0 1px 12px}
+.study-panel{border-radius:17px;border:1px solid #8b815d80;background:radial-gradient(ellipse at 30% 0%,#4a43302e,transparent 75%),#101e2c;padding:16px 14px 15px;margin:14px 0 17px}
+.study-panel h3{margin:0 0 7px;font-size:17px;font-weight:600;color:#f3e2b5}
+.study-panel p{color:#9cb6c4;font-size:11px;line-height:1.55;margin:0}
+.study-kanji-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.study-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:60px;border:1px solid #938869;border-radius:9px;background:#232e37;padding:5px 6px 7px}
+.study-chip .symbol{font:600 30px/1.25 var(--kanji-face);color:#fff2d4}.study-chip .gloss{font-size:10px;color:#c1c7c5}
+.study-empty{margin-top:10px;color:#a3bcc5;font-size:12px}
+.results-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.results-actions button{width:100%;font-size:13px;min-width:0;padding:10px 6px}
+.secondary-button{border:1px solid #647785;border-radius:999px;background:#14283a;color:#e4f2f4;min-height:44px}
+.preview-label{color:#f2cf89;font-size:11px;text-align:center;margin-bottom:9px;letter-spacing:.1em}
+.preview-link{display:block;margin:15px auto 0;padding:9px 12px;border:0;background:transparent;text-decoration:underline;text-underline-offset:4px;color:#97b6c6;font-size:12px}
+@media(max-width:345px){.glyph-picks{gap:4px}.glyph-pick{min-height:100px}.glyph-pick .glyph{font-size:25px}.glyph-pick .gloss{font-size:9px}.review-card{padding:11px 10px 13px}}
+
+/* v0.6: results are a study room, not a scoreboard. */
+.result-heading{margin:12px 0 14px;text-align:left}
+.result-heading h2{font-size:clamp(25px,7vw,32px);letter-spacing:.04em}
+.result-heading .eyebrow{letter-spacing:.19em}
+.study-intro{display:flex;gap:12px;align-items:center;margin-bottom:15px;border-radius:16px;border:1px solid #647f8780;background:linear-gradient(145deg,#193345,#0d1d31);padding:13px 14px}
+.study-intro-mark{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;color:#f3dca7;border-radius:50%;border:1px solid #b3b99d80;box-shadow:0 0 18px #8bd4db29,inset 0 0 14px #9ae3e52b;font-size:26px}
+.study-intro p{margin:0;font-size:13px;line-height:1.75;color:#c8dce3}
+#result .study-panel{margin:18px 0 19px;padding:15px 14px;background:radial-gradient(ellipse at 40% -20%,#4f4a332e,transparent 70%),#101f31;border-color:#92866c99}
+#result .study-panel h3{font-size:17px;margin:0 0 5px}
+.study-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:11px 0 0}
+.study-summary .study-chip{min-width:52px}
+.study-start{width:100%;margin-top:13px;min-height:48px;border:1px solid #b7c4b0;border-radius:100px;background:linear-gradient(120deg,#ead8a9,#d6bd8b);color:#142132;font-weight:700;font-size:15px;box-shadow:0 0 18px #edd9a620}
+.study-start:disabled{opacity:.45;box-shadow:none;cursor:default}
+.study-panel .study-kanji-list{margin:0}
+.results-caption{margin:13px 1px 8px}
+.review-card{margin-bottom:11px}
+.review-card.good,.review-card.retry{border-color:#486478}
+.card-top{margin-bottom:9px}
+.card-result{color:#a9c1cd}
+.card-result.bad{color:#a9c1cd}
+.card-answer{font-size:12px}
+.glyph-pick{min-height:95px}
+.glyph-pick.is-answer:not(.is-unknown){background:#1b2f3b}
+.review-card .card-result .dot{font-size:12px}
+.practice-screen{width:100%;padding:22px 0 25px;text-align:center}
+.practice-kicker{font-size:11px;letter-spacing:.22em;color:#8eb6c3;margin-bottom:8px}
+.practice-title{margin:0;color:#f3e6c7;font:500 29px/1.35 Georgia,'Noto Serif JP',serif}
+.practice-note{margin:12px auto;color:#b5cbd4;font-size:13px;line-height:1.65;max-width:300px}
+.practice-card{position:relative;overflow:hidden;margin:17px 0 15px;min-height:280px;border-radius:21px;border:1px solid #a6a78a88;background:radial-gradient(circle at center,#1c4552 0%,#11273b 48%,#0d1b2f 100%);box-shadow:0 15px 42px #0005;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:25px 15px}
+.practice-card::before{content:'';position:absolute;width:234px;height:234px;border:1px solid #a5d2d053;border-radius:50%;box-shadow:0 0 0 17px #adceca13,0 0 0 34px #a6c1bf0d,0 0 27px #9ad4d42a;pointer-events:none}
+.practice-card::after{content:'✧      ✧      ✧';position:absolute;top:32px;color:#d0d1a981;letter-spacing:30px;font-size:12px;pointer-events:none}
+.practice-glyph{position:relative;z-index:1;font:400 clamp(112px,33vw,142px)/1.25 'JLOS-KanjiStrokeOrders',var(--kanji-face);color:#fff3d5;text-shadow:0 0 35px #d9ecca68}
+.practice-answer{position:relative;z-index:1;min-height:42px;margin-top:4px;font-size:19px;line-height:1.4;color:#ffe5ae;font-weight:600}
+.practice-answer-label{display:block;color:#adc9d0;font-size:11px;letter-spacing:.08em;margin-bottom:5px;font-weight:400}
+.practice-answer.is-hidden{visibility:hidden}
+.practice-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.practice-controls .primary,.practice-controls .secondary-button{padding:12px 9px;min-height:49px;font-size:14px}
+.practice-controls .full{grid-column:1 / -1}
+.practice-progress{margin-top:10px;color:#9fbdc9;font-size:12px}
+.practice-done-icon{font:62px/1 Georgia,serif;color:#f5e0b3;text-shadow:0 0 28px #f5d79588;margin:15px 0}
+.practice-back{display:block;margin:15px auto 0;padding:12px 16px;border:none;background:transparent;color:#aac7d2;text-decoration:underline;text-underline-offset:3px;font-size:13px}
+@media(max-width:345px){.practice-card{min-height:240px}.practice-glyph{font-size:100px}}
+
+/* v1.2: unobtrusive sound control. The 50-question data stays unchanged. */
+.top-controls{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:53px;height:33px;padding:0 7px;border:1px solid #587784;border-radius:999px;background:#102638;color:#d7ebdf;font-size:10px;font-weight:700;letter-spacing:.015em;white-space:nowrap;touch-action:manipulation}
+.sound-note{font-size:18px;line-height:1;color:#e9d39d}
+.sound-toggle.is-muted{color:#8196a6;border-color:#425263;background:#0a1625}
+.sound-toggle.is-muted .sound-note{color:#8196a6}
+@media(max-width:340px){.top-controls{gap:4px}.sound-toggle{min-width:46px;padding:0 5px}.brand{font-size:11px;letter-spacing:.15em}}
+
+/* v1.0 Fruit tiers: no copyrighted character art. Simple inline SVG symbols. */
+.choose{width:min(100%,430px)}
+.choose-heading{color:#d0d4c5;font-size:13px;letter-spacing:.08em;margin:7px 0 14px}
+.levels{gap:10px}
+.fruit-level{position:relative;min-height:147px;padding:12px 4px 11px;gap:4px;border-radius:17px;overflow:hidden;box-shadow:inset 0 1px 0 #ffffff13,0 7px 20px #0005;touch-action:manipulation}
+.fruit-level::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,var(--fruit-glow),transparent 76%);opacity:.18;transition:opacity .25s}
+.fruit-level:hover::before,.fruit-level:focus-visible::before{opacity:.36}
+.fruit-0{--fruit-glow:#f9d34b;border-color:#a1894c99}.fruit-1{--fruit-glow:#ffb25a;border-color:#b98e5d99}.fruit-2{--fruit-glow:#e54c70;border-color:#a6738599}
+.fruit-medallion{position:relative;display:grid;place-items:center;width:75px;height:75px;margin-bottom:1px;border-radius:50%;border:1px solid #e4dbb133;background:radial-gradient(circle at 48% 32%,#ffffff1c,#14283824 65%,#05132045 100%);box-shadow:inset 0 0 14px #0004,0 0 19px #d3e8da12}
+.fruit-svg{width:67px;height:67px;overflow:visible;filter:drop-shadow(0 5px 4px #0006)}
+.fruit-name{font:700 clamp(10px,2.7vw,13px)/1.3 system-ui,sans-serif;letter-spacing:.05em;color:#f4e8c7;white-space:nowrap}
+.fruit-description{font-size:11px;color:#b7cbd0;letter-spacing:.04em}
+.level.fruit-level:active{transform:scale(.95)}
+@media(max-height:760px){.fruit-level{min-height:123px;padding:6px 3px}.fruit-medallion{width:60px;height:60px}.fruit-svg{width:55px;height:55px}.glyph-stage{width:min(100%,285px)}}
+@media(max-width:360px){.levels{gap:6px}.fruit-level{min-height:128px}.fruit-medallion{width:61px;height:61px}.fruit-svg{width:55px;height:55px}.fruit-name{font-size:10px}}
+
+/* v1.3: shared Japanese glyph shapes and touch-friendly kanji size.
+   Internet is needed for the Google-hosted font; offline falls back to Mincho. */
+.headline h1,.glyph-title span:first-child,.result-box h2,
+.result-heading h2,.practice-title{font-family:var(--kanji-face)}
+.kanji-node{font-feature-settings:"palt" 0; /* preserve full-width kanji proportions */}
+.glyph-pick .glyph,.study-chip .symbol{font-feature-settings:"palt" 0}
+@media (max-width:340px){.kanji-node{font-size:clamp(29px,9.5vw,34px)}}
+
+/* Ver.1.4 — practice-only layout and separate reference panel.
+   No changes to game, result, audio, background or magic-circle artwork. */
+.app.practice-expanded{max-width:860px}
+.practice-screen{max-width:824px;margin-inline:auto}
+.practice-layout{display:grid;grid-template-columns:minmax(0,1.07fr) minmax(0,.93fr);gap:14px;align-items:stretch;margin:17px 0 15px}
+.practice-layout .practice-card{margin:0;min-height:282px;position:relative}
+.practice-card .practice-glyph{position:absolute;z-index:1;inset:50% auto auto 50%;width:234px;height:234px;display:grid;place-items:center;text-align:center;transform:translate(-50%,-50%);line-height:1;white-space:nowrap}
+.practice-glyph-mark{display:block;line-height:1;transform:translateY(3px)}
+.practice-info{min-width:0;display:flex;flex-direction:column;text-align:left;gap:0;min-height:282px;padding:17px 17px 13px;border-radius:18px;border:1px solid #8b9c9b8f;background:linear-gradient(150deg,#152e3e,#101e31);box-shadow:0 15px 42px #0005;color:#e9f3f2}
+.practice-info-heading{font:600 12px/1.4 system-ui,sans-serif;letter-spacing:.06em;color:#f0dfb1;padding-bottom:10px;border-bottom:1px solid #7897a23d}
+.practice-info-rows{display:grid;gap:0;margin-top:4px}
+.practice-info-row{display:grid;grid-template-columns:77px minmax(0,1fr);gap:11px;align-items:start;padding:10px 0;border-bottom:1px solid #7897a22b}
+.practice-info-label{font-size:11px;line-height:1.6;color:#a6c7cd;white-space:nowrap}
+.practice-info-value{font-size:13px;line-height:1.65;color:#f6e8c5;overflow-wrap:anywhere;min-width:0}
+.practice-info.locked .practice-info-value{color:#6f94a1}
+.practice-info-source{font-size:9px;line-height:1.5;color:#7f9dab;margin-top:auto;padding-top:11px}
+.practice-info-source a{color:#b1c9d2;text-underline-offset:2px}
+.practice-info-hint{font-size:11px;color:#9cb6c4;line-height:1.6;margin-top:14px}
+.practice-layout.is-done{display:block;max-width:436px;margin-inline:auto}
+.practice-layout.is-done .practice-info{display:none}
+.practice-layout.is-done .practice-card::before,.practice-layout.is-done .practice-card::after{opacity:.4}
+@media(max-width:650px){.practice-layout{grid-template-columns:1fr;gap:12px}.practice-info{min-height:0;padding:14px 16px 10px}.practice-layout .practice-card{min-height:280px}.practice-info-row{grid-template-columns:86px minmax(0,1fr);padding:8px 0}.app.practice-expanded{max-width:470px}}
+@media(max-width:345px){.practice-layout .practice-card{min-height:255px}.practice-card .practice-glyph{width:210px;height:210px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><b>JLOS</b> <span aria-hidden="true">/</span> 五芒星</div>
+    <div class="top-controls">
+      <button type="button" id="soundToggle" class="sound-toggle" aria-pressed="true" aria-label="Ses açık" title="Ses açık"><span class="sound-note" aria-hidden="true">♪</span><span class="sound-state">ON</span></button>
+      <div class="lang" role="group" aria-label="Language / 言語">
+        <button type="button" id="ja" aria-pressed="false">日本語</button>
+        <button type="button" id="tr" aria-pressed="true">Türkçe</button>
+      </div>
+    </div>
+  </header>
+  <main class="page">
+    <section id="home" class="screen">
+      <div class="headline"><div class="eyebrow">JLOS · KANJI CONSTELLATION</div><h1>五芒星</h1><p class="subtitle" id="subtitle">Beş Köşeli Yıldız</p></div>
+      <div class="glyph-stage" id="titleDiagram"></div>
+      <div class="choose"><div class="choose-heading" id="chooseHeading">Seviyeyi seç</div>
+        <div class="levels" id="levels"></div>
+        
+      </div>
+    </section>
+    <section id="game" class="screen hide">
+      <div class="game-top"><span id="levelLabel"></span><span id="countLabel"></span></div>
+      <div class="question-heading" id="questionHeading"></div>
+      <div class="progress" id="progress"></div>
+      <div class="kanji-stage" id="kanjiStage"><div id="gameDiagram"></div><div class="center-flare" id="centerFlare" aria-hidden="true"></div><div id="nodes"></div><div id="sparkfield" class="sparkfield" aria-hidden="true"></div></div>
+      <div class="feedback" aria-live="polite"><div class="status" id="status"></div><div class="explanation" id="explanation"></div><button type="button" class="primary hide" id="next"></button></div>
+      <div style="text-align:center"><button type="button" class="back" id="back"></button></div>
+    </section>
+    <section id="result" class="screen results-screen hide">
+      <div class="preview-label hide" id="previewBadge">DEMO / プレビュー</div>
+      <div class="result-heading"><div class="eyebrow">JLOS · 五芒星 / REVIEW</div><h2 id="resultTitle"></h2></div>
+      <div class="study-intro"><span class="study-intro-mark" aria-hidden="true">✧</span><p id="resultIntro"></p></div>
+      <div class="results-caption"><h3 id="reviewTitle"></h3><small id="reviewCount"></small></div>
+      <p id="tapHint" class="tap-hint"></p>
+      <div id="reviewCards"></div>
+      <!-- At the end of all five questions: review the selected kanji and practice. -->
+      <div class="study-panel" id="studyPanel" aria-live="polite">
+        <h3 id="studyTitle"></h3>
+        <div id="studyList" class="study-summary"></div>
+        <button type="button" id="startPractice" class="study-start" disabled></button>
+      </div>
+      <div class="results-actions">
+        <button type="button" class="primary" id="replay"></button>
+        <button type="button" class="secondary-button" id="again"></button>
+      </div>
+    </section>
+    <section id="practice" class="screen practice-screen hide" aria-live="polite">
+      <div class="practice-kicker">JLOS · 五芒星 / PRACTICE</div>
+      <h2 class="practice-title" id="practiceTitle"></h2>
+      <div class="practice-progress" id="practiceProgress"></div>
+      <p class="practice-note" id="practiceInstruction"></p>
+      <div class="practice-layout" id="practiceLayout">
+        <div class="practice-card" id="practiceCard">
+          <div class="practice-glyph" id="practiceGlyph"></div>
+        </div>
+        <aside class="practice-info locked" id="practiceInfo" aria-live="polite"></aside>
+      </div>
+      <div id="practiceControls" class="practice-controls"></div>
+      <button type="button" class="practice-back" id="practiceBack"></button>
+    </section>
+  </main>
+  <nav class="return-nav" aria-label="Back to training / 鍛錬の場へ戻る">
+    <a id="trainingBack" class="return-link" href="training.html">← Antrenman alanına dön</a>
+  </nav>
+  <footer class="footer">JLOS · 五芒星 · 50 SORU / 50問</footer>
+</div>
+<script>
+'use strict';
+const points=[[200,66],[328,159],[279,310],[121,310],[72,159]];
+const starRoute=[0,2,4,1,3]; // One stroke to each of the five vertices, clockwise through the pentagram.
+function magicDiagram(){
+  const ringTicks=Array.from({length:48},(_,i)=>`<line x1="200" y1="26" x2="200" y2="${i%4===0?40:33}" transform="rotate(${i*7.5} 200 200)" stroke="${i%4===0?'#b9d5d0':'#6b97a8'}" stroke-width="${i%4===0?1.5:.7}" opacity=".5"/>`).join('');
+  const gems=Array.from({length:10},(_,i)=>`<path d="M200 42 l4 4 -4 4 -4 -4Z" transform="rotate(${i*36} 200 200)" fill="none" stroke="#d9ccaa" stroke-width=".8" opacity=".65"/>`).join('');
+  return `<svg class="diagram" viewBox="0 0 400 400" aria-hidden="true">
+    <defs><radialGradient id="aura"><stop stop-color="#6db5c1" stop-opacity=".12"/><stop offset=".65" stop-color="#17465d" stop-opacity=".06"/><stop offset="1" stop-color="#1c506c" stop-opacity="0"/></radialGradient></defs>
+    <circle cx="200" cy="200" r="195" fill="url(#aura)"/>
+    <g class="ring-spin">${ringTicks}<circle class="halo" cx="200" cy="200" r="163"/><circle class="halo" cx="200" cy="200" r="175" stroke-dasharray="2 9"/></g>
+    <g class="ring-spin-back">${gems}<circle class="halo" cx="200" cy="200" r="153" stroke-dasharray="35 7"/></g>
+    <polygon points="${points.map(p=>p.join(',')).join(' ')}" class="edge"/>
+    <path d="M200 66 L279 310 L72 159 L328 159 L121 310 Z" class="star pulse"/>
+    <g class="star-light-lines">${starRoute.map((vertex,k)=>{const to=starRoute[(k+1)%5];return `<path class="star-trace" pathLength="100" d="M${points[vertex][0]} ${points[vertex][1]} L${points[to][0]} ${points[to][1]}"/>`}).join('')}</g>
+    <circle cx="200" cy="200" r="65" class="center-figure"/><circle cx="200" cy="200" r="43" class="halo"/>
+    <path d="M200 157 L243 200 L200 243 L157 200 Z" class="center-figure"/>
+    ${points.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#d8d8c0" opacity=".75"/>`).join('')}
+  </svg>`
+}
+const dict={
+  tr:{subtitle:'Beş Köşeli Yıldız',choose:'Bir meyve seç · Hemen başla',levels:['Kolay','Orta','Zor'],task:'Diğerlerinden farklı olan kanjiyi seç',question:'Soru',correct:'DOĞRU!',wrong:'Tekrar dene',next:'Sonraki soru',finish:'Kanjileri gözden geçir',back:'Seviye seçimine dön',complete:'Tamamlandı',completedText:'5 soruyu bitirdin. Başka bir seviyeyi denemek ister misin?',again:'Seviye seç',level:'Seviye'},
+  ja:{subtitle:'意味のつながりを見抜け',choose:'果物を選ぶとすぐ開始',levels:['初級','中級','上級'],task:'仲間外れの漢字を1つ選べ',question:'第',correct:'正解！',wrong:'違うみたい。もう一度！',next:'次の問題',finish:'漢字を復習する',back:'レベル選択へ戻る',complete:'五芒星 完成',completedText:'全5問終了！ 別のレベルにも挑戦してみよう。',again:'レベルを選ぶ',level:'レベル'}
+};
+const fruitNames=['MUZ','PORTAKAL','NAR'];
+const resultText={
+ tr:{title:'Kanji tekrar odası',intro:'Bilmediğin kanjileri seç.',review:'Sorulardaki kanjiler',question:'soru',tap:'Birden fazla kanji seçebilirsin. ✦ = seçildi.',rightAnswer:'Farklı olan',reason:'Ortak özellik',unknownTitle:'Seçtiğin kanjiler',unknownHelp:'',noUnknown:'Henüz kanji seçmedin.',again:'Aynı seviyeyi tekrar oyna',home:'Seviye seçimi',preview:'Tekrar sayfasını önceden gör',demo:'DEMO · ÖRNEK',practiceStart:'Seçilen kanjilerle çalış',practiceTitle:'Kanji alıştırması',practiceHint:'Anlamını hatırla.',reveal:'Anlamını göster',answerLabel:'Anlamı',repeat:'Bir daha',remembered:'Hatırladım',backToReview:'Kanji listesine dön',remaining:'kaldı',practiceDone:'Alıştırma tamamlandı',doneMessage:'İstersen aynı kanjilerle yeniden çalışabilir veya listeye dönebilirsin.',againPractice:'Yeniden çalış'},
+ ja:{title:'漢字練習の部屋',intro:'知らない漢字を選ぼう。',review:'出題された漢字',question:'問',tap:'複数選択OK。✦が付いた漢字を練習できます。',rightAnswer:'仲間外れ',reason:'共通性',unknownTitle:'選んだ漢字',unknownHelp:'',noUnknown:'まだ漢字が選ばれていません。',again:'同じレベルでもう一度',home:'レベル選択へ',preview:'復習ページを先に見てみる',demo:'DEMO · プレビュー',practiceStart:'選んだ漢字を練習する',practiceTitle:'漢字の練習',practiceHint:'意味や読みを思い出そう。',reveal:'意味・読みを見る',answerLabel:'意味・読み',repeat:'もう一度',remembered:'覚えた',backToReview:'復習一覧へ戻る',remaining:'字が残っています',practiceDone:'練習が終わりました',doneMessage:'選んだ漢字をひと通り確認しました。繰り返して練習することもできます。',againPractice:'もう一度練習する'}
+};
+const SOURCE_QUESTIONS = [{"id":1,"level":"初級","group":"自然・時間","common":"四季","core":["春","夏","秋","冬"],"answer":"年","tr":"春・夏・秋・冬 dört mevsimi gösterir. 年 ise yıldır.","ja":"春・夏・秋・冬は「四季」に共通する。年はそこから外れる。"},{"id":2,"level":"初級","group":"自然・時間","common":"東西南北の四方位","core":["東","西","南","北"],"answer":"京","tr":"東・西・南・北 dört ana yönü gösterir. 京 ise başkentle ilgili bir kanjidir.","ja":"東・西・南・北は「東西南北の四方位」に共通する。京はそこから外れる。"},{"id":3,"level":"初級","group":"自然・時間","common":"一日の時間帯","core":["朝","昼","夕","夜"],"answer":"久","tr":"朝・昼・夕・夜 günün zaman dilimleridir. 久 ise uzun süreyi belirtir.","ja":"朝・昼・夕・夜は「一日の時間帯」に共通する。久はそこから外れる。"},{"id":4,"level":"初級","group":"自然・時間","common":"気象現象","core":["雨","雪","風","雷"],"answer":"空","tr":"雨・雪・風・雷 hava olaylarıdır. 空 ise gökyüzüdür.","ja":"雨・雪・風・雷は「気象現象」に共通する。空はそこから外れる。"},{"id":5,"level":"上級","group":"自然・時間","common":"気象現象","core":["霧","雹","霜","露"],"answer":"雫","tr":"霧・雹・霜・露 meteorolojik olayları ifade eder. 雫 ise su damlasıdır.","ja":"霧・雹・霜・露は気象現象。雫は水滴そのものを指す。"},{"id":6,"level":"初級","group":"自然・時間","common":"時間","core":["年","月","日","秒"],"answer":"由","tr":"年・月・日・秒 zaman birimlerini gösterir. 由 ise sebep veya köken anlamındadır.","ja":"年・月・日・秒は「時間」に共通する。由はそこから外れる。"},{"id":7,"level":"中級","group":"自然・時間","common":"自然地形","core":["山","谷","岬","丘"],"answer":"畑","tr":"山・谷・岬・丘 doğal yeryüzü şekilleridir. 畑 ise tarım yapılan tarladır.","ja":"山・谷・岬・丘は「自然地形」に共通する。畑はそこから外れる。"},{"id":8,"level":"中級","group":"自然・時間","common":"地表にある水域","core":["海","湖","池","沼"],"answer":"島","tr":"海・湖・池・沼 su kütlesi veya sulak alanları anlatır. 島 ise adadır.","ja":"海・湖・池・沼は「地表にある水域」に共通する。島はそこから外れる。"},{"id":9,"level":"上級","group":"自然・時間","common":"水の流れやたまりを表す場所","core":["滝","池","河","沼"],"answer":"法","tr":"滝・池・河・沼 suyun aktığı veya biriktiği yerlerdir. 法 ise hukuk ve kural anlamına gelir.","ja":"滝・池・河・沼は水が流れたり、たまったりする場所。法だけは水の場所を表さない。"},{"id":10,"level":"上級","group":"自然・時間","common":"山や海岸の地形","core":["峰","岳","岬","峠"],"answer":"嵐","tr":"峰・岳・岬・峠 dağ ve kıyı şekilleridir. 嵐 ise fırtınadır.","ja":"峰・岳・岬・峠は「山や海岸の地形」に共通する。嵐はそこから外れる。"},{"id":11,"level":"初級","group":"生物・植物","common":"動物","core":["犬","猫","牛","馬"],"answer":"草","tr":"犬・猫・牛・馬 hayvanlardır. 草 ise ottur.","ja":"犬・猫・牛・馬は「動物」に共通する。草はそこから外れる。"},{"id":12,"level":"上級","group":"生物・植物","common":"鳥","core":["鷹","鶴","雀","鳩"],"answer":"虎","tr":"鷹・鶴・雀・鳩 kuşlardır. 虎 ise kaplandır.","ja":"鷹・鶴・雀・鳩は「鳥」に共通する。虎はそこから外れる。"},{"id":13,"level":"上級","group":"生物・植物","common":"魚類","core":["鮭","鯛","鯉","鰻"],"answer":"鯨","tr":"鮭・鯛・鯉・鰻 balık türleridir. 鯨 ise memeli olan balinadır.","ja":"鮭・鯛・鯉・鰻は「魚類」に共通する。鯨はそこから外れる。"},{"id":14,"level":"上級","group":"生物・植物","common":"昆虫","core":["蝶","蜂","蟻","蚊"],"answer":"蛙","tr":"蝶・蜂・蟻・蚊 böceklerdir. 蛙 ise kurbağadır.","ja":"蝶・蜂・蟻・蚊は「昆虫」に共通する。蛙はそこから外れる。"},{"id":15,"level":"上級","group":"生物・植物","common":"哺乳類","core":["虎","熊","狼","狐"],"answer":"龍","tr":"虎・熊・狼・狐 gerçek memeli hayvanlardır. 龍 ise efsanevi ejderhadır.","ja":"虎・熊・狼・狐は「哺乳類」に共通する。龍はそこから外れる。"},{"id":16,"level":"中級","group":"生物・植物","common":"樹木","core":["松","梅","桜","杉"],"answer":"草","tr":"松・梅・桜・杉 ağaçlardır. 草 ise ottur.","ja":"松・梅・桜・杉は「樹木」に共通する。草はそこから外れる。"},{"id":17,"level":"中級","group":"生物・植物","common":"植物の器官","core":["根","茎","葉","花"],"answer":"緑","tr":"根・茎・葉・花 bitki organlarıdır. 緑 ise yeşil renk anlamına gelir.","ja":"根・茎・葉・花は「植物の器官」に共通する。緑はそこから外れる。"},{"id":18,"level":"中級","group":"生物・植物","common":"植物の成長や構造に関わるもの","core":["芽","種","実","葉"],"answer":"塩","tr":"芽・種・実・葉 bitkinin yapısı ve gelişimiyle ilgilidir. 塩 ise tuzdur.","ja":"芽・種・実・葉は「植物の成長や構造に関わるもの」に共通する。塩はそこから外れる。"},{"id":19,"level":"中級","group":"生物・植物","common":"穀物・豆などの食用作物","core":["米","麦","豆","粟"],"answer":"肉","tr":"米・麦・豆・粟 yenilebilir tarım ürünleridir. 肉 ise ettir.","ja":"米・麦・豆・粟は「穀物・豆などの食用作物」に共通する。肉はそこから外れる。"},{"id":20,"level":"上級","group":"生物・植物","common":"食べられる木の実・果実","core":["桃","梨","柿","栗"],"answer":"杉","tr":"桃・梨・柿・栗 yenilebilir ağaç meyveleridir. 杉 ise bir ağaç türüdür.","ja":"桃・梨・柿・栗は「食べられる木の実・果実」に共通する。杉はそこから外れる。"},{"id":21,"level":"初級","group":"身体・感情","common":"顔にある器官・部位","core":["目","耳","鼻","口"],"answer":"手","tr":"目・耳・鼻・口 yüzün parçalarıdır. 手 ise eldir.","ja":"目・耳・鼻・口は「顔にある器官・部位」に共通する。手はそこから外れる。"},{"id":22,"level":"中級","group":"身体・感情","common":"人体の部位","core":["腕","脚","指","肩"],"answer":"育","tr":"腕・脚・指・肩 vücut bölümleridir. 育 ise yetiştirmek anlamındadır.","ja":"腕・脚・指・肩は「人体の部位」に共通する。育はそこから外れる。"},{"id":23,"level":"初級","group":"身体・感情","common":"親族の呼び名","core":["父","母","兄","妹"],"answer":"友","tr":"父・母・兄・妹 aile üyelerini ifade eder. 友 ise arkadaştır.","ja":"父・母・兄・妹は「親族の呼び名」に共通する。友はそこから外れる。"},{"id":24,"level":"中級","group":"身体・感情","common":"感情","core":["喜","怒","哀","楽"],"answer":"夢","tr":"喜・怒・哀・楽 duyguları ifade eder. 夢 ise rüyadır.","ja":"喜・怒・哀・楽は「感情」に共通する。夢はそこから外れる。"},{"id":25,"level":"上級","group":"身体・感情","common":"感情・感情的態度","core":["愛","憎","恨","恋"],"answer":"変","tr":"愛・憎・恨・恋 duygusal durumları ifade eder. 変 ise değişmek veya tuhaf olmakla ilgilidir.","ja":"愛・憎・恨・恋は「感情・感情的態度」に共通する。変はそこから外れる。"},{"id":26,"level":"中級","group":"身体・感情","common":"声を伴うことのある表現行為","core":["笑","泣","叫","歌"],"answer":"走","tr":"笑・泣・叫・歌 sesle ifade edilebilen davranışlardır. 走 ise koşmaktır.","ja":"笑・泣・叫・歌は「声を伴うことのある表現行為」に共通する。走はそこから外れる。"},{"id":27,"level":"中級","group":"身体・感情","common":"気温や温度の感じ方","core":["寒","暑","暖","涼"],"answer":"然","tr":"寒・暑・暖・涼 sıcaklık hissini anlatır. 然 ise böyle olmak gibi anlamlara gelir.","ja":"寒・暑・暖・涼は「気温や温度の感じ方」に共通する。然はそこから外れる。"},{"id":28,"level":"上級","group":"身体・感情","common":"身体の感覚や状態","core":["痛","痒","疲","眠"],"answer":"働","tr":"痛・痒・疲・眠 bedensel his veya durumları anlatır. 働 ise çalışmak eylemidir.","ja":"痛・痒・疲・眠は「身体の感覚や状態」に共通する。働はそこから外れる。"},{"id":29,"level":"上級","group":"身体・感情","common":"感覚による知覚行為","core":["視","聴","嗅","触"],"answer":"考","tr":"視・聴・嗅・触 duyularla algılamaya ilişkindir. 考 ise düşünmek anlamındadır.","ja":"視・聴・嗅・触は「感覚による知覚行為」に共通する。考はそこから外れる。"},{"id":30,"level":"初級","group":"身体・感情","common":"生命・年齢の状態","core":["生","死","老","若"],"answer":"流","tr":"生・死・老・若 yaşam ve yaşla ilgili durumlardır. 流 ise akmaktır.","ja":"生・死・老・若は「生命・年齢の状態」に共通する。流はそこから外れる。"},{"id":31,"level":"初級","group":"数量・性質","common":"幾何に使う基本概念","core":["円","角","線","点"],"answer":"色","tr":"円・角・線・点 geometrinin temel kavramlarıdır. 色 ise renktir.","ja":"円・角・線・点は「幾何に使う基本概念」に共通する。色はそこから外れる。"},{"id":32,"level":"初級","group":"数量・性質","common":"数を表す漢字","core":["九","二","七","四"],"answer":"土","tr":"九・二・七・四 sayıları gösterir. 土 ise topraktır.","ja":"九・二・七・四は「数を表す漢字」に共通する。土はそこから外れる。"},{"id":33,"level":"中級","group":"数量・性質","common":"数の大きな位・単位","core":["百","千","万","億"],"answer":"五","tr":"百・千・万・億 büyük sayı birimleridir. 五 ise beş sayısıdır.","ja":"百・千・万・億は「数の大きな位・単位」に共通する。五はそこから外れる。"},{"id":34,"level":"初級","group":"数量・性質","common":"高さや長さに関わる性質","core":["高","低","長","短"],"answer":"金","tr":"高・低・長・短 yükseklik ve uzunluğu anlatır. 金 ise altın veya metaldir.","ja":"高・低・長・短は「高さや長さに関わる性質」に共通する。金はそこから外れる。"},{"id":35,"level":"中級","group":"数量・性質","common":"重さ・厚さに関わる性質","core":["重","軽","厚","薄"],"answer":"硬","tr":"重・軽・厚・薄 ağırlık ve kalınlığı anlatır. 硬 ise sertliktir.","ja":"重・軽・厚・薄は「重さ・厚さに関わる性質」に共通する。硬はそこから外れる。"},{"id":36,"level":"中級","group":"数量・性質","common":"速さ・時間的な進み方","core":["早","遅","速","鈍"],"answer":"暖","tr":"早・遅・速・鈍 hız veya zamanlamayla ilgilidir. 暖 ise sıcaklıktır.","ja":"早・遅・速・鈍は「速さ・時間的な進み方」に共通する。暖はそこから外れる。"},{"id":37,"level":"初級","group":"数量・性質","common":"新旧・年齢に関わる性質","core":["新","古","若","老"],"answer":"広","tr":"新・古・若・老 yenilik, eskilik ve yaşla ilgilidir. 広 ise geniş demektir.","ja":"新・古・若・老は「新旧・年齢に関わる性質」に共通する。広はそこから外れる。"},{"id":38,"level":"初級","group":"数量・性質","common":"位置・方向の関係","core":["前","後","左","右"],"answer":"天","tr":"前・後・左・右 göreli konum ve yönlerdir. 天 ise gök anlamına gelir.","ja":"前・後・左・右は「位置・方向の関係」に共通する。天はそこから外れる。"},{"id":39,"level":"初級","group":"数量・性質","common":"相対的な位置関係","core":["内","外","上","下"],"answer":"犬","tr":"内・外・上・下 göreli konumlardır. 犬 ise köpektir.","ja":"内・外・上・下は「相対的な位置関係」に共通する。犬はそこから外れる。"},{"id":40,"level":"初級","group":"数量・性質","common":"大きさ・広さに関わる性質","core":["大","小","広","狭"],"answer":"軽","tr":"大・小・広・狭 boyut ve genişlikle ilgilidir. 軽 ise hafifliktir.","ja":"大・小・広・狭は「大きさ・広さに関わる性質」に共通する。軽はそこから外れる。"},{"id":41,"level":"上級","group":"物・文化","common":"金属の種類・材料","core":["鋼","銀","銅","鉄"],"answer":"銃","tr":"鋼・銀・銅・鉄 metal ve metal malzemelerdir. 銃 ise silahtır.","ja":"鋼・銀・銅・鉄は「金属の種類・材料」に共通する。銃はそこから外れる。"},{"id":42,"level":"中級","group":"物・文化","common":"常温で液体として扱うもの","core":["水","油","酒","酢"],"answer":"塩","tr":"水・油・酒・酢 oda sıcaklığında sıvıdır. 塩 ise genellikle katıdır.","ja":"水・油・酒・酢は「常温で液体として扱うもの」に共通する。塩はそこから外れる。"},{"id":43,"level":"中級","group":"物・文化","common":"味を表す字","core":["甘","辛","酸","苦"],"answer":"痛","tr":"甘・辛・酸・苦 tatları anlatır. 痛 ise acı veya ağrıyı ifade eder.","ja":"甘・辛・酸・苦は「味を表す字」に共通する。痛はそこから外れる。"},{"id":44,"level":"中級","group":"物・文化","common":"食品・調味材料","core":["塩","糖","酢","油"],"answer":"皿","tr":"塩・糖・酢・油 yiyecek veya çeşni malzemeleridir. 皿 ise tabaktır.","ja":"塩・糖・酢・油は「食品・調味材料」に共通する。皿はそこから外れる。"},{"id":45,"level":"中級","group":"物・文化","common":"楽器・音を鳴らす道具","core":["笛","琴","鼓","鐘"],"answer":"歌","tr":"笛・琴・鼓・鐘 müzik aleti veya ses çıkaran araçlardır. 歌 ise şarkıdır.","ja":"笛・琴・鼓・鐘は「楽器・音を鳴らす道具」に共通する。歌はそこから外れる。"},{"id":46,"level":"上級","group":"物・文化","common":"書写・書道に使うもの","core":["筆","紙","墨","硯"],"answer":"剣","tr":"筆・紙・墨・硯 hat sanatında kullanılan araçlardır. 剣 ise kılıçtır.","ja":"筆・紙・墨・硯は「書写・書道に使うもの」に共通する。剣はそこから外れる。"},{"id":47,"level":"上級","group":"物・文化","common":"武器","core":["刀","剣","槍","弓"],"answer":"律","tr":"刀・剣・槍・弓 silahlardır. 律 ise kural veya düzen anlamına gelir.","ja":"刀・剣・槍・弓は「武器」に共通する。律はそこから外れる。"},{"id":48,"level":"上級","group":"物・文化","common":"調理や食事に使う器具","core":["皿","鍋","椀","箸"],"answer":"糖","tr":"皿・鍋・椀・箸 yemek hazırlama veya yeme araçlarıdır. 糖 ise şekerdir.","ja":"皿・鍋・椀・箸は「調理や食事に使う器具」に共通する。糖はそこから外れる。"},{"id":49,"level":"中級","group":"物・文化","common":"医療に関わる字","core":["医","薬","病","診"],"answer":"教","tr":"医・薬・病・診 tıpla ilgili kanjilerdir. 教 ise öğretmek anlamındadır.","ja":"医・薬・病・診は「医療に関わる字」に共通する。教はそこから外れる。"},{"id":50,"level":"中級","group":"物・文化","common":"物やお金の取引","core":["買","売","貸","借"],"answer":"残","tr":"買・売・貸・借 alışveriş ve ödünç işlemlerini anlatır. 残 ise geriye kalmaktır.","ja":"買・売・貸・借は「物やお金の取引」に共通する。残はそこから外れる。"}];
+const KANJI_JP_MEANINGS = {"七":"数字の七","万":"数字の万","上":"上部","下":"下部","丘":"丘・小高い土地","久":"長い時間","九":"数字の九","二":"数字の二","五":"数字の五","京":"都・首都","低":"低い","借":"借りる","働":"働く","億":"数字の億","兄":"兄","内":"内側","円":"円形","冬":"冬の季節","刀":"刀","前":"前・手前","剣":"剣","北":"北の方角","医":"医療","千":"数字の千","南":"南の方角","厚":"厚い","友":"友人","口":"口","古":"古い","叫":"叫ぶ","右":"右","哀":"悲しみ","喜":"喜び","嗅":"においをかぐ","四":"数字の四","土":"土・土壌","塩":"塩","墨":"墨","売":"売る","変":"変化・変わる","夏":"夏の季節","夕":"夕方","外":"外側","夜":"夜・夜間","夢":"夢","大":"大きい","天":"天・空","妹":"妹","実":"実・果実","寒":"寒い","小":"小さい","山":"山","岬":"岬・みさき","岳":"高い山","峠":"山道の通過点","峰":"山の頂上","島":"島","嵐":"暴風・あらし","左":"左","年":"一年・年数","広":"広い","弓":"弓","律":"規律・きまり","後":"後ろ・後","怒":"怒り","恋":"恋愛","恨":"恨み","愛":"愛・愛情","憎":"憎しみ","手":"手","指":"指","教":"教える","新":"新しい","日":"太陽・日","早":"早い","春":"春の季節","昼":"昼間","暑":"暑い","暖":"暖かい","月":"月・月日","朝":"朝・午前","杉":"スギ","東":"東の方角","松":"マツ","柿":"カキ","栗":"クリ","根":"植物の根","桃":"モモ","桜":"サクラ","梅":"ウメ","梨":"ナシ","椀":"椀・お椀","楽":"楽しさ","槍":"槍","歌":"歌う・歌","死":"死・死ぬ","残":"残る","母":"母","水":"水","池":"池","河":"川・大きな川","油":"油","沼":"沼・湿地","法":"法律・方法","泣":"泣く","流":"流れる","海":"海","涼":"涼しい","湖":"湖","滝":"滝・落下する水","点":"点・しるし","然":"そのとおり・状態","熊":"クマ","父":"父","牛":"牛","犬":"犬","狐":"キツネ","狭":"狭い","狼":"オオカミ","猫":"猫","琴":"琴","甘":"甘い","生":"生命・生きる","由":"理由・由来","畑":"畑・耕作地","疲":"疲れ","病":"病気","痒":"かゆみ","痛":"痛み","百":"数字の百","皿":"皿","目":"目・視覚器官","眠":"眠り","短":"短い","硬":"硬い","硯":"すずり","秋":"秋の季節","秒":"秒・時間の単位","種":"種・種子","空":"空・空間","笑":"笑う","笛":"笛","筆":"筆","箸":"箸","米":"米・コメ","粟":"アワ（雑穀）","糖":"糖分・砂糖","紙":"紙","緑":"緑色","線":"線","老":"老いる","考":"考える","耳":"耳","聴":"聴く・聴覚","肉":"肉","肩":"肩","育":"育つ・育てる","脚":"脚・足","腕":"腕","色":"色","花":"花","芽":"新しい芽","若":"若い","苦":"苦い","茎":"植物の茎","草":"草・植物","葉":"葉","薄":"薄い","薬":"薬","虎":"トラ","蚊":"カ","蛙":"カエル","蜂":"ハチ","蝶":"チョウ","蟻":"アリ","西":"西の方角","視":"見る・視覚","角":"角・角度","触":"触る・触れる","診":"診察","谷":"谷間","豆":"豆","買":"買う","貸":"貸す","走":"走る","軽":"軽い","辛":"辛い","速":"速い","遅":"遅い","酒":"酒","酢":"酢","酸":"酸っぱい","重":"重い","金":"金属・金","鈍":"鈍い","鉄":"鉄","銀":"銀","銃":"銃・火器","銅":"銅","鋼":"鋼・鋼鉄","鍋":"鍋","鐘":"鐘","長":"長い","雀":"スズメ","雨":"雨","雪":"雪","雫":"しずく・水滴","雷":"雷・かみなり","雹":"ひょう（氷の粒）","霜":"霜・しも","霧":"霧・きり","露":"露・つゆ","風":"風","馬":"馬","高":"高い","鮭":"サケ","鯉":"コイ","鯛":"タイ","鯨":"クジラ","鰻":"ウナギ","鳩":"ハト","鶴":"ツル","鷹":"タカ","麦":"麦","鼓":"太鼓・つづみ","鼻":"鼻","龍":"竜・龍"};
+const KANJI_LEXICON = {"春":["ilkbahar","はる"],"夏":["yaz","なつ"],"秋":["sonbahar","あき"],"冬":["kış","ふゆ"],"年":["yıl","とし"],"東":["doğu","ひがし"],"西":["batı","にし"],"南":["güney","みなみ"],"北":["kuzey","きた"],"京":["başkent","きょう"],"朝":["sabah","あさ"],"昼":["gündüz","ひる"],"夕":["akşamüstü","ゆう"],"夜":["gece","よる"],"久":["uzun zaman","ひさしい"],"雨":["yağmur","あめ"],"雪":["kar","ゆき"],"風":["rüzgâr","かぜ"],"雷":["gök gürültüsü","かみなり"],"空":["gökyüzü","そら"],"霧":["sis","きり"],"雹":["dolu","ひょう"],"霜":["kırağı","しも"],"露":["çiy","つゆ"],"雫":["damla","しずく"],"月":["ay","つき"],"日":["gün/güneş","ひ"],"秒":["saniye","びょう"],"由":["sebep/köken","ゆえ"],"山":["dağ","やま"],"谷":["vadi","たに"],"岬":["burun","みさき"],"丘":["tepe","おか"],"畑":["tarla","はたけ"],"海":["deniz","うみ"],"湖":["göl","みずうみ"],"池":["gölet","いけ"],"沼":["bataklık/gölet","ぬま"],"島":["ada","しま"],"滝":["şelale","たき"],"河":["nehir","かわ"],"法":["kanun/kural","ほう"],"川":["akarsu","かわ"],"江":["büyük nehir","え"],"溪":["dağ deresi","けい"],"峰":["zirve","みね"],"岳":["dağ zirvesi","たけ"],"峠":["dağ geçidi","とうげ"],"嵐":["fırtına","あらし"],"犬":["köpek","いぬ"],"猫":["kedi","ねこ"],"牛":["inek","うし"],"馬":["at","うま"],"草":["ot","くさ"],"鷹":["şahin","たか"],"鶴":["turna","つる"],"雀":["serçe","すずめ"],"鳩":["güvercin","はと"],"虎":["kaplan","とら"],"鮭":["somon","さけ"],"鯛":["çipura","たい"],"鯉":["sazan","こい"],"鰻":["yılan balığı","うなぎ"],"鯨":["balina","くじら"],"蝶":["kelebek","ちょう"],"蜂":["arı","はち"],"蟻":["karınca","あり"],"蚊":["sivrisinek","か"],"蛙":["kurbağa","かえる"],"熊":["ayı","くま"],"狼":["kurt","おおかみ"],"狐":["tilki","きつね"],"龍":["ejderha","りゅう"],"松":["çam","まつ"],"梅":["erik ağacı","うめ"],"桜":["sakura","さくら"],"杉":["Japon sediri","すぎ"],"根":["kök","ね"],"茎":["gövde/sap","くき"],"葉":["yaprak","は"],"花":["çiçek","はな"],"緑":["yeşil","みどり"],"芽":["filiz","め"],"種":["tohum","たね"],"実":["meyve/ürün","み"],"塩":["tuz","しお"],"米":["pirinç","こめ"],"麦":["buğday/arpagil","むぎ"],"豆":["baklagil","まめ"],"粟":["darı","あわ"],"肉":["et","にく"],"桃":["şeftali","もも"],"梨":["armut","なし"],"柿":["Trabzon hurması","かき"],"栗":["kestane","くり"],"目":["göz","め"],"耳":["kulak","みみ"],"鼻":["burun","はな"],"口":["ağız","くち"],"手":["el","て"],"腕":["kol","うで"],"脚":["bacak","あし"],"指":["parmak","ゆび"],"肩":["omuz","かた"],"育":["yetiştirmek","そだつ"],"父":["baba","ちち"],"母":["anne","はは"],"兄":["ağabey","あに"],"妹":["küçük kız kardeş","いもうと"],"友":["arkadaş","とも"],"喜":["sevinç","よろこぶ"],"怒":["öfke","おこる"],"哀":["keder","あわれ"],"楽":["keyif","たのしい"],"夢":["rüya","ゆめ"],"愛":["sevgi","あい"],"憎":["nefret","にくむ"],"恨":["kin","うらむ"],"恋":["aşk","こい"],"変":["değişim","かわる"],"笑":["gülmek","わらう"],"泣":["ağlamak","なく"],"叫":["bağırmak","さけぶ"],"歌":["şarkı","うた"],"走":["koşmak","はしる"],"寒":["soğuk","さむい"],"暑":["sıcak hava","あつい"],"暖":["ılık/sıcak","あたたかい"],"涼":["serin","すずしい"],"然":["öyle","ぜん"],"痛":["ağrı","いたい"],"痒":["kaşıntı","かゆい"],"疲":["yorgunluk","つかれる"],"眠":["uyku","ねむる"],"働":["çalışmak","はたらく"],"視":["görmek","し"],"聴":["dinlemek","きく"],"嗅":["koklamak","かぐ"],"触":["dokunmak","ふれる"],"考":["düşünmek","かんがえる"],"生":["yaşam","いきる"],"死":["ölüm","しぬ"],"老":["yaşlılık","おいる"],"若":["genç","わかい"],"流":["akmak","ながれる"],"円":["daire","えん"],"角":["köşe/açı","かく"],"線":["çizgi","せん"],"点":["nokta","てん"],"色":["renk","いろ"],"九":["dokuz","きゅう"],"二":["iki","に"],"七":["yedi","なな"],"四":["dört","よん"],"土":["toprak","つち"],"百":["yüz","ひゃく"],"千":["bin","せん"],"万":["on bin","まん"],"億":["yüz milyon","おく"],"五":["beş","ご"],"高":["yüksek","たかい"],"低":["alçak","ひくい"],"長":["uzun","ながい"],"短":["kısa","みじかい"],"金":["altın","きん"],"重":["ağır","おもい"],"軽":["hafif","かるい"],"厚":["kalın","あつい"],"薄":["ince","うすい"],"硬":["sert","かたい"],"早":["erken","はやい"],"遅":["geç/yavaş","おそい"],"速":["hızlı","はやい"],"鈍":["körelmiş/yavaş","にぶい"],"新":["yeni","あたらしい"],"古":["eski","ふるい"],"広":["geniş","ひろい"],"前":["ön","まえ"],"後":["arka/sonra","うしろ"],"左":["sol","ひだり"],"右":["sağ","みぎ"],"天":["gök","てん"],"内":["iç","うち"],"外":["dış","そと"],"上":["üst","うえ"],"下":["alt","した"],"大":["büyük","おおきい"],"小":["küçük","ちいさい"],"狭":["dar","せまい"],"鋼":["çelik","はがね"],"銀":["gümüş","ぎん"],"銅":["bakır","どう"],"鉄":["demir","てつ"],"銃":["ateşli silah","じゅう"],"水":["su","みず"],"油":["yağ","あぶら"],"酒":["alkol/sake","さけ"],"酢":["sirke","す"],"甘":["tatlı","あまい"],"辛":["acı/baharatlı","からい"],"酸":["ekşi","すっぱい"],"苦":["acı tat","にがい"],"糖":["şeker","とう"],"皿":["tabak","さら"],"笛":["flüt","ふえ"],"琴":["koto","こと"],"鼓":["davul","つづみ"],"鐘":["çan","かね"],"筆":["fırça","ふで"],"紙":["kâğıt","かみ"],"墨":["mürekkep","すみ"],"硯":["mürekkep taşı","すずり"],"剣":["kılıç","けん"],"刀":["kılıç","かたな"],"槍":["mızrak","やり"],"弓":["yay","ゆみ"],"律":["kural","りつ"],"鍋":["tencere","なべ"],"椀":["kâse","わん"],"箸":["yemek çubuğu","はし"],"医":["tıp","い"],"薬":["ilaç","くすり"],"病":["hastalık","びょう"],"診":["muayene","しん"],"教":["öğretmek","おしえる"],"買":["satın almak","かう"],"売":["satmak","うる"],"貸":["ödünç vermek","かす"],"借":["ödünç almak","かりる"],"残":["kalmak","のこる"]};
+const POOL_BY_LEVEL=[['初級'],['中級'],['上級']].map(names=>SOURCE_QUESTIONS.filter(q=>names.includes(q.level)));
+const levelDecks=[[],[],[]];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function sampleQuestions(l){
+ const result=[];const ids=new Set();
+ while(result.length<5){
+  if(levelDecks[l].length===0)levelDecks[l]=shuffle([...POOL_BY_LEVEL[l]]);
+  const q=levelDecks[l].pop();
+  if(ids.has(q.id))continue
+  ids.add(q.id);result.push({a:[...q.core,q.answer],o:4,tr:q.tr,ja:q.ja,id:q.id});
+ }
+ return result;
+}
+function buildSession(l){
+ questions[l]=sampleQuestions(l);
+ glosses[l]=questions[l].map(q=>q.a.map(c=>KANJI_LEXICON[c]));
+ jpMeanings[l]=questions[l].map(q=>q.a.map(c=>c));
+}
+const questions={0:[],1:[],2:[]};
+const glosses=[[],[],[]];
+const jpMeanings=[[],[],[]];
+const JLOS_LANG_KEY='jlos_ui_language';
+let initialLanguage='tr';
+try {initialLanguage=localStorage.getItem(JLOS_LANG_KEY)==='ja'?'ja':'tr'} catch (_) {}
+let language=initialLanguage,level=0,index=0,solved=false,screen='home';
+let answerOrder=[0,1,2,3,4], moving=false, motionTimers=[];
+let records=[], unknown=new Set(), sessionStart=0, durationMs=0, preview=false;
+let practiceQueue=[],practiceRevealed=false,practiceDone=false;
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function cancelMotion(){for(const timer of motionTimers)clearTimeout(timer);motionTimers=[];moving=false;$('kanjiStage').classList.remove('stage-thinking','stage-rejected','stage-activating')}
+function later(fn,ms){motionTimers.push(setTimeout(fn,ms))}
+function newQuestionOrder(){
+  // Otherwise the sample data would place the odd-one-out in the last spot every time.
+  answerOrder=[0,1,2,3,4];
+  for(let i=answerOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[answerOrder[i],answerOrder[j]]=[answerOrder[j],answerOrder[i]]}
+}
+// Original synthesized sound effects. No audio files or third-party resources needed.
+// The AudioContext is created only in response to a tap/click (mobile autoplay rules).
+const SOUND_PREF='jlos-gobousei-effects-v1';
+let soundEnabled=true;
+try { soundEnabled=localStorage.getItem(SOUND_PREF)!=='off'; } catch(_) {}
+let audioContext=null, audioBus=null;
+const activeOscillators=new Set();
+function ensureAudio(){
+  if(!soundEnabled)return null;
+  const AudioCtor=window.AudioContext||window.webkitAudioContext;
+  if(!AudioCtor)return null;
+  try{
+    if(!audioContext){
+      audioContext=new AudioCtor();
+      audioBus=audioContext.createGain();
+      audioBus.gain.value=.6;
+      audioBus.connect(audioContext.destination);
+    }
+    if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+    return audioContext;
+  }catch(_){return null}
+}
+function softTone(frequency,delay,duration,volume=.028,wave='sine',endFrequency=null){
+  if(!soundEnabled||!audioContext||!audioBus)return;
+  const c=audioContext;
+  try{
+    const oscillator=c.createOscillator();
+    const amp=c.createGain();
+    const start=c.currentTime+Math.max(0,delay);
+    const end=start+duration;
+    oscillator.type=wave;
+    oscillator.frequency.setValueAtTime(frequency,start);
+    if(endFrequency)oscillator.frequency.exponentialRampToValueAtTime(endFrequency,end);
+    amp.gain.setValueAtTime(.0001,start);
+    amp.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),start+Math.min(.028,duration*.19));
+    amp.gain.exponentialRampToValueAtTime(.0001,end);
+    oscillator.connect(amp);amp.connect(audioBus);
+    activeOscillators.add(oscillator);
+    oscillator.onended=()=>{activeOscillators.delete(oscillator);oscillator.disconnect();amp.disconnect()};
+    oscillator.start(start);oscillator.stop(end+.035);
+  }catch(_){}
+}
+function silenceEffects(){
+  if(!audioContext||!audioBus)return;
+  // Cancel notes scheduled for a screen that the player has left.
+  for(const oscillator of [...activeOscillators]){
+    try{oscillator.stop(audioContext.currentTime+.018)}catch(_){}
+  }
+}
+function playEffect(type){
+  if(!soundEnabled||!ensureAudio())return;
+  if(type==='start'){
+    softTone(196,0,.46,.018,'sine',224);
+    softTone(392,.09,.37,.022);
+    softTone(587.33,.25,.43,.020);
+  }else if(type==='select'){
+    softTone(246.94,0,.18,.012,'triangle',277.18);
+    softTone(493.88,.055,.22,.013);
+  }else if(type==='runes'){
+    // Five ascending wisps: one for each stroke of the shining pentagram.
+    [392,493.88,587.33,739.99,880].forEach((f,i)=>{
+      softTone(f,i*.12,.20,.018,'sine');
+      softTone(f*2.01,i*.12+.018,.12,.005);
+    });
+  }else if(type==='success'){
+    softTone(293.66,0,.54,.018,'sine');
+    softTone(587.33,.015,.64,.027,'sine');
+    softTone(880,.105,.72,.018,'sine');
+    softTone(1174.66,.25,.64,.012,'sine');
+  }else if(type==='fail'){
+    softTone(185,0,.28,.026,'triangle',138.59);
+    softTone(116.54,.065,.34,.020,'sine',103.83);
+  }else if(type==='next'){
+    softTone(369.99,0,.14,.012);
+    softTone(493.88,.075,.17,.014);
+  }else if(type==='finish'){
+    [392,493.88,587.33,783.99].forEach((f,i)=>softTone(f,i*.15,.52,.016));
+    softTone(1174.66,.62,.76,.020);
+  }else if(type==='toggle'){
+    softTone(587.33,0,.22,.025);
+    softTone(880,.095,.3,.018);
+  }
+}
+function renderSoundToggle(){
+  const button=document.getElementById('soundToggle');
+  const muted=!soundEnabled;
+  button.classList.toggle('is-muted',muted);
+  button.setAttribute('aria-pressed',String(soundEnabled));
+  const caption=language==='ja'?(soundEnabled?'効果音オン':'効果音オフ'):(soundEnabled?'Ses açık':'Ses kapalı');
+  button.setAttribute('aria-label',caption);
+  button.title=caption;
+  button.querySelector('.sound-state').textContent=soundEnabled?'ON':'OFF';
+}
+document.getElementById('soundToggle').addEventListener('click',()=>{
+  soundEnabled=!soundEnabled;
+  try{localStorage.setItem(SOUND_PREF,soundEnabled?'on':'off')}catch(_){}
+  if(!soundEnabled){silenceEffects()}else{ensureAudio();playEffect('toggle')}
+  renderSoundToggle();
+});
+
+const $=id=>document.getElementById(id);
+$('titleDiagram').innerHTML=magicDiagram()+`<div class="glyph-title"><span>✦</span><span>THE MAGIC OF FIVE</span></div>`;
+$('gameDiagram').innerHTML=magicDiagram();
+function show(s){cancelMotion();silenceEffects();screen=s;document.querySelector('.page').classList.toggle('with-results',s==='result'||s==='practice');document.querySelector('.app').classList.toggle('practice-expanded',s==='practice');for(const id of ['home','game','result','practice'])$(id).classList.toggle('hide',id!==s);window.scrollTo(0,0)}
+function t(){return dict[language]}
+function fruitIcon(l){
+ if(l===0)return `<svg viewBox="0 0 100 100" aria-hidden="true" class="fruit-svg"><defs><linearGradient id="bananaSkin" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff1a2"/><stop offset=".5" stop-color="#f4cb4c"/><stop offset="1" stop-color="#df9828"/></linearGradient></defs><path d="M19 30C12 63 40 85 70 75c12-5 21-18 24-35-13 17-27 24-43 21-14-3-22-17-25-35Z" fill="url(#bananaSkin)" stroke="#e9bb45" stroke-width="2"/><path d="M22 32c-2 28 21 49 46 42" fill="none" stroke="#ffeb86" stroke-width="3" stroke-linecap="round"/><path d="M23 25l5-6 5 7-5 8Z" fill="#735b30"/><path d="M89 39l3-6 5 2-1 7Z" fill="#6c5734"/></svg>`;
+ if(l===1)return `<svg viewBox="0 0 100 100" aria-hidden="true" class="fruit-svg"><defs><radialGradient id="orangeSkin"><stop stop-color="#ffcf61"/><stop offset=".78" stop-color="#f59a27"/><stop offset="1" stop-color="#c86a17"/></radialGradient></defs><circle cx="50" cy="52" r="41" fill="url(#orangeSkin)" stroke="#ffc470" stroke-width="2"/><circle cx="50" cy="52" r="34" fill="#fff2c8"/><circle cx="50" cy="52" r="30" fill="#f7a73b"/>${Array.from({length:9},(_,i)=>{const a=i*2*Math.PI/9;const b=(i+1)*2*Math.PI/9;const xy=t=>[50+28*Math.cos(t),52+28*Math.sin(t)];const p=xy(a),q=xy(b);return `<path d="M50 52 L${p[0].toFixed(2)} ${p[1].toFixed(2)} A28 28 0 0 1 ${q[0].toFixed(2)} ${q[1].toFixed(2)} Z" fill="${i%2?'#ffba57':'#ffa435'}" stroke="#fff0c6" stroke-width="1.5"/>`}).join('')}<circle cx="50" cy="52" r="5" fill="#fff1ca"/></svg>`;
+ return `<svg viewBox="0 0 100 100" aria-hidden="true" class="fruit-svg"><defs><radialGradient id="narSkin"><stop stop-color="#e74a5a"/><stop offset="1" stop-color="#8c1c3a"/></radialGradient></defs><path d="M36 20l-5-13 12 7 8-10 7 11 12-8-6 15" fill="#ba6641" stroke="#ffc18a" stroke-width="2"/><path d="M50 19C27 13 12 34 15 56c4 29 22 38 35 38s33-12 35-38C87 35 72 14 50 19Z" fill="url(#narSkin)" stroke="#ff9c87" stroke-width="2.4"/><path d="M50 24C30 22 21 39 23 56c1 20 13 30 27 31 15-1 27-13 27-31 1-17-9-34-27-32Z" fill="#6e1532" stroke="#f8a088" stroke-width="1.5"/>${Array.from({length:20},(_,i)=>{const row=Math.floor(i/4),col=i%4;const cx=32+col*12+(row%2?5:0);const cy=35+row*10;return `<ellipse cx="${cx}" cy="${cy}" rx="4.7" ry="5.9" fill="${(row+col)%3===0?'#ffbfaa':(row+col)%3===1?'#f55f6b':'#ed344f'}" stroke="#ffb2a2" stroke-width=".65" transform="rotate(${(col-1.5)*7} ${cx} ${cy})"/>`}).join('')}</svg>`;
+}
+function languageRender(){
+  document.documentElement.lang=language;$('tr').classList.toggle('active',language==='tr');$('ja').classList.toggle('active',language==='ja');
+  $('tr').setAttribute('aria-pressed',language==='tr');$('ja').setAttribute('aria-pressed',language==='ja');
+  $('trainingBack').textContent=language==='tr'?'← Antrenman alanına dön':'← 鍛錬の場へ戻る';
+  renderSoundToggle();
+  $('subtitle').textContent=t().subtitle;$('chooseHeading').textContent=t().choose;
+  $('levels').innerHTML=t().levels.map((label,i)=>`<button type="button" class="level fruit-level fruit-${i}" data-level="${i}" aria-label="${escapeHTML(fruitNames[i])} · ${escapeHTML(label)}"><span class="fruit-medallion">${fruitIcon(i)}</span><span class="fruit-name">${escapeHTML(fruitNames[i])}</span><span class="fruit-description">${escapeHTML(label)}</span></button>`).join('');
+  document.querySelectorAll('[data-level]').forEach(button=>button.addEventListener('click',()=>start(Number(button.dataset.level))));
+  $('back').textContent=t().back;
+  // Language switches must not wipe out a finished animation.
+  if(screen==='game')renderGameTexts();if(screen==='result')resultRender();if(screen==='practice')practiceRender();
+}
+function start(l){buildSession(l);level=l;index=0;solved=false;records=[];unknown=new Set();preview=false;sessionStart=Date.now();durationMs=0;show('game');newQuestionOrder();gameRender();playEffect('start')}
+function renderGameTexts(){
+  const q=questions[level][index];
+  $('levelLabel').textContent=`${fruitNames[level]} · ${t().levels[level]}`;
+  $('countLabel').textContent=language==='tr'?`${t().question} ${index+1} / 5`:`${t().question}${index+1}問 / 5問`;
+  $('questionHeading').textContent=t().task;
+  $('status').textContent=solved?t().correct:'';
+  $('explanation').textContent=solved?q[language]:'';
+  $('next').textContent=index===4?t().finish:t().next;
+}
+function gameRender(){
+  cancelMotion();
+  const q=questions[level][index];
+  $('kanjiStage').classList.remove('stage-complete');
+  $('sparkfield').replaceChildren();
+  $('progress').innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<index?'done':i===index?'current':''}"></i>`).join('');
+  $('nodes').innerHTML=answerOrder.map((originalIndex,i)=>`<button type="button" class="kanji-node" data-index="${i}" aria-label="${q.a[originalIndex]}">${q.a[originalIndex]}</button>`).join('');
+  document.querySelectorAll('.kanji-node').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.index))));
+  $('next').classList.add('hide');
+  renderGameTexts();
+}
+function burstAtOtherNodes(selectedIndex){
+  const field=$('sparkfield');
+  field.replaceChildren();
+  // Seven tiny gold-white fragments per departing character; intentionally lightweight on mobiles.
+  document.querySelectorAll('.kanji-node').forEach((node,i)=>{
+    if(i===selectedIndex)return;
+    const centerX=node.offsetLeft,centerY=node.offsetTop;
+    for(let n=0;n<7;n++){
+      const angle=(2*Math.PI*n/7)+(i*.57),dist=18+(n%3)*12;
+      const bit=document.createElement('i');
+      bit.className='spark';
+      bit.style.left=`${centerX}px`;bit.style.top=`${centerY}px`;
+      bit.style.setProperty('--dx',`${Math.cos(angle)*dist}px`);
+      bit.style.setProperty('--dy',`${Math.sin(angle)*dist}px`);
+      bit.style.setProperty('--delay',`${(n%3)*48}ms`);
+      field.appendChild(bit);
+    }
+  });
+  later(()=>field.replaceChildren(),1400);
+}
+function answer(i){
+  if(solved||moving)return;
+  moving=true;
+  const q=questions[level][index], correct=answerOrder[i]===q.o;
+  playEffect('select');
+  const button=document.querySelector(`.kanji-node[data-index="${i}"]`);
+  const stageRect=$('kanjiStage').getBoundingClientRect(), nodeRect=button.getBoundingClientRect();
+  const deltaX=stageRect.left+stageRect.width/2-(nodeRect.left+nodeRect.width/2);
+  const deltaY=stageRect.top+stageRect.height/2-(nodeRect.top+nodeRect.height/2);
+  button.style.setProperty('--move-x',`${deltaX}px`);
+  button.style.setProperty('--move-y',`${deltaY}px`);
+  document.querySelectorAll('.kanji-node').forEach(b=>b.disabled=true);
+  $('status').textContent='';$('explanation').textContent='';
+  if(!records[index])records[index]={originalOrder:[...answerOrder],firstChoice:answerOrder[i],attempts:0};
+  records[index].attempts++;
+  $('kanjiStage').classList.add('stage-thinking');
+  // A frame delay ensures that transitions start at the actual tapped vertex.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>button.classList.add('to-center')));
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const travel=reduce?30:720;
+  const activation=reduce?30:830;
+  // The glowing circuit begins precisely at the tapped character's original vertex.
+  const first=starRoute.indexOf(i);
+  $('kanjiStage').querySelectorAll('.star-trace').forEach((line,k)=>{
+    line.style.setProperty('--trace-order',String((k-first+5)%5));
+  });
+  later(()=>{ $('kanjiStage').classList.add('stage-activating'); if(correct)playEffect('runes'); },travel);
+  if(correct){
+    later(()=>{
+      // The outlier is now the center of the spell; only the other four dissolve.
+      $('kanjiStage').classList.remove('stage-thinking','stage-activating');
+      $('kanjiStage').classList.add('stage-complete');
+      document.querySelectorAll('.kanji-node').forEach((b,j)=>{if(j!==i)b.classList.add('dissolve')});
+      burstAtOtherNodes(i);
+      playEffect('success');
+      $('status').textContent=t().correct;
+      $('explanation').textContent=q[language];
+      $('next').textContent=index===4?t().finish:t().next;
+      $('next').classList.remove('hide');
+      records[index].solved=true;
+      solved=true;
+      moving=false;
+    },travel+activation);
+  }else{
+    later(()=>{
+      $('kanjiStage').classList.remove('stage-activating');
+      button.classList.add('rejected');
+      $('kanjiStage').classList.add('stage-rejected');
+      $('status').textContent=t().wrong;
+      playEffect('fail');
+    },travel+activation);
+    later(()=>{
+      button.classList.remove('to-center','rejected');
+      $('kanjiStage').classList.remove('stage-thinking','stage-rejected');
+    },travel+activation+300);
+    later(()=>{
+      document.querySelectorAll('.kanji-node').forEach(b=>b.disabled=false);
+      moving=false;
+    },travel+activation+(reduce?80:1080));
+  }
+}
+function getSelectedKanji(){
+ const seen=new Set(),items=[];
+ questions[level].forEach((q,qi)=>{
+  q.a.forEach((symbol,i)=>{
+   if(unknown.has(`${qi}:${i}`) && !seen.has(symbol)){
+    seen.add(symbol);items.push({symbol,gloss:glosses[level][qi][i][0],reading:glosses[level][qi][i][1],jpMeaning:KANJI_JP_MEANINGS[symbol] || symbol});
+   }
+  });
+ });
+ return items;
+}
+function renderStudyList(){
+ const d=resultText[language],items=getSelectedKanji();
+ $('studyTitle').textContent=d.unknownTitle;
+ $('studyList').innerHTML=items.length?`<div class="study-kanji-list">${items.map(item=>`<div class="study-chip"><span class="symbol">${escapeHTML(item.symbol)}</span><span class="gloss">${escapeHTML(language==='tr'?item.gloss:item.reading)}</span></div>`).join('')}</div>`:`<div class="study-empty">${escapeHTML(d.noUnknown)}</div>`;
+ $('startPractice').disabled=items.length===0;
+ $('startPractice').textContent=`${d.practiceStart}${items.length?' · '+items.length:''}`;
+}
+function renderCards(){
+ const d=resultText[language];
+ $('reviewTitle').textContent=d.review;
+ $('reviewCount').textContent=`5 ${d.question}`;
+ $('tapHint').textContent=d.tap;
+ $('reviewCards').innerHTML=questions[level].map((q,qi)=>{
+  const record=records[qi];if(!record)return '';
+  const order=record.originalOrder;
+  return `<article class="review-card">
+    <div class="card-top"><span class="card-number">QUESTION 0${qi+1}</span><span class="card-result"><span class="dot">✧</span>${escapeHTML(d.rightAnswer)}：<strong>${escapeHTML(q.a[q.o])}</strong></span></div>
+    <div class="glyph-picks">${order.map(orig=>{
+     const symbol=q.a[orig],marked=unknown.has(`${qi}:${orig}`),isAnswer=orig===q.o;
+     const gloss=glosses[level][qi][orig][language==='tr'?0:1];
+     return `<button type="button" class="glyph-pick ${marked?'is-unknown':''} ${isAnswer?'is-answer':''}" data-q="${qi}" data-char="${orig}" aria-pressed="${marked}" aria-label="${escapeHTML(symbol)}: ${escapeHTML(gloss)}"><span class="pick-mark">${marked?'✦':'+'}</span><span class="glyph">${escapeHTML(symbol)}</span><span class="gloss">${escapeHTML(gloss)}</span></button>`;
+    }).join('')}</div>
+    <div class="card-reason"><b>${escapeHTML(d.reason)}：</b>${escapeHTML(q[language])}</div>
+   </article>`;
+ }).join('');
+ $('reviewCards').querySelectorAll('.glyph-pick').forEach(b=>b.addEventListener('click',()=>{
+  const key=`${b.dataset.q}:${b.dataset.char}`;
+  if(unknown.has(key))unknown.delete(key);else unknown.add(key);
+  const marked=unknown.has(key);
+  b.classList.toggle('is-unknown',marked);b.setAttribute('aria-pressed',String(marked));b.querySelector('.pick-mark').textContent=marked?'✦':'+';
+  renderStudyList();
+ }));
+}
+function resultRender(){
+ const d=resultText[language];
+ $('resultTitle').textContent=d.title;
+ $('resultIntro').textContent=d.intro;
+ $('previewBadge').classList.toggle('hide',!preview);
+ $('previewBadge').textContent=d.demo;
+ $('replay').textContent=d.again;
+ $('again').textContent=d.home;
+ renderCards();renderStudyList();
+}
+function startPractice(){
+ practiceQueue=getSelectedKanji();
+ if(practiceQueue.length===0)return;
+ practiceDone=false;practiceRevealed=false;
+ show('practice');practiceRender();
+}
+// Readings and counts: KANJIDIC2 via the public kanjiapi.dev endpoint.
+// The project-specific TR/JP meanings above stay fully available without a network.
+const KANJI_META_STORE='jlos-gobousei-kanji-details-v1';
+const kanjiMeta=new Map(),kanjiMetaPending=new Map(),kanjiMetaFailed=new Set();
+try{
+ const old=JSON.parse(localStorage.getItem(KANJI_META_STORE)||'{}');
+ for(const [key,val] of Object.entries(old))if(val&&Number.isInteger(val.stroke_count))kanjiMeta.set(key,val);
+}catch(_){}
+function loadKanjiMeta(symbol){
+ if(kanjiMeta.has(symbol))return Promise.resolve(kanjiMeta.get(symbol));
+ if(kanjiMetaPending.has(symbol))return kanjiMetaPending.get(symbol);
+ if(kanjiMetaFailed.has(symbol))return Promise.resolve(null);
+ const ctrl=new AbortController(), timeout=setTimeout(()=>ctrl.abort(),6500);
+ const pending=fetch('https://kanjiapi.dev/v1/kanji/'+encodeURIComponent(symbol),{signal:ctrl.signal})
+  .then(response=>{if(!response.ok)throw Error('Dictionary unavailable');return response.json()})
+  .then(data=>{
+    if(data.kanji!==symbol||!Number.isInteger(data.stroke_count)||data.stroke_count<1)throw Error('Bad dictionary data');
+    const entry={stroke_count:data.stroke_count,
+      on_readings:Array.isArray(data.on_readings)?data.on_readings.filter(x=>typeof x==='string'):[],
+      kun_readings:Array.isArray(data.kun_readings)?data.kun_readings.filter(x=>typeof x==='string'):[]};
+    kanjiMeta.set(symbol,entry);
+    try{localStorage.setItem(KANJI_META_STORE,JSON.stringify(Object.fromEntries(kanjiMeta)))}catch(_){}
+    return entry;
+  })
+  .catch(()=>{kanjiMetaFailed.add(symbol);return null})
+  .finally(()=>{clearTimeout(timeout);kanjiMetaPending.delete(symbol)});
+ kanjiMetaPending.set(symbol,pending);
+ return pending;
+}
+const practiceLabels={
+ tr:{heading:'Kanji bilgileri',count:'Çizgi sayısı',meaning:'Anlamı',on:'On okunuşu',kun:'Kun okunuşu',locked:'Bilgileri görmek için aşağıdaki düğmeye dokun.',loading:'Yükleniyor…',unavailable:'Sözlük verisi alınamadı.',source:'Okunuş ve çizgi: KANJIDIC2 © EDRDG / KanjiAPI',more:'diğer'},
+ ja:{heading:'漢字情報',count:'画数',meaning:'意味',on:'音読み',kun:'訓読み',locked:'下のボタンで意味と読みを確認できます。',loading:'読み込み中…',unavailable:'辞書データを取得できませんでした。',source:'読み・画数：KANJIDIC2 © EDRDG / KanjiAPI',more:'ほか'}
+};
+function compactReadings(readings,which){
+ if(!readings.length)return '—';
+ const picked=readings.slice(0,4).map(r=>escapeHTML(r)).join('・');
+ return picked+(readings.length>4?` <span title="${escapeHTML(readings.slice(4).join('、'))}">＋${readings.length-4}</span>`:'');
+}
+function renderPracticeInfo(){
+ const info=$('practiceInfo'), d=practiceLabels[language];
+ const item=practiceQueue[0]; if(!item)return;
+ const revealed=practiceRevealed;
+ const meta=kanjiMeta.get(item.symbol),failed=kanjiMetaFailed.has(item.symbol);
+ info.classList.toggle('locked',!revealed);
+ const placeholder=revealed?(failed?'—':d.loading):'•••';
+ const meaning=revealed?(language==='tr'?item.gloss:item.jpMeaning):'•••';
+ const row=(label,value)=>`<div class="practice-info-row"><div class="practice-info-label">${escapeHTML(label)}</div><div class="practice-info-value">${value}</div></div>`;
+ info.innerHTML=`<div class="practice-info-heading">${escapeHTML(d.heading)}</div><div class="practice-info-rows">`+
+  row(d.count,revealed&&meta?String(meta.stroke_count):escapeHTML(placeholder))+
+  row(d.meaning,escapeHTML(meaning))+
+  row(d.on,revealed&&meta?compactReadings(meta.on_readings):escapeHTML(placeholder))+
+  row(d.kun,revealed&&meta?compactReadings(meta.kun_readings):escapeHTML(placeholder))+
+  `</div>`+(revealed?`<div class="practice-info-source"><a href="https://www.edrdg.org/kanjidic/kanjidic_legacy.html" target="_blank" rel="noopener noreferrer">${escapeHTML(d.source)}</a>${failed?' · '+escapeHTML(d.unavailable):''}</div>`:`<div class="practice-info-hint">${escapeHTML(d.locked)}</div>`);
+}
+function practiceRender(){
+ const d=resultText[language];
+ $('practiceTitle').textContent=practiceDone?d.practiceDone:d.practiceTitle;
+ $('practiceInstruction').textContent=practiceDone?d.doneMessage:d.practiceHint;
+ $('practiceBack').textContent=d.backToReview;
+ $('practiceProgress').textContent=practiceDone?'':`${practiceQueue.length} ${d.remaining}`;
+ $('practiceLayout').classList.toggle('is-done',practiceDone);
+ if(practiceDone){
+  $('practiceCard').innerHTML='<div class="practice-done-icon" aria-hidden="true">✧</div>';
+  $('practiceInfo').replaceChildren();
+  $('practiceControls').innerHTML=`<button type="button" class="primary full" id="practiceAgain">${escapeHTML(d.againPractice)}</button>`;
+  $('practiceAgain').addEventListener('click',startPractice);
+  return;
+ }
+ const item=practiceQueue[0];
+ $('practiceCard').innerHTML=`<div class="practice-glyph"><span class="practice-glyph-mark">${escapeHTML(item.symbol)}</span></div>`;
+ renderPracticeInfo();
+ $('practiceControls').innerHTML=practiceRevealed?
+  `<button type="button" class="secondary-button" id="practiceRepeat">${escapeHTML(d.repeat)}</button><button type="button" class="primary" id="practiceKnown">${escapeHTML(d.remembered)}</button>`:
+  `<button type="button" class="primary full" id="practiceReveal">${escapeHTML(d.reveal)}</button>`;
+ if(practiceRevealed){
+  $('practiceRepeat').addEventListener('click',()=>practiceNext(false));
+  $('practiceKnown').addEventListener('click',()=>practiceNext(true));
+  // The asynchronous response may arrive after the learner has selected another kanji.
+  if(!kanjiMeta.has(item.symbol)&&!kanjiMetaFailed.has(item.symbol))
+   loadKanjiMeta(item.symbol).then(()=>{
+     if(screen==='practice'&&!practiceDone&&practiceRevealed&&practiceQueue[0]?.symbol===item.symbol)renderPracticeInfo();
+   });
+ }else $('practiceReveal').addEventListener('click',()=>{practiceRevealed=true;practiceRender()});
+}
+function practiceNext(remembered){
+ const item=practiceQueue.shift();
+ if(!remembered)practiceQueue.push(item);
+ practiceRevealed=false;
+ if(practiceQueue.length===0)practiceDone=true;
+ practiceRender();
+}
+function finishSession(){durationMs=Date.now()-sessionStart;preview=false;show('result');resultRender();playEffect('finish')}
+function previewSession(){
+ if(!questions[0].length)buildSession(0);
+ level=0;index=0;preview=true;durationMs=42000;unknown=new Set(['0:0','1:4']);
+ records=questions[0].map((q,qi)=>({originalOrder:[...Array(5).keys()].sort((a,b)=>((a+qi)%5)-((b+qi)%5)),firstChoice:qi===1?0:q.o,attempts:qi===1?2:1,solved:true}));
+ show('result');resultRender();
+}
+$('next').addEventListener('click',()=>{if(!solved)return;if(index===4){finishSession()}else {index++;solved=false;newQuestionOrder();gameRender();playEffect('next')}});
+$('back').addEventListener('click',()=>{show('home');languageRender()});
+$('again').addEventListener('click',()=>{show('home');languageRender()});
+$('replay').addEventListener('click',()=>start(level));
+
+$('startPractice').addEventListener('click',startPractice);
+$('practiceBack').addEventListener('click',()=>{show('result');resultRender()});
+function selectLanguage(next){
+  language=next;
+  try {localStorage.setItem(JLOS_LANG_KEY,next)} catch (_) {}
+  languageRender();
+}
+$('tr').addEventListener('click',()=>selectLanguage('tr'));
+$('ja').addEventListener('click',()=>selectLanguage('ja'));
+languageRender();
+</script>
+</body>
+</html>
