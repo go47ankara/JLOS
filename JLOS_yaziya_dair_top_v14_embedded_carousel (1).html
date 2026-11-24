@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f8f7f3" name="theme-color"/>
+<meta content="Yazı üzerine üç soru; ilk soruya bağlı beş okuma ve Japonca yazının 15 temel çizgisi." name="description"/>
+<title>Yazıya Dair | JLOS Base Camp</title>
+<style>
+:root{--ink:#26312b;--muted:#626b62;--rust:#a95e4b;--bg1:#f8f7f3;--bg2:#ebe9e2;--bg3:#dadcd3;--bg4:#aebcae}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg1)}main{max-width:850px;margin:auto;box-shadow:0 6px 50px #0000000a}.intro{min-height:78vh;padding:34px clamp(25px,7vw,82px) 80px;background:var(--bg1);display:flex;flex-direction:column}.top{display:flex;justify-content:space-between;letter-spacing:.16em;font-size:11px;color:#85847c}.introText{margin:auto 0;max-width:570px}.eyebrow{color:#97765f;letter-spacing:.18em;font-size:12px;font-weight:650}h1{font-size:clamp(44px,8vw,76px);letter-spacing:-.05em;font-weight:570;margin:20px 0}h2{font-size:clamp(27px,4vw,44px);letter-spacing:-.035em;font-weight:570;margin:10px 0 22px}.introText .lead{font-size:clamp(19px,3vw,24px);line-height:1.45;color:#4b5750}.introText p:last-child{line-height:1.8;color:#636d65}.threshold{background:var(--bg2);padding:96px 25px 106px;text-align:center;transition:background 1s}.threshold.active{background:#d9dfd5}.small{font-size:11px;font-weight:650;letter-spacing:.17em;color:#888a80}.rule{display:flex;align-items:center;gap:14px;max-width:380px;margin:22px auto 25px}.rule:before,.rule:after{content:"";height:1px;background:#b9b9b1;flex:1}.rule svg{width:25px;height:25px;stroke:var(--rust);stroke-width:1.5;fill:none}.threshold h2{margin:0 0 14px}.threshold p{margin:0 0 25px;color:var(--muted)}button{border:0;cursor:pointer;font:inherit}.ready{background:#38493d;color:white;border-radius:40px;padding:13px 36px;min-width:160px;transition:transform .2s,opacity .35s,background .2s}.ready:hover{background:#273a2e;transform:translateY(-2px)}.ready:focus-visible,.link:focus-visible{outline:3px solid #9d604b;outline-offset:4px}.ready:disabled{cursor:default;opacity:.5}.inkstage{height:82px;max-width:320px;margin:10px auto 12px;position:relative;display:none}.inkstage svg{width:100%;height:100%;overflow:visible}.inkstage path.stroke{stroke:var(--rust);stroke-width:5.5;stroke-linecap:round;stroke-dasharray:200;stroke-dashoffset:200}.inkstage .pencil{opacity:0;transform:translateX(0px);transform-box:fill-box}.threshold.writing .inkstage,.threshold.active .inkstage{display:block}.threshold.writing .stroke{animation:draw 2.85s linear forwards}.threshold.writing .pencil{opacity:1;animation:pen 2.85s linear forwards}.inkstage .terminal{stroke:#844335;stroke-width:5.6;stroke-linecap:round;opacity:0}.threshold.writing .terminal{animation:press-end 2.85s linear forwards}.threshold.active .stroke{stroke-dashoffset:0}.threshold.active .pencil{opacity:0}.threshold.active .terminal{opacity:.24}.next{font-size:14px;color:#56695a;min-height:22px;opacity:0;transition:opacity .4s}.threshold.active .next{opacity:1}/* 0–0.74s: 始筆で降ろしてためる / 0.74–2.22s: 運筆 / 2.22–2.68s: 終筆で止める / 最後に離す */
+@keyframes draw{0%,26%{stroke-dashoffset:200}31%{stroke-dashoffset:195}78%,100%{stroke-dashoffset:0}}
+@keyframes pen{0%{transform:translate(0,-5px);opacity:1}10%,26%{transform:translate(0,0);opacity:1}31%{transform:translate(5px,0)}78%{transform:translate(200px,0)}82%,94%{transform:translate(200px,1.4px);opacity:1}100%{transform:translate(203px,-8px);opacity:0}}
+@keyframes press-end{0%,78%{opacity:0}85%,100%{opacity:.24}}.strokes{background:var(--bg3);padding:76px clamp(24px,7vw,80px) 96px;scroll-margin-top:8px}.strokes p{color:#4d5c51}.tiles{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:28px 0}.tile{min-width:0;aspect-ratio:1;background:#fbfcf9;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid #cbd0c9;font-family:"Yu Mincho","Noto Serif CJK JP",serif;color:var(--rust);font-size:clamp(22px,4.5vw,38px)}.link{display:inline-block;margin-top:10px;border-bottom:1px solid #556d5b;color:#344c3a;text-decoration:none;padding-bottom:6px;font-weight:600}.rhythm{background:var(--bg4);padding:75px clamp(24px,7vw,80px) 110px}.rhythm p{color:#354b3e}.beat{display:flex;align-items:center;gap:11px;margin:30px 0}.beat span{width:9px;height:22px;border-radius:6px;background:#e4ebe2}.beat span:nth-child(3){height:43px;background:var(--rust)}.footnote{font-size:12px;line-height:1.8;color:#5b665c}.quiet-link{background:none;padding:0;text-decoration:underline;text-underline-offset:4px;color:#46594b}.replay{margin-left:14px;font-size:13px}@media(max-width:520px){.tiles{grid-template-columns:repeat(4,1fr)}.intro{min-height:68vh}.threshold{padding:75px 20px 78px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+:root{--paper:#f8f7f3;--glaze:#eeece5;--deep:#acc0ad}
+body{background:#e7e9e3}main{max-width:1060px;box-shadow:0 18px 90px #26312b13}.intro{min-height:0;padding-bottom:105px}.introText{margin:95px 0 0}.top a{color:inherit;text-decoration:none}.introText .lead{max-width:580px}.introduction{max-width:710px;margin:46px 0 0;display:grid;gap:20px}.intro-unit{padding:19px 0;border-top:1px solid #dddcd4;display:grid;grid-template-columns:110px 1fr;gap:24px;align-items:baseline}.intro-unit span{font-size:12px;color:#947663;font-weight:650;letter-spacing:.04em}.intro-unit p{margin:0;line-height:1.85;color:#47534d;font-size:15px}.smallcap{font-size:11px;letter-spacing:.15em;color:#8c796a}.intro-foot{font-size:13px;line-height:1.7;color:#687269;max-width:610px}.small-em{font-size:13px;opacity:.85}.threshold{padding:110px 28px 115px}.threshold h2{font-size:clamp(29px,5vw,49px);font-weight:600}.threshold .ready{font-weight:650;letter-spacing:.03em}.stage-support{margin-top:35px;font-size:12px;color:#7a8076}.next{margin-top:10px}.strokes{padding-top:110px;padding-bottom:130px}.strokes h2,.rhythm h2{font-size:clamp(32px,5vw,52px)}.strokes .subline,.rhythm .subline{max-width:540px;line-height:1.75;font-size:16px}.tiles{margin:34px 0 19px;gap:11px}.tile{position:relative;flex-direction:column;gap:6px;aspect-ratio:1;transition:transform .2s,box-shadow .2s;border-radius:8px;overflow:hidden}.tile:hover{transform:translateY(-2px);box-shadow:0 6px 20px #28362912}.tile .glyph{font-size:clamp(26px,4.5vw,43px);line-height:1}.tile small{position:absolute;bottom:7px;right:10px;color:#7b877d;font:10px system-ui}.note{font-size:12px!important;line-height:1.6;color:#667369!important;margin:0 0 35px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:20px}.primary-link{background:#34483b;border-radius:100px;color:white;text-decoration:none;padding:15px 24px;display:inline-flex;align-items:center;gap:18px;font-size:14px;font-weight:650;transition:transform .2s,background .2s}.primary-link:hover{transform:translateY(-2px);background:#253a2d}.primary-link:focus-visible{outline:3px solid #a75f4b;outline-offset:4px}.accent-link{color:#344b3a;font-size:14px;text-decoration:none;border-bottom:1px solid #738476;padding-bottom:5px}.rhythm{padding-top:110px;padding-bottom:105px}.rhythm-layout{display:grid;grid-template-columns:1fr 220px;gap:30px;align-items:center}.beat-art{min-height:220px;display:grid;place-items:center;border:1px solid #d7e1d5;border-radius:15px;background:#c2d0c0}.beat-art .beat{gap:14px}.beat-art .beat span{height:32px;width:12px}.beat-art .beat span:nth-child(3){height:68px}.footer{padding:27px clamp(24px,7vw,80px);background:#99ad9b;color:#2c4431;font-size:11px;display:flex;justify-content:space-between;gap:12px;letter-spacing:.04em}.missing{background:none;color:#516958;border:1px solid #647e69;border-radius:30px;padding:12px 20px;cursor:pointer}.missing:hover{background:#e0e9df}.missing:focus-visible{outline:3px solid #a75f4b;outline-offset:3px}.connection-message{margin-top:14px;min-height:18px;color:#4d5b4e;font-size:12px}.replay-link{font-size:12px;margin-left:0}.skip{position:absolute;left:-9999px;top:8px;padding:12px;background:#fff;color:#000;z-index:10}.skip:focus{left:8px}.interaction-title{font-size:12px;letter-spacing:.14em;color:#667468;margin-top:27px}.first-cell{box-shadow:inset 0 0 0 2px #b36c54}.threshold-replay{display:block;margin:16px auto 0;font-size:13px;text-decoration:none;border-bottom:1px solid currentColor;padding:3px 0;opacity:.85}.threshold-replay:hover{opacity:1}.threshold-replay[hidden],.ready[hidden]{display:none!important}.threshold-replay:focus-visible{outline:3px solid #9d604b;outline-offset:4px}.small-rule{height:1px;background:#98aa99;margin:44px 0 34px;opacity:.6}
+@media(max-width:700px){.rhythm-layout{grid-template-columns:1fr}.beat-art{min-height:130px}.introText{margin-top:80px}.introduction{margin-top:35px}.intro-unit{grid-template-columns:1fr;gap:7px}.strokes{padding-bottom:95px}.rhythm{padding:85px 24px}.footer{flex-direction:column}.threshold{padding:90px 20px}.stage-support{margin-top:25px}}
+@media(max-width:520px){.tiles{grid-template-columns:repeat(4,1fr);gap:7px}.tile small{right:5px;bottom:5px}.tile{border-radius:5px}.intro{padding-top:25px;padding-bottom:75px}.introText{margin-top:72px}.intro-unit p{font-size:14px}.strokes{padding-top:80px}.rhythm{padding-top:80px}.actions{align-items:stretch;flex-direction:column}.primary-link{justify-content:center;text-align:center}.top{font-size:9px}}
+
+/* Three question cards: the answer stays optional and never blocks the next section. */
+.introduction{gap:0;margin-top:45px;overflow:visible}
+.intro-unit.question-card{align-items:start;padding:27px 0 32px;overflow:visible}
+.question-card .question-kicker{padding-top:5px}
+.question-body{min-width:0;position:relative}
+.question-body h3{font-size:clamp(19px,2.5vw,24px);line-height:1.45;font-weight:610;letter-spacing:-.015em;margin:0 0 8px;color:#303a33}
+.question-body>p{margin:0 0 17px;font-size:14px;line-height:1.75;color:#667066}
+.answer-control{position:relative;display:inline-block;max-width:100%}
+.answer-toggle{background:transparent;border:1px solid #b3bdb3;border-radius:999px;padding:9px 15px;color:#435c49;font-size:12px;font-weight:650;letter-spacing:.015em;transition:background .2s,border-color .2s}
+.answer-toggle:hover,.answer-toggle[aria-expanded="true"]{background:#e7ebe4;border-color:#8ea293}
+.answer-toggle:focus-visible{outline:3px solid #a95e4b;outline-offset:3px}
+.answer-popup{position:absolute;z-index:8;top:calc(100% + 10px);left:0;width:min(350px,calc(100vw - 65px));padding:20px 21px;background:#fffef9;border:1px solid #d2d4ca;border-radius:12px;box-shadow:0 12px 38px #29352b25;color:#354137;text-align:left}
+.answer-popup[hidden]{display:none}
+.answer-popup:before{content:"";position:absolute;top:-7px;left:24px;width:12px;height:12px;background:#fffef9;border-left:1px solid #d2d4ca;border-top:1px solid #d2d4ca;transform:rotate(45deg)}
+.answer-popup strong{font-size:12px;color:#965d49;letter-spacing:.025em}
+.answer-popup p{font-size:14px!important;line-height:1.8!important;margin:9px 0 0!important;color:#455448!important}
+.intro-foot{margin-top:36px;color:#6a7169}
+@media(max-width:700px){.intro-unit.question-card{gap:9px;padding:23px 0 28px}.question-card .question-kicker{padding-top:0}.answer-popup{width:min(350px,calc(100vw - 65px))}}
+</style>
+<style>
+/* SVG tile preview */
+.tile .stroke-svg{width:83%;height:83%;display:block;overflow:visible;flex:none}
+.stroke-svg .guide{fill:none;stroke:#dce4dc;stroke-width:.9;stroke-dasharray:3 5}
+.stroke-svg .guide-diag{fill:none;stroke:#e5eae4;stroke-width:.6;stroke-dasharray:2 6}
+.stroke-svg .stroke-vector{fill:none;stroke:#a95e4b;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.tile:hover .stroke-vector{stroke:#874636}
+@media(max-width:520px){.tile .stroke-svg{width:87%;height:87%}}
+
+/* Official shapes: baseline-aligned display. */
+.tiles{grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.tile{aspect-ratio:auto;min-height:174px;display:flex;flex-direction:column;align-items:center;justify-content:start;gap:2px;padding:4px 3px 7px;border-radius:8px}
+.tile-art{width:100%;display:block}
+.tile .gallery-svg{display:block;width:100%;height:auto;aspect-ratio:120/136;overflow:visible;color:#a95e4b}
+.tile .approved-stroke path{fill:#a95e4b}
+.tile .approved-stroke path[fill="none"]{fill:none}
+.tile .mid-guide{stroke:#e2e8e1;stroke-width:.75;stroke-dasharray:3 5}
+.tile .base-guide{stroke:#9cae9e;stroke-width:1.5}
+.tile small{position:static;font:600 10px system-ui;color:#6c7f70}
+.tile .stroke-name{display:block;text-align:center;font-size:10px;line-height:1.25;color:#42584a;word-break:keep-all}
+.tile:hover{transform:none}
+@media(max-width:700px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.tile{min-height:0}}
+</style>
+<style id="jlos-entrance-links">
+.jlos-explore{margin-top:15px;color:#435c49;font-size:13px;max-width:100%;}
+.jlos-explore summary{cursor:pointer;display:inline-block;border-bottom:1px solid #9db0a1;padding:10px 4px;min-height:44px;font-weight:600;}
+.jlos-five{display:grid;gap:5px;margin:9px 0 0;max-width:390px;}
+.jlos-five a,.jlos-single-link{color:#395a45;text-decoration:none;border-radius:7px;display:block;padding:11px 12px;min-height:44px;background:#f0f1eb;line-height:1.5;font-size:13px;}
+.jlos-single-link{margin-top:15px;max-width:390px;width:fit-content;min-width:200px;font-weight:600;}
+.jlos-five a:hover,.jlos-single-link:hover{background:#e2e9df;}
+.jlos-five a:focus-visible,.jlos-single-link:focus-visible,.jlos-explore summary:focus-visible{outline:2px solid #a95e4b;outline-offset:2px;}
+</style><style id="jlos-v12">
+.jlos-five .jlos-pending{display:block;padding:11px 12px;min-height:44px;border-radius:7px;background:#e9e9e3;color:#727a72;line-height:1.5;font-size:13px}
+.jlos-pending em,.jlos-pending-reading em{font-size:11px;font-style:normal;opacity:.75}
+.jlos-pending-reading{font-size:13px!important;display:inline-block;margin:15px 0 0!important;padding:9px 0;color:#516453!important;border-bottom:1px dashed #a4b3a5}
+.tile .gallery-svg{width:100%;height:auto;max-height:120px;aspect-ratio:1;display:block;color:#a95e4b}
+.tile .gallery-svg path{fill:currentColor}
+.tiles{grid-template-columns:repeat(5,minmax(0,1fr));}
+.tile{min-height:0;padding:10px 4px 13px;gap:4px}
+.tile .stroke-name{font-size:11px;line-height:1.45;min-height:30px;word-break:normal}
+@media(max-width:600px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.tile .gallery-svg{max-height:105px}.tile .stroke-name{font-size:10px}}
+</style><style>
+/* Five independent readings: responsive swipe gallery */
+.readings{background:#edece6;padding:80px clamp(24px,7vw,80px) 94px;scroll-margin-top:10px;overflow:hidden}
+.readings-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px}
+.readings h2{margin:8px 0 8px;font-size:clamp(30px,5vw,49px)}
+.readings .reading-intro{font-size:15px;line-height:1.8;color:#56635b;max-width:590px;margin:0}
+.reading-controls{display:flex;gap:9px;flex-shrink:0}
+.reading-arrow{width:44px;height:44px;border-radius:50%;background:#fcfcf8;color:#35493a;border:1px solid #bec8bd;display:grid;place-items:center;font-size:23px;font-weight:400;line-height:1;cursor:pointer}
+.reading-arrow:hover:not(:disabled){background:#dce6db}.reading-arrow:disabled{opacity:.35;cursor:default}
+.reading-arrow:focus-visible,.reading-card a:focus-visible,.reading-dot:focus-visible{outline:3px solid #a95e4b;outline-offset:3px}
+.reading-track{display:flex;overflow-x:auto;gap:17px;scroll-snap-type:x mandatory;scroll-padding-inline:1px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:3px 2px 19px}
+.reading-track::-webkit-scrollbar{display:none}
+.reading-card{flex:0 0 clamp(240px,67%,320px);scroll-snap-align:start;background:#fffefa;border:1px solid #d6dad2;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:392px}
+.reading-art{height:173px;display:grid;place-items:center;position:relative;overflow:hidden;background:#d9e0d6;color:#516657}
+.reading-art.sand{background:#e6ddd0;color:#846c55}.reading-art.light{background:#e5e8e0;color:#617663}.reading-art.sage{background:#ccd7cc;color:#405b48}
+.reading-art .art-mark{font-family:Georgia,'Noto Serif',serif;font-size:clamp(85px,15vw,123px);font-weight:400;line-height:1;opacity:.7;transform:rotate(-7deg)}
+.reading-art .art-number{position:absolute;top:15px;left:18px;font-size:11px;letter-spacing:.16em;font-weight:700;color:#34483b}
+.reading-text{padding:21px 21px 22px;display:flex;flex-direction:column;flex:1;gap:8px}
+.reading-text h3{margin:0;font-size:20px;line-height:1.35;letter-spacing:-.02em}
+.reading-jp{color:#788179;font-size:12px;line-height:1.4}
+.reading-text p{margin:4px 0 14px;color:#56635a;font-size:14px;line-height:1.65;flex:1}
+.reading-open{display:inline-flex;gap:10px;justify-content:space-between;align-items:center;align-self:flex-start;color:#2e513c;text-decoration:none;border-bottom:1px solid #718e76;padding:5px 0;font-size:13px;font-weight:650}
+.reading-pending{color:#8a705d;font-size:12px;font-weight:600;line-height:2.1}
+.reading-progress{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:7px;font-size:12px;color:#68756b}
+.reading-dots{display:flex;gap:8px;align-items:center}
+.reading-dot{width:9px;height:9px;border-radius:50%;border:0;background:#b5c2b5;cursor:pointer;padding:0}
+.reading-dot[aria-current='true']{width:25px;border-radius:6px;background:#3a5843}
+@media(max-width:700px){.readings{padding:73px 22px 78px}.reading-card{flex-basis:min(79vw,310px)}.readings-header{align-items:flex-end}.reading-controls{gap:6px}.reading-arrow{width:39px;height:39px}.reading-art{height:152px}}
+@media(prefers-reduced-motion:reduce){.reading-track{scroll-behavior:auto!important}}
+</style><style>
+/* v14: The five readings belong to the first question, not a separate page section. */
+.intro-unit.question-card{overflow:visible}
+.question-body{min-width:0}
+.embedded-readings{margin:21px 0 0;padding:18px 0 9px;background:transparent;overflow:hidden;border-top:1px solid #d7dbd2;scroll-margin-top:16px}
+.embedded-readings .readings-header{margin-bottom:15px;align-items:center;gap:12px}
+.embedded-readings .eyebrow{font-size:10px;letter-spacing:.12em}
+.embedded-readings h2{font-size:19px;margin:3px 0 4px;font-weight:600}
+.embedded-readings .reading-intro{font-size:12px;line-height:1.6;max-width:430px}
+.embedded-readings .reading-card{flex-basis:min(78%,270px);min-height:332px}
+.embedded-readings .reading-art{height:122px}
+.embedded-readings .reading-art .art-mark{font-size:75px}
+.embedded-readings .reading-text{padding:15px 16px 17px;gap:5px}
+.embedded-readings .reading-text h3{font-size:17px}
+.embedded-readings .reading-text p{font-size:12px;margin:3px 0 10px}
+.embedded-readings .reading-progress{font-size:11px}
+.embedded-readings .reading-arrow{width:36px;height:36px}
+@media(max-width:700px){.embedded-readings{padding:16px 0 7px;margin-top:18px}.embedded-readings .reading-card{flex-basis:min(77vw,275px)}.embedded-readings .readings-header{align-items:flex-start}.embedded-readings .reading-controls{padding-top:4px}.embedded-readings .reading-art{height:118px}}
+</style></head>
+<body>
+<a class="skip" href="#icerik">İçeriğe geç</a>
+<main id="icerik">
+<section aria-labelledby="page-title" class="intro">
+<nav aria-label="Konum" class="top"><a href="https://go47ankara.github.io/JLOS/">JLOS / BASE CAMP</a><span>YAZIYA DAİR</span></nav>
+<div class="introText">
+<div class="eyebrow">01 / YAZI ÜZERİNE</div>
+<h1 id="page-title">Yazıya Dair</h1>
+<div class="lead">İnsan konuşur. Peki, neden yazar?</div>
+<p>Yazı hakkında üç soru.</p>
+<div aria-label="Yazı üzerine üç soru" class="introduction">
+<article class="intro-unit question-card">
+<span class="question-kicker">01 — Yazı nedir?</span>
+<div class="question-body">
+<h3>Bir resim ile bir harf arasındaki fark nedir?</h3>
+
+<section aria-label="Birinci soruya ait beş okuma" aria-labelledby="readings-title" class="readings embedded-readings" id="okumalar"><div class="readings-header"><div><span class="eyebrow">OKUMALAR / 5 YAZI</span><h2 id="readings-title">Beş Okuma</h2><p class="reading-intro">Yazı üzerine beş kısa okuma. Sağa kaydırarak diğerlerini keşfet.</p></div><div class="reading-controls"><button aria-label="Önceki okumaya git" class="reading-arrow" id="readings-prev" type="button">‹</button><button aria-label="Sonraki okumaya git" class="reading-arrow" id="readings-next" type="button">›</button></div></div><div aria-label="Beş okumanın yatay listesi" class="reading-track" id="readings-track" role="region" tabindex="0"><article class="reading-card"><div aria-hidden="true" class="reading-art light"><span class="art-number">01 / 05</span><span class="art-mark">𐂂</span></div><div class="reading-text"><span class="reading-jp">ラスコーの壁画</span><h3>Lascaux Mağara Resimleri</h3><p>Bir resim ne anlatır?</p><a class="reading-open" href="./JLOS_yaziya_dair_01_TR_v1.html">Oku <span aria-hidden="true">→</span></a></div></article><article class="reading-card"><div aria-hidden="true" class="reading-art sand"><span class="art-number">02 / 05</span><span class="art-mark">✳</span></div><div class="reading-text"><span class="reading-jp">記号のいろいろ</span><h3>İşaretlerin Çeşitliliği</h3><p>İşaretler nasıl anlam kazanır?</p><a class="reading-open" href="./JLOS_yaziya_dair_02_TR_v1.html">Oku <span aria-hidden="true">→</span></a></div></article><article class="reading-card"><div aria-hidden="true" class="reading-art sage"><span class="art-number">03 / 05</span><span class="art-mark">𒀀</span></div><div class="reading-text"><span class="reading-jp">世界の文字</span><h3>Dünya Yazıları</h3><p>Dünyada yazılar ne kadar farklı?</p><span class="reading-pending">Hazırlanıyor</span></div></article><article class="reading-card"><div aria-hidden="true" class="reading-art light"><span class="art-number">04 / 05</span><span class="art-mark">Α</span></div><div class="reading-text"><span class="reading-jp">アルファベットの起源</span><h3>Alfabenin Kökeni</h3><p>Harflerin biçimleri nereden geldi?</p><a class="reading-open" href="./JLOS_alphabet_origins_prototype_final.html">Japonca sürüm <span aria-hidden="true">→</span></a></div></article><article class="reading-card"><div aria-hidden="true" class="reading-art sand"><span class="art-number">05 / 05</span><span class="art-mark">文</span></div><div class="reading-text"><span class="reading-jp">文字とは何か？</span><h3>Yazı Nedir?</h3><p>Yazıyı nasıl tanımlarız?</p><a class="reading-open" href="./JLOS_yaziya_dair_05_TR_v1.html">Oku <span aria-hidden="true">→</span></a></div></article></div><div class="reading-progress"><span aria-live="polite" id="readings-count">01 / 05</span><div aria-label="Okuma seçimi" class="reading-dots"><button aria-current="true" aria-label="1. okumaya git" class="reading-dot" data-reading="0" type="button"></button><button aria-current="false" aria-label="2. okumaya git" class="reading-dot" data-reading="1" type="button"></button><button aria-current="false" aria-label="3. okumaya git" class="reading-dot" data-reading="2" type="button"></button><button aria-current="false" aria-label="4. okumaya git" class="reading-dot" data-reading="3" type="button"></button><button aria-current="false" aria-label="5. okumaya git" class="reading-dot" data-reading="4" type="button"></button></div><span>Kaydır →</span></div></section></div>
+</article>
+<article class="intro-unit question-card">
+<span class="question-kicker">02 — Japonca yazı</span>
+<div class="question-body">
+<h3>Japoncada neden üç yazı türü kullanılıyor?</h3>
+
+<a class="jlos-single-link" href="./JLOS_modern_japanese_writing_prototype_v17.html">Japonca yazı sayfasını aç →</a></div>
+</article>
+<article class="intro-unit question-card">
+<span class="question-kicker">03 — Taklit ve çizgi</span>
+<div class="question-body">
+<h3>Bir şeklin benzerini yapmak, ne anlama gelir?</h3>
+
+<p class="jlos-pending-reading">Taklit üzerine okuma <em>— hazırlanıyor</em></p>
+</div>
+</article>
+</div>
+<p class="intro-foot"><em>Buradan sonra sözcüklere değil, çizgilere bakacağız.</em></p>
+</div>
+</section>
+<section aria-label="Yazmaya geçiş" class="threshold" id="threshold">
+<div class="small">YAZIDAN ÇİZGİYE</div>
+<div class="rule"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M5 19l4-.8L20 7.2l-3.2-3.2L5.8 15.1 5 19zM14.5 6.5l3.2 3.2"></path></svg></div>
+<h2>Tarih burada başlıyor.</h2>
+<p id="prompt">Kurşun kalemin hazır mı?</p>
+<button class="ready" id="ready" type="button">Hazırım! <span aria-hidden="true">↓</span></button>
+<div aria-hidden="true" class="inkstage"><svg viewbox="0 0 320 82"><path d="M30 39H290" stroke="#cbd1c8" stroke-dasharray="3 9" stroke-width="1"></path><path class="stroke" d="M60 40H260"></path><path class="terminal" d="M254 40H260"></path><g class="pencil"><path d="M65 14L78 5 95 22 82 35Z" fill="#ddd1a7" stroke="#8b6551" stroke-width="1.5"></path><path d="M65 14L60 40 82 35Z" fill="#e6ceb0" stroke="#8b6551" stroke-width="1.5"></path><path d="M60 40l10-4-7-7Z" fill="#414b45"></path></g></svg></div>
+<div aria-live="polite" class="next" id="next"></div>
+<button aria-label="İlk çizginin animasyonunu yeniden izle" class="quiet-link threshold-replay" hidden="" id="replay" type="button">↺ Yeniden izle</button>
+<div class="stage-support">Kâğıt ve kurşun kalem yeterli.</div>
+</section>
+<section aria-labelledby="strokes-title" class="strokes" id="strokes" tabindex="-1">
+<span class="eyebrow">02 / TEMEL ÇİZGİLER</span>
+<h2 id="strokes-title">15 Temel Çizgi</h2>
+<p class="subline">Japonca karakterlerin temel çizgilerine bak. Bunlar yalnızca biçimler değil, kalemin hareketinden kalan izlerdir. Kâğıt üzerinde dene.</p>
+<div aria-label="15 temel çizginin genel görünümü" class="tiles" id="tiles" role="list"></div>
+<p class="note">15 çizginin şekilleri JLOS'un onaylı SVG dosyasından alınmıştır. Alt çizgi yazma konumunun ölçüsüdür; yatay çizgi orta yükseklikte gösterilir.</p>
+<div class="actions"><a class="primary-link" data-not-connected="true" href="#strokes" id="detail-link">15 çizginin açıklamaları <span aria-hidden="true">↗</span></a><a class="accent-link" href="#rhythm">Ritimle Çiz! ↓</a></div>
+<div aria-live="polite" class="connection-message" id="detail-status" role="status"></div>
+</section>
+<section aria-labelledby="rhythm-title" class="rhythm" id="rhythm">
+<div class="rhythm-layout">
+<div><span class="eyebrow" style="color:#365b41">03 / RİTİMLE ÇİZ</span><h2 id="rhythm-title">Ritimle Çiz!</h2>
+<p class="subline">Çizgileri belirli bir ritme göre kâğıda çizme alıştırması. Ekranda gösterilen hareketi kalemle tekrar et.</p>
+<div class="small-rule"></div>
+<div class="actions"><a class="primary-link" data-not-connected="true" href="#rhythm" id="rhythm-link">Alıştırmayı aç <span aria-hidden="true">→</span></a></div>
+<div aria-live="polite" class="connection-message" id="rhythm-status" role="status"></div>
+</div>
+<div aria-hidden="true" class="beat-art"><div class="beat"><span></span><span></span><span></span><span></span><span></span></div></div>
+</div>
+</section>
+<footer class="footer"><span>JLOS — JAPANESE LEARNING OPEN SPACE</span><span>Yazıya Dair</span></footer>
+</main>
+<script>
+/* JLOS bağlantıları: Dosya adları kesinleşince yalnızca bu iki değeri doldurun.
+   Örn: details: './temel_cizgiler.html', rhythm: './ritimle_ciz.html'
+   Dosya adları tahmin edilmedi; hatalı bağlantı vermek yerine açıkça bildiriliyor. */
+const JLOS_PAGES = { details: './JLOS_basic_strokes_15_final.html', rhythm: '' };
+/* JLOS approved shapes, extracted from 2026-11-08 official file.
+   Original path data is unmodified; only display viewBox/position is normalized.
+   The lower line is the writing baseline, not the middle line. */
+const tileMarkup = ["<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"01 縦画 / Dikey\"><path d=\"m 164.16,286.73968 c -1.61796,-0.49612 -4.7466,-2.25551 -5.69199,-3.2009 -0.53504,-0.53504 -1.22344,-1.62912 -1.5298,-2.43129 -0.49691,-1.30115 -0.51554,-1.7934 -0.17266,-4.56299 0.87936,-7.10313 0.962,-18.59532 0.67353,-93.6645 -0.31322,-81.51089 -0.24379,-78.218 -1.73671,-82.36513 -0.62116,-1.725506 -0.28643,-2.277246 1.37681,-2.269388 3.17877,0.01502 8.57401,2.223388 10.64035,4.355298 l 1.08047,1.11475 0.0879,90.46223 c 0.0484,49.75423 0.0103,90.78361 -0.0846,91.17641 -0.3224,1.33422 -2.59707,2.01295 -4.6433,1.38551 z\" fill=\"currentColor\"/></svg></div><small>01</small><span class=\"stroke-name\">Dikey</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"02 左払い（月型） / Savurmalı Dikey\"><path d=\"m 114.82843,287.21461 c -0.58518,-1.28433 0.86903,-3.73349 4.58226,-7.71739 11.21464,-12.03214 19.78165,-24.38739 26.83227,-38.69723 3.82533,-7.76383 5.63309,-12.15396 8.16966,-19.83999 6.04873,-18.32817 7.59819,-34.57624 7.64425,-80.16 l 0.0231,-22.88 -0.88,-4.07086 c -1.08797,-5.03292 -1.09564,-5.5331 -0.0949,-6.1888 0.72269,-0.47352 0.93205,-0.4717 2.63352,0.0229 1.01663,0.29554 3.36333,1.24793 5.2149,2.11643 3.14814,1.47665 3.40248,1.66667 3.92143,2.92969 0.82166,1.9997 0.94358,9.18383 0.566,33.35061 -0.46239,29.59519 -1.05021,41.32172 -2.59861,51.84 -0.36272,2.464 -0.71722,5.056 -0.78778,5.76 -0.21579,2.15327 -1.52505,8.08263 -2.04911,9.28 -0.15406,0.352 -0.7387,2.296 -1.29919,4.32 -4.79073,17.2999 -15.07511,36.17911 -28.50113,52.31999 -6.1357,7.3764 -14.58552,15.3144 -18.55257,17.42881 -2.36504,1.26056 -4.30046,1.3351 -4.82412,0.18581 z\" fill=\"currentColor\"/></svg></div><small>02</small><span class=\"stroke-name\">Savurmalı Dikey</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"03 縦のはね / Kancalı Dikey\"><path d=\"m 155.86108,284.95326 c -5.6168,-2.73375 -13.23359,-7.59152 -21.46108,-13.68725 -11.79128,-8.73612 -16.47822,-14.46321 -12.18412,-14.88805 1.54997,-0.15335 3.49181,0.63344 8.47035,3.43197 8.39803,4.7207 22.17236,11.21239 25.55377,12.04322 l 0.88,0.21623 0.0106,-7.4747 c 0.006,-4.11108 0.20939,-43.48816 0.45236,-87.50462 0.49089,-88.92842 0.6212,-82.362232 -1.73426,-87.388664 -1.1828,-2.524022 -1.25759,-2.829509 -0.8036,-3.282223 1.77738,-1.772389 11.57984,1.280231 13.51858,4.209875 l 0.80655,1.218768 -0.37913,89.036094 c -0.4604,108.12135 -0.34784,98.58714 -1.18532,100.39608 -0.83843,1.81099 -2.35729,3.29907 -4.41279,4.32337 -2.43689,1.21435 -3.97373,1.0817 -7.5319,-0.6501 z\" fill=\"currentColor\"/></svg></div><small>03</small><span class=\"stroke-name\">Kancalı Dikey</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"04 曲がりはね / Kancalı Kavis\"><path d=\"m 159.48766,286.2119 c -5.40485,-2.85501 -16.21418,-13.20978 -22.45762,-21.5132 -2.84129,-3.77876 -3.99228,-6.0099 -3.8526,-7.46806 0.094,-0.98093 0.2015,-1.07887 1.28331,-1.16882 1.57268,-0.13075 2.61819,0.45044 6.90656,3.83925 8.00509,6.3259 18.46644,13.37892 19.84421,13.37892 2.43431,0 5.67449,-11.15416 10.27175,-35.36 2.47711,-13.04265 4.00462,-25.37105 4.8344,-39.01795 0.83406,-13.71736 -1.28545,-35.0828 -4.78983,-48.28326 -0.52255,-1.96833 -1.18941,-4.51478 -1.48192,-5.65878 -2.45865,-9.61571 -7.58493,-22.54515 -12.4357,-31.36515 -2.32825,-4.23339 -2.51371,-5.20246 -1.27694,-6.67228 0.99796,-1.18601 4.02901,-2.39442 5.30369,-2.11445 2.12615,0.46698 5.66465,6.32327 10.04933,16.63188 10.48364,24.64756 15.42967,49.51387 14.73487,74.08 -0.42942,15.18332 -1.58988,26.78818 -4.36791,43.67999 -3.51093,21.34826 -6.54319,33.69611 -9.80447,39.92529 -1.36404,2.60539 -4.79007,6.22106 -6.82983,7.20788 -1.98752,0.96155 -3.95769,0.92127 -5.9313,-0.12126 z\" fill=\"currentColor\"/></svg></div><small>04</small><span class=\"stroke-name\">Kancalı Kavis</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"05 横画 / Yatay\"><path d=\"m 74.713175,180.85965 c -2.579547,-1.20844 -5.590633,-5.52529 -6.566281,-9.41375 -0.652597,-2.60094 -0.101883,-2.92447 3.417595,-2.00776 4.298242,1.11955 6.301678,1.03744 89.075511,-3.65053 43.736,-2.47703 80.16799,-4.58678 80.95999,-4.68834 0.792,-0.10155 2.78181,-0.55311 4.4218,-1.00347 l 2.98179,-0.81883 2.61821,1.30537 c 6.04294,3.01286 8.94017,7.70492 6.3543,10.29079 -0.74104,0.74105 -1.27438,0.93851 -2.96,1.0959 -3.26833,0.30519 -169.56756,9.23292 -174.536092,9.36993 -3.885827,0.10715 -4.650668,0.0436 -5.766823,-0.47931 z\" fill=\"currentColor\"/></svg></div><small>05</small><span class=\"stroke-name\">Yatay</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 270.93333 270.93333\" role=\"img\" aria-label=\"06 横折れ（止め） / Köşe\"><path d=\"m 197.57795,236.57958 c -2.01794,-0.83011 -3.2232,-1.60683 -4.17436,-2.69014 -1.27038,-1.44688 -1.45703,-2.47126 -1.08668,-5.96412 0.57714,-5.44314 1.0563,-125.47656 0.51582,-129.216167 -0.14595,-1.009831 -0.29242,-1.852574 -0.32549,-1.872763 -0.0331,-0.02019 -30.302,1.605879 -67.26429,3.61348 -81.012407,4.40019 -75.439417,4.14259 -76.970672,3.5578 -2.240228,-0.85555 -4.865868,-4.475436 -5.722449,-7.88935 -0.539582,-2.150513 -0.08424,-2.418017 2.825746,-1.660062 3.553361,0.925533 5.21281,0.857567 73.649665,-3.016456 36.16193,-2.047028 66.56553,-3.845591 67.56357,-3.996808 0.99804,-0.151217 2.51233,-0.509983 3.36509,-0.797258 1.97356,-0.664843 2.16661,-0.658654 4.73187,0.151711 4.55556,1.439103 7.2784,3.131478 8.3659,5.199811 0.53188,1.011589 0.4656,2.702183 -0.15351,3.915743 -0.51636,1.012145 -0.52906,1.554653 -0.52459,22.412899 0.003,11.7566 0.12125,42.40543 0.26385,68.1085 0.1742,31.39876 0.17168,47.1947 -0.008,48.14039 -0.50368,2.65585 -2.01129,3.25354 -5.05181,2.00279 z\" fill=\"currentColor\"/></svg></div><small>06</small><span class=\"stroke-name\">Köşe</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 1024 1024\" role=\"img\" aria-label=\"07 横折れ鉤 / Kancalı Köşe\"><path d=\"M 701.5,907.93464 C 665.98176,894.75683 587.90117,847.3122 567.79988,826.69354 559.09585,817.76549 559.57024,811 568.90029,811 c 5.29065,0 13.25173,3.1643 36.77794,14.61819 46.55011,22.66321 94.09697,42.93993 96.068,40.96892 0.73656,-0.73655 7.35561,-494.69185 6.63964,-495.49199 -0.19926,-0.22268 -88.9051,5.30693 -197.12408,12.28802 C 403.04281,390.36424 310.45,396.1316 305.5,396.19952 c -18.2202,0.24997 -25.1511,-4.41035 -31.89019,-21.4429 -1.46744,-3.70886 -2.76747,-8.43386 -2.88895,-10.5 L 270.5,360.5 l 7,0.13798 c 3.85,0.0759 14.425,0.44898 23.5,0.8291 14.91454,0.62471 35.66967,-0.5713 216,-12.44696 109.725,-7.22595 203.13278,-12.99905 207.57284,-12.82911 18.56467,0.71056 28.61755,11.9672 22.85445,25.59111 -1.38771,3.28052 -1.91935,32.53869 -4.51933,248.71788 -1.62064,134.75 -2.69115,246.46983 -2.37892,248.26629 1.25775,7.23654 0.637,26.676 -0.99736,31.23371 -3.38715,9.44564 -10.23799,16.08614 -19.95982,19.34702 -6.62189,2.22109 -8.72061,2.05707 -18.07186,-1.41238 z\" fill=\"currentColor\"/></svg></div><small>07</small><span class=\"stroke-name\">Kancalı Köşe</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 1024 1024\" role=\"img\" aria-label=\"08 縦折れ / Sağa Uzantılı Dikey\"><path d=\"m 337.5,842.13908 c -6.39122,-3.04339 -9.7763,-6.08 -11.31926,-10.15401 -0.59765,-1.57803 -0.64177,-20.57753 -0.11842,-51 0.45874,-26.66679 0.85204,-78.86007 0.874,-115.98507 0.022,-37.125 0.55236,-102.64993 1.17867,-145.61096 1.23523,-84.72923 1.20436,-85.4872 -4.01809,-98.64771 -1.54908,-3.90366 -2.60082,-7.92233 -2.33721,-8.93038 0.69134,-2.64368 4.77037,-3.30817 11.62124,-1.89314 13.36683,2.76087 25.71058,9.53724 28.04189,15.39419 1.02528,2.57582 1.02513,20.95052 -7.7e-4,95.688 -0.69836,50.875 -1.26755,124.45 -1.26488,163.5 0.003,39.05 -0.31814,83.41624 -0.71293,98.59164 l -0.71779,27.59163 12.88678,-0.40699 C 378.70095,810.05243 475.4,807.43148 586.5,804.45195 l 202,-5.41734 12.5,-2.74899 c 16.61815,-3.65465 21.69849,-3.55762 30.07642,0.57447 16.97996,8.37469 25.36317,21.85416 18.10542,29.11192 -2.51271,2.51271 -3.73206,2.88152 -11.25,3.40277 -4.63751,0.32153 -111.70684,3.0729 -237.93184,6.11414 -187.01224,4.50584 -231.35132,5.82998 -239.5,7.15242 -16.18389,2.62646 -16.4414,2.62083 -23,-0.50226 z\" fill=\"currentColor\"/></svg></div><small>08</small><span class=\"stroke-name\">Sağa Uzantılı Dikey</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"09 縦曲げはね / Kancalı Dirsek\"><path d=\"m 139.84,275.19371 c -11.1503,-0.35952 -28.21735,-1.22597 -31.84,-1.61643 -3.66641,-0.39518 -5.83384,-1.01873 -8.640002,-2.48564 -4.502001,-2.35339 -7.944597,-6.82363 -9.415481,-12.22607 C 88.536465,253.69391 88.559058,258.74454 89.484381,156 c 0.132345,-14.69514 0.08248,-21.36353 -0.169912,-22.72 -0.19648,-1.056 -0.878432,-2.99166 -1.515447,-4.30147 -0.84755,-1.74269 -1.074425,-2.51518 -0.845839,-2.88 0.445961,-0.71174 2.960306,-0.79695 5.142419,-0.17427 2.708967,0.77301 6.811592,2.8437 7.904396,3.98952 l 0.960002,1.00658 v 4.05982 c 0,2.2329 -0.11774,29.04382 -0.26164,59.57982 -0.28364,60.18977 -0.33265,58.0241 1.40445,62.0621 0.9925,2.30713 3.3176,4.31787 5.9237,5.12281 5.05323,1.56079 29.82564,2.8885 53.89349,2.8885 23.13505,0 41.48436,-0.9514 58.83659,-3.05063 4.88002,-0.59037 6.7125,-1.3771 8.9758,-3.8535 3.71078,-4.06019 5.11812,-9.43778 7.70941,-29.45857 0.70968,-5.48311 1.48907,-10.62968 1.73198,-11.43681 0.66204,-2.19979 2.01293,-4.3183 2.89475,-4.53962 2.1643,-0.54321 3.24676,1.32059 3.683,6.34146 0.55884,6.43181 -0.46433,28.84172 -1.58905,34.80425 -2.00123,10.6092 -6.42493,16.15877 -14.5337,18.23264 -3.95921,1.0126 -19.60236,2.40743 -36.02878,3.21254 -9.24968,0.45335 -43.22169,0.64832 -53.76,0.30854 z\" fill=\"currentColor\"/></svg></div><small>09</small><span class=\"stroke-name\">Kancalı Dirsek</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"10 右下切り / Sağa Kesme\"><path d=\"m 173.01406,143.98535 c -0.45774,-0.36006 -2.76047,-3.56406 -5.11718,-7.12 -4.71301,-7.11126 -10.44134,-14.87817 -14.79881,-20.06535 -3.69664,-4.40052 -4.29807,-5.32124 -4.29807,-6.57978 0,-2.10477 3.03778,-4.94022 5.29274,-4.94022 2.41015,0 11.25429,9.35456 20.31584,21.48831 4.53297,6.06982 6.69061,9.49553 6.93702,11.01399 0.33407,2.05861 -1.67675,4.34552 -5.56971,6.33447 -1.33121,0.68013 -1.7558,0.65992 -2.76183,-0.13142 z\" fill=\"currentColor\"/></svg></div><small>10</small><span class=\"stroke-name\">Sağa Kesme</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"11 左下切り / Sola Kesme\"><path d=\"m 150.44881,236.43087 c -1.45989,-0.72263 -3.67148,-3.21771 -4.41469,-4.9806 -0.58826,-1.39534 -0.5462,-2.9832 0.10435,-3.93907 0.29616,-0.43516 2.27616,-2.59692 4.4,-4.80391 8.17165,-8.49156 14.13305,-16.25176 22.05535,-28.71033 1.01845,-1.60161 1.82344,-2.48815 2.59214,-2.85472 1.08397,-0.5169 1.17797,-0.50631 3.38231,0.38109 4.5568,1.83442 5.33386,4.24129 2.78838,8.63667 -3.0928,5.34044 -11.59865,17.68694 -17.56245,25.49243 -5.34345,6.99356 -9.8109,11.46813 -11.44907,11.46731 -0.27782,-1.4e-4 -1.13117,-0.31013 -1.89632,-0.68887 z\" fill=\"currentColor\"/></svg></div><small>11</small><span class=\"stroke-name\">Sola Kesme</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"12 左払い（ノ型） / Sola Savurma\"><path d=\"m 92.959998,274.34167 c -2.370669,-0.62137 -2.244327,-2.92724 0.28192,-5.14532 0.613037,-0.53825 4.075404,-2.9294 7.694152,-5.31366 7.48139,-4.92923 11.81373,-8.05382 18.34031,-13.2275 28.12385,-22.29404 55.95948,-55.61707 75.21158,-90.03849 4.52004,-8.08151 8.52001,-16.6559 10.14521,-21.7474 1.01228,-3.17129 0.97459,-5.57342 -0.11549,-7.36157 -0.84587,-1.38754 -0.84847,-1.92431 -0.0145,-2.98458 0.90487,-1.15035 2.30286,-1.09358 5.7952,0.23533 7.13367,2.71451 9.54863,5.50026 8.45815,9.75681 -2.13188,8.32153 -11.64939,26.44532 -22.50381,42.85304 -25.99516,39.29472 -57.61888,69.84341 -92.09276,88.96212 -6.376606,3.53637 -9.180475,4.54056 -11.200002,4.01122 z\" fill=\"currentColor\"/></svg></div><small>12</small><span class=\"stroke-name\">Sola Savurma</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 1024 1024\" role=\"img\" aria-label=\"13 フ型 / Çatılı Savurma\"><path d=\"m 376.22251,893.4433 c -4.47307,-3.13306 -1.80725,-11.81137 6.0518,-19.70111 2.32413,-2.3332 8.06281,-7.47225 12.75263,-11.42011 11.82944,-9.95792 42.01326,-40.90961 56.98725,-58.43698 78.12915,-91.45181 139.52352,-196.9103 175.01556,-300.62816 5.10491,-14.91801 7.64772,-23.02265 14.64186,-46.66765 0.54306,-1.83593 0.042,-1.88538 -12.80322,-1.26338 -30.20526,1.46262 -91.66558,10.83497 -201.64973,30.75043 C 400.11392,490.98435 375.67907,495 372.919,495 c -2.76008,0 -6.26729,-0.64587 -7.79381,-1.43526 -10.79894,-5.58435 -21.72824,-30.41684 -16.73865,-38.03192 2.19483,-3.34974 5.14785,-3.2484 13.61346,0.46718 10.99068,4.82384 9.06544,4.99181 86,-7.50317 C 554.62912,431.17915 641.79859,419 659.11688,419 c 3.28157,0 6.86967,0.78326 9.56474,2.08792 5.19636,2.51551 11.93075,10.04672 13.45757,15.04988 0.97293,3.18815 0.78844,4.34053 -1.49262,9.32302 -1.43153,3.12687 -4.66106,12.73986 -7.17673,21.3622 -20.887,71.58907 -46.57635,131.92313 -83.95504,197.17698 -25.6944,44.856 -57.65754,90.11566 -93.0491,131.75714 -14.56617,17.13845 -57.26942,59.72207 -71.24824,71.04863 -20.55531,16.65528 -38.86356,28.19115 -44.74495,28.19344 -1.11513,4.3e-4 -3.02763,-0.69973 -4.25,-1.55591 z\" fill=\"currentColor\"/></svg></div><small>13</small><span class=\"stroke-name\">Çatılı Savurma</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"14 右払い / Sağa Savurma\"><path d=\"m 202.56,254.81698 c -2.74103,-0.98502 -7.79587,-4.23064 -14.4,-9.24599 -22.22332,-16.87694 -44.34434,-40.42698 -59.53086,-63.37656 -2.22942,-3.36906 -4.67085,-7.25706 -5.4254,-8.64 -1.58755,-2.90968 -6.65995,-8.23985 -9.65369,-10.14428 -2.76894,-1.76142 -2.99005,-2.57057 -2.99005,-10.94199 0,-5.85827 0.0723,-6.84246 0.55712,-7.58435 0.5043,-0.77169 0.64935,-0.82038 1.52973,-0.51348 0.53493,0.18648 1.16945,0.71944 1.41006,1.18436 0.2406,0.46492 1.4674,2.14131 2.72622,3.72531 1.25882,1.584 2.90568,3.672 3.6597,4.64 0.75401,0.968 4.91322,7.088 9.24268,13.6 4.32945,6.512 8.53229,12.704 9.33963,13.76 4.33709,5.67286 6.70813,8.65494 9.4099,11.83488 13.90662,16.36786 29.26854,30.08799 47.56496,42.4815 6.48662,4.39387 14.3428,9.28457 15.68,9.76126 0.528,0.18822 2.184,0.78837 3.68,1.33366 1.496,0.54529 3.872,1.30196 5.28,1.68149 6.66547,1.79668 7.00586,3.07547 0.96,3.60654 -2.14177,0.18814 -6.27246,0.98492 -12.46379,2.40419 -2.72232,0.62404 -5.53074,0.80916 -6.57621,0.43346 z\" fill=\"currentColor\"/></svg></div><small>14</small><span class=\"stroke-name\">Sağa Savurma</span>", "<div class=\"tile-art\"><svg class=\"gallery-svg\" viewBox=\"0 0 327.67999 327.67999\" role=\"img\" aria-label=\"15 右上払い / Yerden Sekme\"><path d=\"m 139.84,255.34679 c -3.6798,-1.31744 -9.28,-5.92924 -9.28,-7.64214 0,-0.82327 0.28556,-1.04181 3.35344,-2.56643 3.90598,-1.94111 5.60275,-3.42085 13.32481,-11.62045 12.00777,-12.75033 23.70728,-26.52148 34.04876,-40.07777 1.74541,-2.288 3.94107,-4.91676 4.87925,-5.84167 1.55126,-1.52934 3.7337,-2.95833 4.51813,-2.95833 0.6589,0 1.31561,1.05483 1.31561,2.11318 0,5.77297 -17.24147,32.10064 -38.51185,58.80747 -8.76459,11.00472 -9.25744,11.3581 -13.64815,9.78614 z\" fill=\"currentColor\"/></svg></div><small>15</small><span class=\"stroke-name\">Yerden Sekme</span>"];
+const tiles=document.getElementById('tiles');
+tileMarkup.forEach((markup,i)=>{
+ const tile=document.createElement('div');
+ tile.className='tile';tile.setAttribute('role','listitem');
+ tile.innerHTML=markup;
+ tiles.append(tile);
+});
+function connectLink(id,url,statusId,label){
+ const link=document.getElementById(id),status=document.getElementById(statusId);
+ if(url){link.href=url;link.removeAttribute('data-not-connected');}
+ else link.addEventListener('click',e=>{e.preventDefault();status.textContent=label+' henüz bağlanmadı. JLOS_PAGES ayarından dosya yolunu ekleyin.';});
+}
+connectLink('detail-link',JLOS_PAGES.details,'detail-status','Ayrıntılı açıklama sayfası');
+connectLink('rhythm-link',JLOS_PAGES.rhythm,'rhythm-status','Ritim alıştırması');
+const threshold=document.getElementById('threshold'),ready=document.getElementById('ready'),replay=document.getElementById('replay'),prompt=document.getElementById('prompt'),next=document.getElementById('next'),strokes=document.getElementById('strokes');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let busy=false, timers=[];
+function later(fn,ms){const id=setTimeout(fn,ms);timers.push(id);}
+function clearPending(){timers.forEach(clearTimeout);timers=[];}
+function playStroke({scrollAfter=false}={}){
+ if(busy)return;
+ busy=true;clearPending();
+ ready.hidden=true;replay.hidden=true;next.textContent='';prompt.textContent='';
+ threshold.classList.remove('active','writing');
+ // Force animation to restart even when a second play immediately follows the first.
+ void threshold.offsetWidth;
+ threshold.classList.add('writing');
+ later(()=>{
+  threshold.classList.remove('writing');threshold.classList.add('active');
+  next.textContent='Öyleyse, ilk çizgini at!';
+  replay.hidden=false;busy=false;
+  if(scrollAfter)later(()=>strokes.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'}),reduced?0:1200);
+ },reduced?50:2850);
+}
+ready.addEventListener('click',()=>playStroke({scrollAfter:true}));
+replay.addEventListener('click',()=>{
+ // Replay in place; don't send the learner away from the line they are observing.
+ threshold.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});
+ playStroke({scrollAfter:false});
+});
+
+// Optional answers: pointer hover on desktops, click/tap everywhere, Escape to close.
+const answerControls=[...document.querySelectorAll('.answer-control')];
+const canHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+function setAnswer(control,open){
+ const button=control.querySelector('.answer-toggle');
+ const popup=control.querySelector('.answer-popup');
+ button.setAttribute('aria-expanded',String(open));popup.hidden=!open;
+}
+function closeAnswers(except=null){answerControls.forEach(c=>{if(c!==except)setAnswer(c,false);});}
+answerControls.forEach(control=>{
+ const button=control.querySelector('.answer-toggle');
+ button.addEventListener('click',()=>{
+  const shouldOpen=button.getAttribute('aria-expanded')!=='true';
+  closeAnswers(control);setAnswer(control,shouldOpen);
+ });
+ if(canHover){
+  control.addEventListener('pointerenter',()=>{closeAnswers(control);setAnswer(control,true)});
+  control.addEventListener('pointerleave',()=>setAnswer(control,false));
+ }
+});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('.answer-control'))closeAnswers();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAnswers();document.activeElement?.blur?.();}});
+</script>
+<script>
+// Five readings: touch swipe, mouse/keyboard, arrow and dot navigation.
+(()=>{
+ const track=document.getElementById('readings-track');
+ if(!track)return;
+ const cards=[...track.querySelectorAll('.reading-card')];
+ const dots=[...document.querySelectorAll('.reading-dot')];
+ const prev=document.getElementById('readings-prev');
+ const next=document.getElementById('readings-next');
+ const count=document.getElementById('readings-count');
+ let selected=0;
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ function setSelected(i){selected=Math.max(0,Math.min(cards.length-1,i));dots.forEach((d,j)=>d.setAttribute('aria-current',String(j===selected)));count.textContent=String(selected+1).padStart(2,'0')+' / 05';prev.disabled=selected===0;next.disabled=selected===cards.length-1;}
+ function go(i){const target=Math.max(0,Math.min(cards.length-1,i));track.scrollTo({left:cards[target].offsetLeft-cards[0].offsetLeft,behavior:reduced?'instant':'smooth'});setSelected(target);}
+ function detect(){const left=track.scrollLeft;let i=0,best=Infinity;cards.forEach((card,j)=>{const delta=Math.abs(card.offsetLeft-cards[0].offsetLeft-left);if(delta<best){best=delta;i=j;}});setSelected(i);}
+ prev.addEventListener('click',()=>go(selected-1));next.addEventListener('click',()=>go(selected+1));
+ dots.forEach((dot,i)=>dot.addEventListener('click',()=>go(i)));
+ track.addEventListener('scroll',detect,{passive:true});
+ track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(selected+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(selected-1)}});
+ window.addEventListener('resize',detect);setSelected(0);
+})();
+</script></body></html>
