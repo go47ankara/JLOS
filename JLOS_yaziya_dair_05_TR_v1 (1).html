@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f8f7f3" name="theme-color"/>
+<title>Yazı Nedir? — Yazıya Dair · JLOS</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Noto+Sans+Phoenician&amp;family=Noto+Sans+Cuneiform&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#25302c;--muted:#68736f;--paper:#f8f7f3;--white:#fff;--line:#dcded7;
+  --accent:#2a6156;--soft:#e9f1eb;--sand:#f4eee3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans JP',system-ui,-apple-system,sans-serif;line-height:1.82}
+img{max-width:100%}
+a{color:var(--accent);text-underline-offset:3px}
+.wrap{width:min(100% - 42px,1030px);margin:auto}
+.top{background:#fff;border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0}
+.brand{font-weight:800;letter-spacing:.08em}
+.small{color:var(--muted);font-size:.77rem}
+.hero{position:relative;overflow:hidden;padding:58px 0 54px;border-bottom:1px solid var(--line);isolation:isolate}
+.hero:before{content:'𐤀';position:absolute;right:max(-22px,calc((100vw - 1050px)/2));top:-155px;font:370px/1 'Noto Sans Phoenician',serif;color:#2a6156;opacity:.047;z-index:-1;pointer-events:none}
+.hero:after{content:'文';position:absolute;right:24%;bottom:-145px;font:320px/1 serif;color:#2a6156;opacity:.033;z-index:-1;pointer-events:none}
+.eyebrow{font-size:.73rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.hero h1{font-size:clamp(2.15rem,5vw,3.6rem);line-height:1.35;letter-spacing:.01em;margin:12px 0 16px}
+.lede{font-size:clamp(.97rem,1.8vw,1.13rem);max-width:710px;margin:0}
+.section{padding:32px 0 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:0 0 17px}
+.section-head h2{margin:0;font-size:1.3rem}
+.section-head span{font-size:.77rem;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.definition{display:block;position:relative;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:20px 21px 17px;min-width:0}
+.definition h3{margin:0;font-size:.98rem;line-height:1.5}
+.type{margin:6px 0 13px;color:var(--muted);font-size:.7rem;letter-spacing:.04em}
+.statement{font-size:.99rem;line-height:1.82;margin:0 0 15px;font-weight:500}
+.original{margin:0 0 14px;padding:11px 13px;border-radius:12px;background:#fbfbf8;border:1px solid #eceee7;font-size:.83rem;line-height:1.72;color:#3f4b46}
+.original b{display:inline-block;margin-right:8px;color:#5f6f69}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:11px;font-size:.76rem;color:var(--muted)}
+.foot a{white-space:nowrap;font-weight:600}
+.descriptor{font-size:.72rem;color:#61716b}
+.note-box{margin-top:18px;background:var(--soft);border-radius:16px;padding:16px 18px;color:#385148}
+.note-box p{margin:0;font-size:.88rem;line-height:1.8}
+.after{padding:35px 0 70px}
+.after-panel{background:var(--sand);border-radius:16px;padding:24px 28px;position:relative;overflow:hidden}
+.after-panel:after{content:'𒀀';font-family:'Noto Sans Cuneiform',serif;position:absolute;right:8px;bottom:-105px;font-size:190px;color:#7d735b;opacity:.055;pointer-events:none}
+.after-panel h2{margin:0 0 8px;font-size:1.25rem}
+.after-panel p{margin:0;max-width:670px;font-size:.93rem}
+.after-panel .question{margin-top:14px;font-size:1.12rem;font-weight:600}
+.footnote{font-size:.75rem;color:var(--muted);margin-top:18px}
+.sitefoot{border-top:1px solid var(--line);padding:19px 0 26px;font-size:.75rem;color:var(--muted)}
+.sitefoot .wrap{display:flex;justify-content:space-between;gap:15px}
+@media(max-width:680px){
+  .hero{padding:43px 0 42px}
+  .hero:before{font-size:250px;top:-75px;right:-45px}
+  .hero:after{font-size:220px;right:10%;bottom:-90px}
+  .cards{grid-template-columns:1fr;gap:11px}
+  .definition{padding:17px 18px}
+  .section{padding-top:25px}
+  .after{padding:29px 0 45px}
+  .after-panel{padding:21px}
+  .top .small{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="wrap">
+<div class="brand">JLOS <span class="small">/ Yazıya Dair</span></div>
+<div class="small">Yazı üzerine biraz düşünelim.</div>
+</div>
+</header>
+<main>
+<section class="hero">
+<div class="wrap">
+<div class="eyebrow">Yazıya Dair / 01—05 · A small discovery about writing</div>
+<h1>Yazı Nedir?</h1>
+<p class="lede">“Yazı”yı açıklamanın tek bir yolu yok. Türkçe ve Japonca kaynaklarla dünyanın farklı yerlerinden tanım ve yorumları bir araya getirdik. Hangisi sana daha anlamlı geliyor?</p>
+</div>
+</section>
+<section aria-labelledby="tr-title" class="section wrap">
+<div class="section-head">
+<h2 id="tr-title">Türkçe kaynaklardan</h2>
+<span>Türkiye’den örnekler</span>
+</div>
+<div class="cards">
+<article class="definition">
+<h3>Türk Dil Kurumu (TDK)</h3>
+<div class="type">Sözlük tanımı</div>
+<p class="statement">Düşüncenin belirli işaretlerle kaydedilmesi; yazma eylemi.</p>
+<p class="original" lang="tr"><b>TR</b> Düşüncenin belli işaretlerle tespit edilmesi, yazma işi.</p>
+<div class="foot"><span class="descriptor">Türkçe Sözlük / yazı</span><a href="https://sozluk.gov.tr/" rel="noopener noreferrer" target="_blank">Kaynak ↗</a></div>
+</article>
+<article class="definition">
+<h3>Millî Eğitim Bakanlığı (MEB)</h3>
+<div class="type">Eğitim kaynağındaki tanım</div>
+<p class="statement">Ortak anlamları veya sesleri temsil eden işaret ve simgelere dayalı bir iletişim sistemi.</p>
+<p class="original" lang="tr"><b>TR</b> Yazı insanlar için ortak anlam ya da sesleri temsil eden işaret veya simgelere dayalı iletişim sistemi olarak tanımlanabilir.</p>
+<div class="foot"><span class="descriptor">Türkiye’de Ders Kitapları Tarihi</span><a href="https://ttkb.meb.gov.tr/meb_iys_dosyalar/2023_05/13061434_TDKTindd.pdf" rel="noopener noreferrer" target="_blank">Kaynak ↗</a></div>
+</article>
+<article class="definition">
+<h3>Jale Baysal</h3>
+<div class="type">Kütüphanecilik açısından</div>
+<p class="statement">Söylenen ses ve sözcükleri görme veya dokunma yoluyla algılanabilen işaretlere dönüştürerek dili ses ve hareket olmadan ifade etme aracı.</p>
+<p class="original" lang="tr"><b>TR</b> İnsanoğlunun çıkardığı sesleri ve söylediği sözleri, görme ve dokunma duyularıyla algılanabilecek işaretlere dönüştüren; ses ve hareketin yardımı olmaksızın dili anlatmayı sağlayan araç.</p>
+<div class="foot"><span class="descriptor">MEB belgesinde aktarılan tanım</span><a href="https://ttkb.meb.gov.tr/meb_iys_dosyalar/2023_05/13061434_TDKTindd.pdf" rel="noopener noreferrer" target="_blank">Kaynak belge ↗</a></div>
+</article>
+<article class="definition">
+<h3>Mahmut Bedrettin Yazır</h3>
+<div class="type">Yazı ve uygarlık</div>
+<p class="statement">Yazı, insanlığın uygarlık yaşamında hafıza görevi görür ve uygarlığın kuruluşunda önemli bir yere sahiptir.</p>
+<p class="original" lang="tr"><b>TR</b> Yazı, insanlığın medenî hayatında hafıza vazifesini gören ve medeniyetin kuruluşunda büyük yeri olan bir unsurdur.</p>
+<div class="foot"><span class="descriptor">MEB belgesinde aktarıldığı üzere / Kalem Güzeli</span><a href="https://ttkb.meb.gov.tr/meb_iys_dosyalar/2023_05/13061434_TDKTindd.pdf" rel="noopener noreferrer" target="_blank">Kaynak belge ↗</a></div>
+</article>
+</div>
+<div class="note-box"><p>Bunlar Türkçe kaynaklarda karşılaşabileceğimiz dört açıklama. Bazıları sözlük tanımı yaparken bazıları yazının uygarlıktaki rolünü vurguluyor.</p></div>
+</section>
+<section aria-labelledby="jp-title" class="section wrap">
+<div class="section-head">
+<h2 id="jp-title">Japonca kaynaklardan</h2>
+<span>Japonya’dan tanımlar</span>
+</div>
+<div class="cards">
+<article class="definition">
+<h3>Dijital Daijisen (デジタル大辞泉)</h3>
+<div class="type">Sözlük tanımı</div>
+<p class="statement">Sözcükleri yazıya geçirmek için toplumsal uzlaşıyla kullanılan işaretler.</p>
+<p class="original" lang="ja"><b>JP</b> 言葉を表記するために社会習慣として用いられる記号。</p>
+<div class="foot"><span class="descriptor">Shogakukan</span><span>Sözlük maddesi</span></div>
+</article>
+<article class="definition">
+<h3>Nihon Kokugo Daijiten (日本国語大辞典)</h3>
+<div class="type">Sözlük tanımı</div>
+<p class="statement">Dil birimlerini nokta ve çizgi birleşimleriyle işaretlere dönüştüren sistem.</p>
+<p class="original" lang="ja"><b>JP</b> 点や線の組み合わせによって言語をひとくぎりごとに記号化したもの。</p>
+<div class="foot"><span class="descriptor">Shogakukan</span><span>Sözlük maddesi</span></div>
+</article>
+<article class="definition">
+<h3>Nipponika (日本大百科全書)</h3>
+<div class="type">Ansiklopedi açıklaması</div>
+<p class="statement">Dili görsel işaretlere dönüştürür. Böylece dil saklanabilir, taşınabilir ve yeniden üretilebilir.</p>
+<p class="original" lang="ja"><b>JP</b> 言語を図形記号に置き換えるもの。文字によって、言語は保存され、移動し、再生される。</p>
+<div class="foot"><span class="descriptor">Fumio Kusakabe’nin yazdığı madde</span><span>Ansiklopedi maddesi</span></div>
+</article>
+<article class="definition">
+<h3>Yazı ve Basılı Kültürü Geliştirme Yasası</h3>
+<div class="type">Yazılı kültürün toplumsal rolü</div>
+<p class="statement">Yazılı ve basılı kültür; bilgi ve bilgeliğin aktarılması, insani değerlerin gelişmesi ve sağlıklı bir demokrasinin ilerlemesi açısından vazgeçilmez sayılır.</p>
+<p class="original" lang="ja"><b>JP</b> 文字・活字文化が、人類が長い歴史の中で蓄積してきた知識及び知恵の継承及び向上、豊かな人間性の涵養並びに健全な民主主義の発達に欠くことのできないものであることにかんがみ…</p>
+<div class="foot"><span class="descriptor">2005, 91 sayılı yasa</span><a href="https://laws.e-gov.go.jp/law/417AC1000000091/" rel="noopener noreferrer" target="_blank">Özgün metin ↗</a></div>
+</article>
+</div>
+<div class="note-box"><p>Japonca kaynaklarda “dili yazıya geçiren işaret” gibi işlevsel açıklamalar öne çıkıyor. Son örnek olan yasa ise bir tanımdan çok yazılı kültürün toplumsal önemini anlatıyor.</p></div>
+</section>
+<section aria-labelledby="intl-title" class="section wrap">
+<div class="section-head">
+<h2 id="intl-title">Dünyadan başka yaklaşımlar</h2>
+<span>Other definitions and views</span>
+</div>
+<div class="cards">
+<article class="definition">
+<h3>The World’s Writing Systems</h3>
+<div class="type">Yazı sistemi tanımı</div>
+<p class="statement">İnsan dilini görsel olarak ifade etmek üzere bir araya getirilen grafik işaretler sistemi.</p>
+<div class="foot"><span class="descriptor">Writing system · FAQ</span><a href="https://worldswritingsystems.org/faq.php" rel="noopener noreferrer" target="_blank">Kaynak ↗</a></div>
+</article>
+<article class="definition">
+<h3>Peter T. Daniels &amp; William Bright</h3>
+<div class="type">Yazı tanımı · 1996</div>
+<p class="statement">Yazan kişi orada olmasa da söylenenleri büyük ölçüde yeniden kurmayı sağlayan kalıcı işaretler sistemi.</p>
+<div class="foot"><span class="descriptor">The World’s Writing Systems · p.3</span><a href="https://omniglot.com/writing/definition.htm" rel="noopener noreferrer" target="_blank">Kaynak bilgisi ↗</a></div>
+</article>
+<article class="definition">
+<h3>Florian Coulmas</h3>
+<div class="type">Yazı sistemi tanımı · 1999</div>
+<p class="statement">Dil birimlerini sistemli biçimde temsil eden, görülebilir veya dokunulabilir işaretler bütünü.</p>
+<div class="foot"><span class="descriptor">Encyclopedia of Writing Systems</span><a href="https://omniglot.com/writing/definition.htm" rel="noopener noreferrer" target="_blank">Kaynak bilgisi ↗</a></div>
+</article>
+<article class="definition">
+<h3>UNESCO Courier</h3>
+<div class="type">Yazının toplumsal rolü · 1995</div>
+<p class="statement">Okuryazarlık öğrenmek, ortak belleğe erişmek ve ulusal topluluğun bir üyesi olma süreciyle de ilişkilidir.</p>
+<div class="foot"><span class="descriptor">The Origins of Writing · Giriş yazısı</span><a href="https://courier.unesco.org/en/articles/origins-writing" rel="noopener noreferrer" target="_blank">Kaynak ↗</a></div>
+</article>
+<article class="definition">
+<h3>UNESCO · Gürcü yazısı</h3>
+<div class="type">Yazı ve kültür · 2016</div>
+<p class="statement">Yazıların farklı kullanımları ve kuşaktan kuşağa aktarılması, kültürel çeşitliliği ve topluluk kimliğini yansıtır.</p>
+<div class="foot"><span class="descriptor">Somut olmayan kültürel miras tanıtımı</span><a href="https://ich.unesco.org/en/RL/living-culture-of-three-writing-systems-of-the-georgian-alphabet-01205" rel="noopener noreferrer" target="_blank">Kaynak ↗</a></div>
+</article>
+</div>
+<p class="footnote">Not: Kolay okunabilmesi için bazı açıklamalar Türkçe özetlenmiştir. UNESCO örnekleri, Yazır’ın görüşü ve Japon yasası, kesin birer yazı tanımından çok yazının toplumsal ve kültürel rolünü ele alır. Jale Baysal ve Yazır’a ait Türkçe ifadeler MEB belgesindeki alıntı ve aktarımlara dayanmaktadır.</p>
+</section>
+<section class="after wrap">
+<div class="after-panel">
+<div class="eyebrow">SON SORU</div>
+<h2>Başlangıçtaki soruya dönelim.</h2>
+<p>Lascaux resimleri, farklı işaretler, dünya yazıları ve alfabenin tarihi…</p>
+<p class="question" lang="tr">Bir resim ile bir harf arasındaki fark nedir?</p>
+</div>
+</section>
+</main>
+<footer class="sitefoot">
+<div class="wrap">
+<span>JLOS — JAPANESE LEARNING OPEN SPACE</span>
+<span>Yazıya Dair · 05 / 05</span>
+</div>
+</footer>
+</body>
+</html>

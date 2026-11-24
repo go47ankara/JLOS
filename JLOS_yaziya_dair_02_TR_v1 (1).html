@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#f8f7f3" name="theme-color"/>
+<meta content="Yazıya Dair — 記号のいろいろ。ピクトグラム、イデオグラム、ロゴグラム、フォノグラムなどを見比べる。" name="description"/>
+<title>İşaretlerin Çeşitliliği | Yazıya Dair — JLOS</title>
+<style>
+:root{--paper:#f8f7f3;--ink:#25302c;--muted:#68736f;--line:#dcded7;--green:#2a6156;--sand:#f4eee3;--sage:#eef2ed}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;line-height:1.72}
+a{color:var(--green);text-underline-offset:3px}
+.wrap{width:min(100% - 40px,970px);margin:auto}
+.top{background:#fff;border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:13px 0;gap:15px}
+.brand{font-weight:800;letter-spacing:.08em}.crumb{font-size:.74rem;color:var(--muted)}
+.hero{padding:40px 0 29px;position:relative;isolation:isolate;overflow:hidden}
+.hero:after{content:"山";font:250px/1 serif;position:absolute;top:-85px;right:1%;opacity:.042;color:var(--green);z-index:-1;pointer-events:none}
+.eyebrow{font-size:.72rem;font-weight:750;letter-spacing:.14em;color:var(--green)}
+h1{font-size:clamp(2.05rem,6vw,3.5rem);margin:10px 0 13px;line-height:1.2;letter-spacing:-.035em}
+.lead{max-width:670px;margin:0;font-size:clamp(.99rem,2vw,1.13rem)}
+.comparison{border-radius:17px;background:#e9ede7;border:1px solid #dce4d9;padding:21px 20px 18px;margin:0 0 25px}
+.comp-title{font-size:.75rem;letter-spacing:.1em;color:var(--green);font-weight:750;margin-bottom:12px}
+.comp-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.comp-item{text-align:center;background:#fffaf7;border:1px solid #e1e4dc;padding:16px 7px 13px;border-radius:12px}
+.comp-symbol{height:75px;display:flex;justify-content:center;align-items:center;color:#39493f;font-family:serif;font-size:4rem;line-height:1}
+.comp-symbol svg{height:70px;width:90px;stroke:#39493f;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.comp-caption{font-size:.8rem;color:var(--muted);margin-top:6px}
+.comp-bottom{font-size:.8rem;color:#536359;margin:12px 0 0;text-align:center}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 13px}
+.section-head h2{margin:0;font-size:1.2rem}.section-head span{font-size:.75rem;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;min-width:0}
+.card-art{height:150px;background:#f1f4ef;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.card:nth-child(2) .card-art{background:#f4efe7}
+.card:nth-child(3) .card-art{background:#e9efea}.card:nth-child(4) .card-art{background:#f0eee7}
+.card-art:after{content:"";position:absolute;inset:14px;border:1px solid #43574a0b;border-radius:12px;pointer-events:none}
+.art-symbol{font-family:serif;font-size:5.3rem;font-weight:500;color:#345448;line-height:1}
+.card-art svg{width:116px;height:116px;stroke:#345448;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.card-body{padding:17px 18px 19px}
+.tag{color:var(--green);font-size:.72rem;letter-spacing:.06em;font-weight:700}
+.card h3{font-size:1.1rem;margin:7px 0 7px}
+.card p{margin:0;color:#536058;font-size:.89rem;line-height:1.78}
+.example{border-top:1px solid #e9ebe6;margin-top:14px;padding-top:10px;color:var(--muted);font-size:.77rem}
+.example strong{font-size:.85rem;color:#34473d}
+.other{margin-top:23px}.other-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.other-item{border:1px solid var(--line);background:#fff;border-radius:13px;padding:14px 15px}.other-item .mark{display:block;font-size:1.75rem;color:var(--green);line-height:1.4;min-height:39px}.other-item strong{display:block;font-size:.89rem}.other-item p{font-size:.8rem;color:var(--muted);margin:3px 0 0;line-height:1.6}.note{font-size:.78rem;color:var(--muted);max-width:820px;margin:16px 0 0}
+.bridge{margin:27px 0 28px;padding:22px 23px;border-radius:15px;background:var(--sand);position:relative;overflow:hidden}
+.bridge:after{content:"𐤀";font-family:serif;position:absolute;right:-7px;bottom:-92px;font-size:180px;opacity:.055;pointer-events:none}
+.bridge h2{margin:0 0 8px;font-size:1.16rem;position:relative}
+.bridge p{margin:0;font-size:.89rem;max-width:680px;position:relative}
+.sample-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px;position:relative}
+.sample{background:#fff9f0;border:1px solid #e5dfd5;border-radius:9px;padding:5px 11px;font-size:.86rem;color:#526257}
+.next{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:19px 0 27px}
+.next strong{display:block;font-size:.95rem}.next span{color:var(--muted);font-size:.76rem}
+.footer{border-top:1px solid var(--line);padding:15px 0 23px;font-size:.73rem;color:var(--muted)}
+.footer .wrap{display:flex;justify-content:space-between;gap:12px}
+@media(max-width:700px){.cards{grid-template-columns:1fr;gap:11px}.card{display:grid;grid-template-columns:36% 64%}.card-art{height:100%;min-height:168px}.card-body{padding:14px 15px}.art-symbol{font-size:4.3rem}.card-art svg{width:88px;height:88px}.example{margin-top:10px;padding-top:8px}}
+@media(max-width:480px){.crumb{display:none}.hero{padding:32px 0 23px}.hero:after{font-size:175px;top:-52px;right:-12px}.comparison{padding:14px 11px;margin-bottom:22px}.comp-row{gap:6px}.comp-symbol{font-size:2.7rem}.comp-item{padding:11px 3px 9px}.comp-symbol{height:58px;font-size:2.75rem}.comp-symbol svg{height:57px;width:62px}.comp-caption{font-size:.7rem}.section-head{display:block}.section-head span{display:block;margin-top:4px}.card{grid-template-columns:33% 67%}.card-body{padding:12px 12px 13px}.card-art svg{width:80px;height:80px}.card h3{font-size:1rem}.card p{font-size:.82rem}.bridge{padding:18px 17px;margin:22px 0}}
+.hieroglyph-note{margin:17px 0 0;padding:15px 17px;background:#edf1eb;border:1px solid #dce6df;border-radius:13px;color:#40564b}
+.hieroglyph-note strong{display:block;font-size:.87rem;margin-bottom:5px}
+.hieroglyph-note p{margin:0;font-size:.85rem;line-height:1.8}
+.hieroglyph-note .tr{margin-top:7px;color:#53645b;font-size:.82rem}
+.hieroglyph-note a{font-size:.77rem}
+
+.hiero-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0 12px}
+.hiero-example{background:#fff;border:1px solid #dce4db;border-radius:11px;padding:12px 9px;text-align:center;min-width:0}
+.hiero-glyph{display:block;min-height:75px;font:normal 62px/1.35 'Noto Sans Egyptian Hieroglyphs','Segoe UI Historic',serif;color:#315648}
+.hiero-kind{display:block;font-size:.76rem;font-weight:750;color:#2a6156;line-height:1.5}
+.hiero-explain{display:block;font-size:.77rem;line-height:1.55;margin-top:4px;color:#53645b}
+.hiero-sign-id{display:block;font-size:.67rem;color:#7c8880;margin-top:5px}
+.hiero-source{font-size:.75rem!important;margin-top:8px!important}
+@media(max-width:420px){.hiero-examples{gap:6px}.hiero-example{padding:9px 4px}.hiero-glyph{font-size:47px;min-height:62px}.hiero-kind{font-size:.69rem}.hiero-explain{font-size:.69rem}}
+</style><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Egyptian+Hieroglyphs&amp;display=swap" rel="stylesheet"/>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">JLOS <span class="crumb">/ Yazıya Dair</span></div><span class="crumb">Yazı üzerine biraz düşünelim.</span></div></header>
+<main>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">YAZIYA DAİR / 01—02 · İŞARETLER</div>
+<h1>İşaretlerin Çeşitliliği</h1>
+<p class="lead">Hepsi birer işaret. Ama anlattıkları şeyler farklı. Önce şu dört şekle bakalım.</p>
+</div></section>
+<div class="wrap">
+<section aria-label="四つの記号を見比べる" class="comparison">
+<div class="comp-title">DÖRT İŞARET</div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-symbol"><svg aria-label="歩く人の図" role="img" viewbox="0 0 100 100"><circle cx="53" cy="17" r="9"></circle><path d="M53 30 L47 55 L30 74 M47 55 L68 75 M47 37 L31 51 M48 36 L66 45"></path></svg></div>
+<div class="comp-caption">İnsan figürü</div></div>
+<div class="comp-item"><div class="comp-symbol">∞</div><div class="comp-caption">Sonsuzluk kavramı</div></div>
+<div class="comp-item"><div class="comp-symbol">山</div><div class="comp-caption">Sözcük / biçimbirim</div></div><div class="comp-item"><div class="comp-symbol">か</div><div class="comp-caption">Ses (mora)</div></div>
+</div>
+<p class="comp-bottom">Yalnızca şekillerine değil, neyi temsil ettiklerine de bakalım.</p>
+</section>
+<section aria-labelledby="kinds-title">
+<div class="section-head"><h2 id="kinds-title">Dört farklı bakış</h2><span>Şekil · Anlam · Dil</span></div>
+<div class="cards">
+<article class="card">
+<div class="card-art"><svg aria-label="歩いている人を表す単純な図" role="img" viewbox="0 0 100 100"><circle cx="54" cy="17" r="9"></circle><path d="M54 31 L49 55 L31 77 M49 55 L69 77 M50 37 L32 50 M50 37 L70 45"></path></svg></div>
+<div class="card-body">
+<div class="tag">PİKTOGRAM · RESİMSEL İŞARET</div>
+<h3>Piktogram</h3>
+<p>Nesnelerin veya hareketlerin görünüşünden yararlanarak anlam iletir. İstasyonlarda ve kamusal alanlarda sıkça karşımıza çıkar.</p>
+<div class="example"><strong>Örnek:</strong> İnsanları, çıkışları veya tesisleri gösteren simgeler</div>
+</div></article>
+<article class="card">
+<div class="card-art"><span class="art-symbol">∞</span></div>
+<div class="card-body">
+<div class="tag">İDEOGRAM · KAVRAMI GÖSTEREN İŞARET</div>
+<h3>İdeogram</h3>
+<p>Bir işaret, gösterdiği şeye benzemese de ortak bir uzlaşı sayesinde bir kavramı anlatabilir.</p>
+<div class="example"><strong>Örnek:</strong> ∞ (sonsuzluk), ♻ (geri dönüşüm) gibi işaretler</div>
+</div></article>
+<article class="card">
+<div class="card-art"><span class="art-symbol" lang="ja">山</span></div>
+<div class="card-body">
+<div class="tag">LOGOGRAM · SÖZCÜĞÜ GÖSTEREN YAZI İŞARETİ</div>
+<h3>Logogram</h3>
+<p>Bir dildeki sözcüğü veya biçimbirimi temsil eder. Örneğin 山 karakteri Japoncada yama (dağ) ya da san olarak okunabilir.</p>
+<div class="example"><strong>Örnek:</strong> Kanji karakterleri: 山 (dağ), 日 (gün/güneş)</div>
+</div></article>
+<article class="card">
+<div class="card-art"><span class="art-symbol" lang="ja">か</span></div>
+<div class="card-body">
+<div class="tag">FONOGRAM · SESİ GÖSTEREN YAZI İŞARETİ</div>
+<h3>Fonogram</h3>
+<p>Anlamdan çok dilin sesini temsil eder. Japonca か karakteri /ka/ ses birimini, yani bir morayı gösterir.</p>
+<div class="example"><strong>Örnek:</strong> Kana か (ka), Latin alfabesindeki A gibi</div>
+</div></article>
+</div>
+<p class="note">Not: Bunlar aynı ölçüte göre oluşturulmuş dört ayrı sınıf değildir. Piktogramda şekil ile anlamın ilişkisine, logogram ve fonogramda yazı ile dilin ilişkisine bakıyoruz. İdeogram ve logogram terimleri kimi zaman örtüşebilir.</p>
+<aside aria-label="ヒエログリフについての注釈" class="hieroglyph-note">
+<strong>Küçük bir not: Mısır hiyeroglifleri</strong>
+<p>Resme benzeyen hiyerogliflerin hepsi ideogram değildir. Aynı yazı sistemi içinde farklı görevler üstlenebilirler.</p>
+<div aria-label="ヒエログリフの三種類の用法" class="hiero-examples">
+<div class="hiero-example"><span class="hiero-glyph" lang="egy">𓉐</span><span class="hiero-kind">Logogram</span><span class="hiero-explain">“ev”<em>pr</em> sözcüğünü gösterir</span><span class="hiero-sign-id">O1 · Ev planı</span></div>
+<div class="hiero-example"><span class="hiero-glyph" lang="egy">𓅓</span><span class="hiero-kind">Fonogram</span><span class="hiero-explain">Baykuş biçimli işaret, <em>m</em> sesini gösterir</span><span class="hiero-sign-id">G17 · Baykuş</span></div>
+<div class="hiero-example"><span class="hiero-glyph" lang="egy">𓀀</span><span class="hiero-kind">Determinatif</span><span class="hiero-explain">İnsanla ilgili sözcüklerin anlam alanını belirtir</span><span class="hiero-sign-id">A1 · Oturan erkek</span></div>
+</div>
+<p class="tr" lang="tr">Mısır hiyeroglifleri yalnızca ideogramlardan oluşmaz. Örneğin 𓉐, <em>pr</em> “ev” sözcüğünü; 𓅓, <em>m</em> sesini gösterebilir. 𓀀 ise insanla ilgili sözcüklerde belirleyici (determinatif) olarak kullanılabilir.</p>
+<p class="hiero-source">Aynı işaret, bağlama göre birden fazla görev üstlenebilir.<a href="https://www.phrp.be/ListSignsInGroup.php?GroupKey=14" rel="noopener noreferrer" target="_blank">O1 (ev)</a> · <a href="https://www.phrp.be/ListSignsInGroup.php?GroupKey=7" rel="noopener noreferrer" target="_blank">G17 (kuş)</a> · <a href="https://www.phrp.be/ListSignsInGroup.php?GroupKey=1" rel="noopener noreferrer" target="_blank">A1 (insan)</a> ／ Université libre de Bruxelles</p>
+</aside>
+</section>
+<section class="bridge">
+<h2>Peki yazı işaretleri neyi temsil eder?</h2>
+<p>Kimi yazı işaretleri sözcükleri, kimileri sesleri gösterir; kimi sistemlerde ikisi bir aradadır. Şimdi dünyadan örneklere bakalım.</p>
+<div aria-label="次のページで扱う文字の例" class="sample-row">
+<span class="sample">山 · Kanji</span><span class="sample">か · Kana</span><span class="sample">A · Alfabe</span><span class="sample" dir="rtl" lang="ar">ب · Arap yazısı</span><span class="sample" lang="hi">क · Devanagari</span>
+</div>
+</section>
+<div class="next"><div><span>SONRAKİ SAYFA · 01—03</span><strong>Dünya Yazıları</strong><span>Çivi yazısından farklı yazı sistemlerine</span></div><span>03 / 05</span></div>
+</div>
+</main>
+<footer class="footer"><div class="wrap"><span>JLOS — JAPANESE LEARNING OPEN SPACE</span><span>Yazıya Dair · 02 / 05</span></div></footer>
+</body></html>
